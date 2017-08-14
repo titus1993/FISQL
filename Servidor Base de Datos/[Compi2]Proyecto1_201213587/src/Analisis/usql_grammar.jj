@@ -1,0 +1,304 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\";
+}
+
+PARSER_BEGIN(Analisis)
+package Analisis;
+
+public class Analisis {
+  public static void main(String args[]) throws ParseException {
+    Analisis parser = new Analisis(System.in);
+    parser.S();
+    System.out.println("Exito!!");
+  }
+}
+PARSER_END(Analisis)
+
+TOKEN:
+{
+    
+    <MAS:"+"> {System.out.println(image);}
+    |<MENOS:"-"> {System.out.println(image);}
+    |<POR:"*"> {System.out.println(image);}
+    |<DIVISION:"/"> {System.out.println(image);}
+    |<POTENCIA:"^"> {System.out.println(image);}
+    |<AUMENTO:"++"> {System.out.println(image);}
+    |<DECREMENTO:"--"> {System.out.println(image);}
+    |<SUMASIMPLIFICADA:"+="> {System.out.println(image);}
+    |<RESTASIMPLIFICADA:"-="> {System.out.println(image);}
+}
+
+TOKEN:
+{
+    
+    <PAR_IZQ:"(">{System.out.println(image);}
+    |<PAR_DER:")">{System.out.println(image);}
+    |<LLAVE_IZQ:"{">{System.out.println(image);}
+    |<LLAVE_DER:"}">{System.out.println(image);}
+    |<COR_IZQ:"[">{System.out.println(image);}
+    |<COR_DER:"]">{System.out.println(image);}
+    |<PCOMA:";">{System.out.println(image);}
+    |<COMA:",">{System.out.println(image);}
+    |<DOSP:":">{System.out.println(image);}
+    |<IGUAL:"=">{System.out.println(image);}
+    |<ARROBA:"@">{System.out.println(image);}
+}
+
+TOKEN:
+{
+  
+    <IGUALACION:"=="> {System.out.println(image);}
+    |<DIFERENCIACION:"!="> {System.out.println(image);}
+    |<MENOR:"<"> {System.out.println(image);}
+    |<MAYOR:">"> {System.out.println(image);}
+    |<MENORIGUAL:"<="> {System.out.println(image);}
+    |<MAYORIGUAL:">="> {System.out.println(image);}  
+    |<AND:"&&"> {System.out.println(image);}
+    |<OR:"!||"> {System.out.println(image);}
+    |<NOT:"&|"> {System.out.println(image);}
+
+}
+
+
+TOKEN:
+{
+  
+  <T_TEXT: ("text")> {System.out.println(image);}
+  |<T_INTEGER: ("integer")> {System.out.println(image);}
+  |<T_DOUBLE: ("double")> {System.out.println(image);}
+  |<T_BOOL:("bool")> {System.out.println(image);}
+  |<T_DATE: ("date")> {System.out.println(image);}
+  |<T_DATETIME: ("datetime")> {System.out.println(image);}
+}
+
+
+TOKEN:
+{
+  
+    <T_CREAR:("crear")> {System.out.println(image);}
+    |<T_BASE_DATOS:("base_datos")> {System.out.println(image);}
+    |<T_TABLA:("tabla")> {System.out.println(image);}
+    |<T_NULO:("nulo")> {System.out.println(image);}
+    |<T_NO_NULO:("no nulo")> {System.out.println(image);}
+    |<T_AUTOINCREMETABLE:("autoincrementable")> {System.out.println(image);}
+    |<T_LLAVE_PRIMARIA:("llave_primaria")> {System.out.println(image);}
+    |<T_LLAVE_FORANEA:("llave_foranea")> {System.out.println(image);}
+    |<T_OBJETO:("objeto")> {System.out.println(image);}
+    |<T_PROCEDIMIENTO:("procedimiento")> {System.out.println(image);}
+    |<T_FUNCION:("funcion")> {System.out.println(image);}
+    |<T_RETORNO:("retorno")> {System.out.println(image);}
+    |<T_USUARIO:("usuario")> {System.out.println(image);}
+    |<T_COLOCAR:("colocar")> {System.out.println(image);}
+    |<T_PASSWORD:("password")> {System.out.println(image);}
+    |<T_USAR:("usar")> {System.out.println(image);}
+    |<T_ALTERAR:("alaterar")> {System.out.println(image);}
+    |<T_AGREGAR:("agregar")> {System.out.println(image);}
+    |<T_QUITAR:("quitar")> {System.out.println(image);}
+    |<T_CAMBIAR:("cambiar")> {System.out.println(image);}
+    |<T_ELIMINAR:("eliminar")> {System.out.println(image);}
+    |<T_INSERTAR:("insertar en")> {System.out.println(image);}
+    |<T_VALORES:("valores")> {System.out.println(image);}
+    |<T_ACTUALIZAR:("actualizar")> {System.out.println(image);}
+    |<T_DONDE:("donde")> {System.out.println(image);}
+    |<T_BORRAR:("borrar en")> {System.out.println(image);}
+    |<T_SELECCIONAR:("seleccionar")> {System.out.println(image);}
+    |<T_DE:(("de"))> {System.out.println(image);}
+    |<T_ORDENAR:("ordenar por")> {System.out.println(image);}
+    |<T_ASC:("asc")> {System.out.println(image);}
+    |<T_DESC:("desc")> {System.out.println(image);}
+    |<T_OTORGAR:("otorgar permisos")> {System.out.println(image);}
+    |<T_DENEGAR:("denegar permisos")> {System.out.println(image);}
+    |<T_DECLARAR:(("declarar"))> {System.out.println(image);}
+    |<T_SI:(("si"))> {System.out.println(image);}
+    |<T_SINO:(("sino"))> {System.out.println(image);}
+    |<T_SELECCIONA:(("selecciona"))> {System.out.println(image);}
+    |<T_CASO:(("caso"))> {System.out.println(image);}
+    |<T_DEFECTO:(("defecto"))> {System.out.println(image);}
+    |<T_PARA:(("para"))> {System.out.println(image);}
+    |<T_MIENTRAS:(("mientras"))> {System.out.println(image);}
+    |<T_DETENER:(("detener"))> {System.out.println(image);}
+    |<T_IMPRIMIR:(("imprimir"))> {System.out.println(image);}
+    |<T_FECHA:(("fecha"))> {System.out.println(image);}
+    |<T_FECHA_HORA:(("fecha_hora"))> {System.out.println(image);}
+    |<T_CONTAR:(("contar"))> {System.out.println(image);}
+    |<T_BACKUP_USQL:(("backup usqldump"))> {System.out.println(image);}
+    |<T_BACKUP_COMPLETO:(("backup completo"))> {System.out.println(image);}
+    |<T_RESTAURAR_USQL:(("restaurar usqldump"))> {System.out.println(image);}
+    |<T_RESTAURAR_COMPLETO:(("restaurar completo"))> {System.out.println(image);}
+}   
+
+TOKEN:
+{  
+    <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    |<ENTERO: (["0"-"9"])+ > {System.out.println(image);}
+    |<#NUMERO: ["0"-"9"]>
+    |<DECIMAL: (<NUMERO>)+(".")((<NUMERO>))> {System.out.println(image);}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S() :
+{}
+{
+  DDL()
+}
+
+
+void DDL():
+{}
+{
+    CREATE()
+}
+
+void CREATE():
+{}
+{
+    <T_CREAR> (((CREATE_BASE() | CREATE_TABLA() | CREATE_OBJETO()) <PCOMA>) 
+                | CREATE_PROCEDIMIENTO()
+                | CREATE_FUNCION()
+                )
+                
+}
+
+void CREATE_BASE():
+{}
+{
+    <T_BASE_DATOS> <ID>
+}
+
+void CREATE_TABLA():
+{}
+{
+    <T_TABLA> <ID> <PAR_IZQ> L_CAMPO() <PAR_DER>
+}
+
+void L_CAMPO():
+{}
+{
+    CAMPO() (<COMA> L_CAMPO())?
+}
+
+void CAMPO():
+{}
+{
+    TIPO_DATO() <ID> (L_COMPLEMENTO())?
+}
+
+void TIPO_DATO():
+{}
+{
+    <T_TEXT>
+    |<T_INTEGER>
+    |<T_DOUBLE>
+    |<T_BOOL>
+    |<T_DATE>
+    |<T_DATETIME>
+    |<ID>
+}
+
+void L_COMPLEMENTO():
+{}
+{
+    COMPLEMENTO() (L_COMPLEMENTO())?
+}
+
+void COMPLEMENTO():
+{}
+{
+    <T_NULO>
+    |<T_NO_NULO>
+    |<T_AUTOINCREMETABLE>
+    |<T_LLAVE_PRIMARIA>
+    |<T_LLAVE_FORANEA>
+}
+
+void CREATE_OBJETO():
+{}
+{
+    <T_OBJETO> <ID> <PAR_IZQ> L_ATRIBUTO() <PAR_DER>
+}
+
+void L_ATRIBUTO():
+{}
+{
+    ATRIBUTO() (<COMA> L_ATRIBUTO())?
+}
+
+void ATRIBUTO():
+{}
+{
+    TIPO_DATO_ATRIBUTO() <ID>
+}
+
+void TIPO_DATO_ATRIBUTO():
+{}
+{
+    <T_TEXT>
+    |<T_INTEGER>
+    |<T_DOUBLE>
+    |<T_BOOL>
+    |<T_DATE>
+    |<T_DATETIME>
+}
+
+void CREATE_PROCEDIMIENTO():
+{}
+{
+    <T_PROCEDIMIENTO> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> <LLAVE_IZQ>    <LLAVE_DER>
+}
+
+void L_PARAMETRO():
+{}
+{
+    PARAMETRO() (<COMA> L_PARAMETRO())?
+}
+
+void PARAMETRO():
+{}
+{
+    TIPO_DATO() <ARROBA> <ID>
+}
+
+void CREATE_FUNCION():
+{}
+{
+    <T_FUNCION> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> TIPO_DATO() <LLAVE_IZQ>    <LLAVE_DER>
+}
+
+void E():
+{}
+{
+    T() (<MAS> E()
+         | <MENOS> E())?
+}
+
+void T():
+{}
+{
+    G() (<POR> T() 
+         | <DIVISION> T())?
+}
+
+void G():
+{}
+{
+    H() (<POTENCIA> G())?
+}
+
+void H():
+{}
+{
+    <CADENA>
+    | <ENTERO>
+    | <DECIMAL>
+    | <ARROBA> <ID>
+}
