@@ -26,8 +26,6 @@ TOKEN:
     |<POTENCIA:"^"> {System.out.println(image);}
     |<AUMENTO:"++"> {System.out.println(image);}
     |<DECREMENTO:"--"> {System.out.println(image);}
-    |<SUMASIMPLIFICADA:"+="> {System.out.println(image);}
-    |<RESTASIMPLIFICADA:"-="> {System.out.println(image);}
 }
 
 TOKEN:
@@ -44,6 +42,7 @@ TOKEN:
     |<DOSP:":">{System.out.println(image);}
     |<IGUAL:"=">{System.out.println(image);}
     |<ARROBA:"@">{System.out.println(image);}
+    |<PUNTO:".">{System.out.println(image);}
 }
 
 TOKEN:
@@ -56,8 +55,8 @@ TOKEN:
     |<MENORIGUAL:"<="> {System.out.println(image);}
     |<MAYORIGUAL:">="> {System.out.println(image);}  
     |<AND:"&&"> {System.out.println(image);}
-    |<OR:"!||"> {System.out.println(image);}
-    |<NOT:"&|"> {System.out.println(image);}
+    |<OR:"||"> {System.out.println(image);}
+    |<NOT:"!"> {System.out.println(image);}
 
 }
 
@@ -134,7 +133,7 @@ TOKEN:
     <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
     |<ENTERO: (["0"-"9"])+ > {System.out.println(image);}
     |<#NUMERO: ["0"-"9"]>
-    |<DECIMAL: (<NUMERO>)+(".")((<NUMERO>))> {System.out.println(image);}
+    |<DECIMAL: (<NUMERO>)+(".")(<NUMERO>)+> {System.out.println(image);}
     |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
 }
 
@@ -146,27 +145,38 @@ SKIP:
 | "\t"
 }
 
+SPECIAL_TOKEN:
+{
+    <COMENTARIO_LINEA: "#" (~["\n"])>
+    |<COMENTARIO_MULTI: "#*" (~["*"]) "*#">
+}
+
 void S() :
 {}
-{
-  DDL()
+{    
+    DDL() 
+    | DML()
+    | DCL()
+    | DECLARACION()
 }
 
 
 void DDL():
 {}
 {
-    CREATE()
+    <T_USAR> <ID> <PCOMA>
+    |CREATE()
+    |ALTER()
+    |ELIMINAR()
 }
 
 void CREATE():
 {}
 {
-    <T_CREAR> (((CREATE_BASE() | CREATE_TABLA() | CREATE_OBJETO()) <PCOMA>) 
+    <T_CREAR> (((CREATE_BASE() | CREATE_TABLA() | CREATE_OBJETO() | CREATE_USUARIO()) <PCOMA>) 
                 | CREATE_PROCEDIMIENTO()
-                | CREATE_FUNCION()
-                )
-                
+                | CREATE_FUNCION()                
+                )                
 }
 
 void CREATE_BASE():
@@ -274,6 +284,173 @@ void CREATE_FUNCION():
     <T_FUNCION> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> TIPO_DATO() <LLAVE_IZQ>    <LLAVE_DER>
 }
 
+void CREATE_USUARIO():
+{}
+{
+    <T_USUARIO> <ID> <T_COLOCAR> <T_PASSWORD> <IGUAL> <CADENA>
+}
+
+void RETORNO():
+{}
+{
+    <T_RETORNO> LOGICA_OR()
+}
+
+void ALTER():
+{}
+{
+    <T_ALTERAR> (ALTER_TABLA() | ALTER_OBJETO() | ALTER_USUARIO()) <PCOMA>         
+}
+
+void ALTER_TABLA():
+{}
+{
+    <T_TABLA> <ID> (<T_AGREGAR> <PAR_IZQ> L_CAMPO() <PAR_DER>
+    |<T_QUITAR> L_ID())
+}
+
+void L_ID():
+{}
+{
+    <ID> (<COMA> L_ID())?
+}
+
+void ALTER_OBJETO():
+{}
+{
+    <T_OBJETO> <ID> (<T_AGREGAR> <PAR_IZQ> L_ATRIBUTO() <PAR_DER>
+    |<T_QUITAR> L_ID())
+}
+
+void ALTER_USUARIO():
+{}
+{
+    <T_USUARIO> <ID> <T_CAMBIAR> <T_PASSWORD> <IGUAL> <CADENA>
+}
+
+
+void ELIMINAR():
+{}
+{
+    <T_ELIMINAR> (<T_TABLA> | <T_BASE_DATOS> | <T_OBJETO> | <T_USUARIO>) <ID> <PCOMA>
+}
+
+void DML():
+{}
+{
+    INSERTAR()
+    |ACTUALIZAR()
+    |BORRAR()
+    |SELECCIONAR()
+}
+
+void INSERTAR():
+{}
+{
+    <T_INSERTAR> <T_TABLA> <ID> <PAR_IZQ> (L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ>)? L_EXPRESIONES() <PAR_DER> <PCOMA>
+}
+
+void ACTUALIZAR():
+{}
+{
+    <T_ACTUALIZAR> <T_TABLA> <ID> <PAR_IZQ> L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ> L_EXPRESIONES() <PAR_DER> <PCOMA>
+}
+
+void BORRAR():
+{}
+{
+    <T_BORRAR> <T_TABLA> <ID> (<T_DONDE> LOGICA_OR())? <PCOMA>
+}
+
+void SELECCIONAR():
+{}
+{
+    <T_SELECCIONAR> (L_ID() | <POR>) <T_DE> L_ID() (<T_DONDE> LOGICA_OR())? (<T_ORDENAR> <ID> (<T_ASC>|<T_DESC>))? <PCOMA>
+}
+
+void DCL():
+{}
+{
+    <T_OTORGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
+    |<T_DENEGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
+}
+
+void L_SENTENCIA():
+{}
+{
+    (SSL()
+    |DML()
+    |DCL()) (L_SENTENCIA())?
+}
+
+void SSL():
+{}
+{
+    DECLARACION()
+    |ASIGNACION()
+}
+
+void DECLARACION():
+{}
+{
+    <T_DECLARAR> L_VARIABLE() ((TIPO_DATO_ATRIBUTO() (<IGUAL> LOGICA_OR())?)
+                    | <ID> ) <PCOMA>
+}
+
+void L_VARIABLE():
+{}
+{
+    <ARROBA> <ID> (<COMA> L_VARIABLE())?
+}
+
+void ASIGNACION():
+{}
+{
+    <ARROBA> <ID>(<PUNTO> <ID>)? <IGUAL> LOGICA_OR() <PCOMA>
+}
+
+void SI():
+{}
+{
+    <T_SI> <PAR_DER> LOGICA_OR() <PAR_IZQ> <LLAVE_IZQ>   <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> <LLAVE_DER>)?
+}
+
+void LLAMADA_METODO():
+{}
+{
+    <ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>
+}
+
+void L_EXPRESIONES():
+{}
+{
+    LOGICA_OR() (<COMA> L_EXPRESIONES())?
+}
+
+void LOGICA_OR():
+{}
+{
+    LOGICA_AND() (<OR> LOGICA_OR())?
+}
+
+void LOGICA_AND():
+{}
+{
+    LOGICA_NOT() (<AND> LOGICA_AND())?
+}
+
+void LOGICA_NOT():
+{}
+{
+    (<NOT>)? RELACIONAL()
+}
+
+void RELACIONAL():
+{}
+{
+    E() ((<IGUALACION> | <DIFERENCIACION> | <MAYOR> | <MENOR> | <MAYORIGUAL> | <MENORIGUAL> ) RELACIONAL())?
+}
+
 void E():
 {}
 {
@@ -301,4 +478,5 @@ void H():
     | <ENTERO>
     | <DECIMAL>
     | <ARROBA> <ID>
+    | LLAMADA_METODO()
 }

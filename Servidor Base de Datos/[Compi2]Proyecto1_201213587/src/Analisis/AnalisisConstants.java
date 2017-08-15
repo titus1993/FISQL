@@ -25,171 +25,173 @@ public interface AnalisisConstants {
   /** RegularExpression Id. */
   int DECREMENTO = 7;
   /** RegularExpression Id. */
-  int SUMASIMPLIFICADA = 8;
+  int PAR_IZQ = 8;
   /** RegularExpression Id. */
-  int RESTASIMPLIFICADA = 9;
+  int PAR_DER = 9;
   /** RegularExpression Id. */
-  int PAR_IZQ = 10;
+  int LLAVE_IZQ = 10;
   /** RegularExpression Id. */
-  int PAR_DER = 11;
+  int LLAVE_DER = 11;
   /** RegularExpression Id. */
-  int LLAVE_IZQ = 12;
+  int COR_IZQ = 12;
   /** RegularExpression Id. */
-  int LLAVE_DER = 13;
+  int COR_DER = 13;
   /** RegularExpression Id. */
-  int COR_IZQ = 14;
+  int PCOMA = 14;
   /** RegularExpression Id. */
-  int COR_DER = 15;
+  int COMA = 15;
   /** RegularExpression Id. */
-  int PCOMA = 16;
+  int DOSP = 16;
   /** RegularExpression Id. */
-  int COMA = 17;
+  int IGUAL = 17;
   /** RegularExpression Id. */
-  int DOSP = 18;
+  int ARROBA = 18;
   /** RegularExpression Id. */
-  int IGUAL = 19;
+  int PUNTO = 19;
   /** RegularExpression Id. */
-  int ARROBA = 20;
+  int IGUALACION = 20;
   /** RegularExpression Id. */
-  int IGUALACION = 21;
+  int DIFERENCIACION = 21;
   /** RegularExpression Id. */
-  int DIFERENCIACION = 22;
+  int MENOR = 22;
   /** RegularExpression Id. */
-  int MENOR = 23;
+  int MAYOR = 23;
   /** RegularExpression Id. */
-  int MAYOR = 24;
+  int MENORIGUAL = 24;
   /** RegularExpression Id. */
-  int MENORIGUAL = 25;
+  int MAYORIGUAL = 25;
   /** RegularExpression Id. */
-  int MAYORIGUAL = 26;
+  int AND = 26;
   /** RegularExpression Id. */
-  int AND = 27;
+  int OR = 27;
   /** RegularExpression Id. */
-  int OR = 28;
+  int NOT = 28;
   /** RegularExpression Id. */
-  int NOT = 29;
+  int T_TEXT = 29;
   /** RegularExpression Id. */
-  int T_TEXT = 30;
+  int T_INTEGER = 30;
   /** RegularExpression Id. */
-  int T_INTEGER = 31;
+  int T_DOUBLE = 31;
   /** RegularExpression Id. */
-  int T_DOUBLE = 32;
+  int T_BOOL = 32;
   /** RegularExpression Id. */
-  int T_BOOL = 33;
+  int T_DATE = 33;
   /** RegularExpression Id. */
-  int T_DATE = 34;
+  int T_DATETIME = 34;
   /** RegularExpression Id. */
-  int T_DATETIME = 35;
+  int T_CREAR = 35;
   /** RegularExpression Id. */
-  int T_CREAR = 36;
+  int T_BASE_DATOS = 36;
   /** RegularExpression Id. */
-  int T_BASE_DATOS = 37;
+  int T_TABLA = 37;
   /** RegularExpression Id. */
-  int T_TABLA = 38;
+  int T_NULO = 38;
   /** RegularExpression Id. */
-  int T_NULO = 39;
+  int T_NO_NULO = 39;
   /** RegularExpression Id. */
-  int T_NO_NULO = 40;
+  int T_AUTOINCREMETABLE = 40;
   /** RegularExpression Id. */
-  int T_AUTOINCREMETABLE = 41;
+  int T_LLAVE_PRIMARIA = 41;
   /** RegularExpression Id. */
-  int T_LLAVE_PRIMARIA = 42;
+  int T_LLAVE_FORANEA = 42;
   /** RegularExpression Id. */
-  int T_LLAVE_FORANEA = 43;
+  int T_OBJETO = 43;
   /** RegularExpression Id. */
-  int T_OBJETO = 44;
+  int T_PROCEDIMIENTO = 44;
   /** RegularExpression Id. */
-  int T_PROCEDIMIENTO = 45;
+  int T_FUNCION = 45;
   /** RegularExpression Id. */
-  int T_FUNCION = 46;
+  int T_RETORNO = 46;
   /** RegularExpression Id. */
-  int T_RETORNO = 47;
+  int T_USUARIO = 47;
   /** RegularExpression Id. */
-  int T_USUARIO = 48;
+  int T_COLOCAR = 48;
   /** RegularExpression Id. */
-  int T_COLOCAR = 49;
+  int T_PASSWORD = 49;
   /** RegularExpression Id. */
-  int T_PASSWORD = 50;
+  int T_USAR = 50;
   /** RegularExpression Id. */
-  int T_USAR = 51;
+  int T_ALTERAR = 51;
   /** RegularExpression Id. */
-  int T_ALTERAR = 52;
+  int T_AGREGAR = 52;
   /** RegularExpression Id. */
-  int T_AGREGAR = 53;
+  int T_QUITAR = 53;
   /** RegularExpression Id. */
-  int T_QUITAR = 54;
+  int T_CAMBIAR = 54;
   /** RegularExpression Id. */
-  int T_CAMBIAR = 55;
+  int T_ELIMINAR = 55;
   /** RegularExpression Id. */
-  int T_ELIMINAR = 56;
+  int T_INSERTAR = 56;
   /** RegularExpression Id. */
-  int T_INSERTAR = 57;
+  int T_VALORES = 57;
   /** RegularExpression Id. */
-  int T_VALORES = 58;
+  int T_ACTUALIZAR = 58;
   /** RegularExpression Id. */
-  int T_ACTUALIZAR = 59;
+  int T_DONDE = 59;
   /** RegularExpression Id. */
-  int T_DONDE = 60;
+  int T_BORRAR = 60;
   /** RegularExpression Id. */
-  int T_BORRAR = 61;
+  int T_SELECCIONAR = 61;
   /** RegularExpression Id. */
-  int T_SELECCIONAR = 62;
+  int T_DE = 62;
   /** RegularExpression Id. */
-  int T_DE = 63;
+  int T_ORDENAR = 63;
   /** RegularExpression Id. */
-  int T_ORDENAR = 64;
+  int T_ASC = 64;
   /** RegularExpression Id. */
-  int T_ASC = 65;
+  int T_DESC = 65;
   /** RegularExpression Id. */
-  int T_DESC = 66;
+  int T_OTORGAR = 66;
   /** RegularExpression Id. */
-  int T_OTORGAR = 67;
+  int T_DENEGAR = 67;
   /** RegularExpression Id. */
-  int T_DENEGAR = 68;
+  int T_DECLARAR = 68;
   /** RegularExpression Id. */
-  int T_DECLARAR = 69;
+  int T_SI = 69;
   /** RegularExpression Id. */
-  int T_SI = 70;
+  int T_SINO = 70;
   /** RegularExpression Id. */
-  int T_SINO = 71;
+  int T_SELECCIONA = 71;
   /** RegularExpression Id. */
-  int T_SELECCIONA = 72;
+  int T_CASO = 72;
   /** RegularExpression Id. */
-  int T_CASO = 73;
+  int T_DEFECTO = 73;
   /** RegularExpression Id. */
-  int T_DEFECTO = 74;
+  int T_PARA = 74;
   /** RegularExpression Id. */
-  int T_PARA = 75;
+  int T_MIENTRAS = 75;
   /** RegularExpression Id. */
-  int T_MIENTRAS = 76;
+  int T_DETENER = 76;
   /** RegularExpression Id. */
-  int T_DETENER = 77;
+  int T_IMPRIMIR = 77;
   /** RegularExpression Id. */
-  int T_IMPRIMIR = 78;
+  int T_FECHA = 78;
   /** RegularExpression Id. */
-  int T_FECHA = 79;
+  int T_FECHA_HORA = 79;
   /** RegularExpression Id. */
-  int T_FECHA_HORA = 80;
+  int T_CONTAR = 80;
   /** RegularExpression Id. */
-  int T_CONTAR = 81;
+  int T_BACKUP_USQL = 81;
   /** RegularExpression Id. */
-  int T_BACKUP_USQL = 82;
+  int T_BACKUP_COMPLETO = 82;
   /** RegularExpression Id. */
-  int T_BACKUP_COMPLETO = 83;
+  int T_RESTAURAR_USQL = 83;
   /** RegularExpression Id. */
-  int T_RESTAURAR_USQL = 84;
+  int T_RESTAURAR_COMPLETO = 84;
   /** RegularExpression Id. */
-  int T_RESTAURAR_COMPLETO = 85;
+  int CADENA = 85;
   /** RegularExpression Id. */
-  int CADENA = 86;
+  int ENTERO = 86;
   /** RegularExpression Id. */
-  int ENTERO = 87;
+  int NUMERO = 87;
   /** RegularExpression Id. */
-  int NUMERO = 88;
+  int DECIMAL = 88;
   /** RegularExpression Id. */
-  int DECIMAL = 89;
+  int ID = 89;
   /** RegularExpression Id. */
-  int ID = 90;
+  int COMENTARIO_LINEA = 94;
+  /** RegularExpression Id. */
+  int COMENTARIO_MULTI = 95;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -204,8 +206,6 @@ public interface AnalisisConstants {
     "\"^\"",
     "\"++\"",
     "\"--\"",
-    "\"+=\"",
-    "\"-=\"",
     "\"(\"",
     "\")\"",
     "\"{\"",
@@ -217,6 +217,7 @@ public interface AnalisisConstants {
     "\":\"",
     "\"=\"",
     "\"@\"",
+    "\".\"",
     "\"==\"",
     "\"!=\"",
     "\"<\"",
@@ -224,8 +225,8 @@ public interface AnalisisConstants {
     "\"<=\"",
     "\">=\"",
     "\"&&\"",
-    "\"!||\"",
-    "\"&|\"",
+    "\"||\"",
+    "\"!\"",
     "\"text\"",
     "\"integer\"",
     "\"double\"",
@@ -291,6 +292,8 @@ public interface AnalisisConstants {
     "\"\\n\"",
     "\"\\r\"",
     "\"\\t\"",
+    "<COMENTARIO_LINEA>",
+    "<COMENTARIO_MULTI>",
   };
 
 }
