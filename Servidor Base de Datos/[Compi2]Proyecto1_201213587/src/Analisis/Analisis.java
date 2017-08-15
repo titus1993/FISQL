@@ -14,7 +14,12 @@ public class Analisis implements AnalisisConstants {
     case T_CREAR:
     case T_USAR:
     case T_ALTERAR:
-    case T_ELIMINAR:{
+    case T_ELIMINAR:
+    case T_BACKUP_USQL:
+    case T_BACKUP_COMPLETO:
+    case T_RESTAURAR_USQL:
+    case T_RESTAURAR_COMPLETO:
+    case ID:{
       DDL();
       break;
       }
@@ -61,8 +66,41 @@ public class Analisis implements AnalisisConstants {
       ELIMINAR();
       break;
       }
+    case T_BACKUP_USQL:
+    case T_BACKUP_COMPLETO:{
+      BACKUP();
+      break;
+      }
+    case T_RESTAURAR_USQL:
+    case T_RESTAURAR_COMPLETO:{
+      RESTAURAR();
+      break;
+      }
+    case ID:{
+      jj_consume_token(ID);
+      jj_consume_token(PAR_IZQ);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case ARROBA:
+      case NOT:
+      case T_FECHA:
+      case T_FECHA_HORA:
+      case T_CONTAR:
+      case CADENA:
+      case ENTERO:
+      case DECIMAL:
+      case ID:{
+        L_EXPRESIONES();
+        break;
+        }
+      default:
+        jj_la1[1] = jj_gen;
+        ;
+      }
+      jj_consume_token(PAR_DER);
+      break;
+      }
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -93,7 +131,7 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -109,7 +147,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -137,7 +175,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[5] = jj_gen;
       ;
     }
   }
@@ -155,7 +193,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       ;
     }
   }
@@ -191,7 +229,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[6] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -209,7 +247,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[8] = jj_gen;
       ;
     }
   }
@@ -237,7 +275,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -260,7 +298,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[10] = jj_gen;
       ;
     }
   }
@@ -297,7 +335,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -319,11 +357,12 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[12] = jj_gen;
       ;
     }
     jj_consume_token(PAR_DER);
     jj_consume_token(LLAVE_IZQ);
+    L_SENTENCIAS();
     jj_consume_token(LLAVE_DER);
   }
 
@@ -336,7 +375,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
   }
@@ -363,12 +402,13 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[14] = jj_gen;
       ;
     }
     jj_consume_token(PAR_DER);
     TIPO_DATO();
     jj_consume_token(LLAVE_IZQ);
+    L_SENTENCIAS();
     jj_consume_token(LLAVE_DER);
   }
 
@@ -402,7 +442,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[14] = jj_gen;
+      jj_la1[15] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -426,7 +466,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[16] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -441,7 +481,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[17] = jj_gen;
       ;
     }
   }
@@ -463,7 +503,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[18] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -498,7 +538,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[19] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -525,7 +565,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -545,7 +585,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[21] = jj_gen;
       ;
     }
     L_EXPRESIONES();
@@ -564,6 +604,16 @@ public class Analisis implements AnalisisConstants {
     jj_consume_token(PAR_IZQ);
     L_EXPRESIONES();
     jj_consume_token(PAR_DER);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_DONDE:{
+      jj_consume_token(T_DONDE);
+      LOGICA_OR();
+      break;
+      }
+    default:
+      jj_la1[22] = jj_gen;
+      ;
+    }
     jj_consume_token(PCOMA);
   }
 
@@ -578,7 +628,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[23] = jj_gen;
       ;
     }
     jj_consume_token(PCOMA);
@@ -596,7 +646,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[24] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -609,7 +659,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[25] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -626,14 +676,14 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[26] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
       }
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[27] = jj_gen;
       ;
     }
     jj_consume_token(PCOMA);
@@ -656,7 +706,7 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[26] = jj_gen;
+        jj_la1[28] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -678,7 +728,7 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[27] = jj_gen;
+        jj_la1[29] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -686,16 +736,73 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[30] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
   }
 
-  final public void L_SENTENCIA() throws ParseException {
+  final public void L_SENTENCIAS() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case ARROBA:
-    case T_DECLARAR:{
+    case T_INSERTAR:
+    case T_ACTUALIZAR:
+    case T_BORRAR:
+    case T_SELECCIONAR:
+    case T_OTORGAR:
+    case T_DENEGAR:
+    case T_DECLARAR:
+    case T_SI:
+    case T_SELECCIONA:
+    case T_PARA:
+    case T_MIENTRAS:
+    case T_DETENER:
+    case T_IMPRIMIR:{
+      L_SENTENCIA();
+      break;
+      }
+    default:
+      jj_la1[31] = jj_gen;
+      ;
+    }
+  }
+
+  final public void L_SENTENCIA() throws ParseException {
+    SENTENCIA();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case ARROBA:
+    case T_INSERTAR:
+    case T_ACTUALIZAR:
+    case T_BORRAR:
+    case T_SELECCIONAR:
+    case T_OTORGAR:
+    case T_DENEGAR:
+    case T_DECLARAR:
+    case T_SI:
+    case T_SELECCIONA:
+    case T_PARA:
+    case T_MIENTRAS:
+    case T_DETENER:
+    case T_IMPRIMIR:{
+      L_SENTENCIA();
+      break;
+      }
+    default:
+      jj_la1[32] = jj_gen;
+      ;
+    }
+  }
+
+  final public void SENTENCIA() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case ARROBA:
+    case T_DECLARAR:
+    case T_SI:
+    case T_SELECCIONA:
+    case T_PARA:
+    case T_MIENTRAS:
+    case T_DETENER:
+    case T_IMPRIMIR:{
       SSL();
       break;
       }
@@ -712,25 +819,9 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[33] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case ARROBA:
-    case T_INSERTAR:
-    case T_ACTUALIZAR:
-    case T_BORRAR:
-    case T_SELECCIONAR:
-    case T_OTORGAR:
-    case T_DENEGAR:
-    case T_DECLARAR:{
-      L_SENTENCIA();
-      break;
-      }
-    default:
-      jj_la1[30] = jj_gen;
-      ;
     }
   }
 
@@ -744,8 +835,36 @@ public class Analisis implements AnalisisConstants {
       ASIGNACION();
       break;
       }
+    case T_SI:{
+      SI();
+      break;
+      }
+    case T_SELECCIONA:{
+      SELECCIONA();
+      break;
+      }
+    case T_PARA:{
+      PARA();
+      break;
+      }
+    case T_MIENTRAS:{
+      MIENTRAS();
+      break;
+      }
+    case T_DETENER:{
+      jj_consume_token(T_DETENER);
+      jj_consume_token(PCOMA);
+      break;
+      }
+    case T_IMPRIMIR:{
+      jj_consume_token(T_IMPRIMIR);
+      jj_consume_token(PAR_IZQ);
+      LOGICA_OR();
+      jj_consume_token(PAR_DER);
+      break;
+      }
     default:
-      jj_la1[31] = jj_gen;
+      jj_la1[34] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -769,7 +888,7 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[32] = jj_gen;
+        jj_la1[35] = jj_gen;
         ;
       }
       break;
@@ -779,7 +898,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[33] = jj_gen;
+      jj_la1[36] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -796,7 +915,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[34] = jj_gen;
+      jj_la1[37] = jj_gen;
       ;
     }
   }
@@ -811,7 +930,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[35] = jj_gen;
+      jj_la1[38] = jj_gen;
       ;
     }
     jj_consume_token(IGUAL);
@@ -821,10 +940,11 @@ public class Analisis implements AnalisisConstants {
 
   final public void SI() throws ParseException {
     jj_consume_token(T_SI);
-    jj_consume_token(PAR_DER);
-    LOGICA_OR();
     jj_consume_token(PAR_IZQ);
+    LOGICA_OR();
+    jj_consume_token(PAR_DER);
     jj_consume_token(LLAVE_IZQ);
+    L_SENTENCIAS();
     jj_consume_token(LLAVE_DER);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_SINO:{
@@ -834,29 +954,228 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[36] = jj_gen;
+      jj_la1[39] = jj_gen;
       ;
     }
   }
 
-  final public void LLAMADA_METODO() throws ParseException {
-    jj_consume_token(ID);
+  final public void SELECCIONA() throws ParseException {
+    jj_consume_token(T_SELECCIONA);
     jj_consume_token(PAR_IZQ);
+    LOGICA_OR();
+    jj_consume_token(PAR_DER);
+    jj_consume_token(LLAVE_IZQ);
+    L_CASOS();
+    jj_consume_token(LLAVE_DER);
+  }
+
+  final public void L_CASOS() throws ParseException {
+    jj_consume_token(T_CASO);
+    VALOR_CASO();
+    jj_consume_token(DOSP);
+    L_SENTENCIAS();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case ARROBA:
-    case NOT:
-    case CADENA:
-    case ENTERO:
-    case DECIMAL:
-    case ID:{
-      L_EXPRESIONES();
+    case T_CASO:{
+      L_CASOS();
       break;
       }
     default:
-      jj_la1[37] = jj_gen;
+      jj_la1[40] = jj_gen;
       ;
     }
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_DEFECTO:{
+      DEFECTO();
+      break;
+      }
+    default:
+      jj_la1[41] = jj_gen;
+      ;
+    }
+  }
+
+  final public void VALOR_CASO() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case CADENA:{
+      jj_consume_token(CADENA);
+      break;
+      }
+    case ENTERO:{
+      jj_consume_token(ENTERO);
+      break;
+      }
+    case DECIMAL:{
+      jj_consume_token(DECIMAL);
+      break;
+      }
+    default:
+      jj_la1[42] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void DEFECTO() throws ParseException {
+    jj_consume_token(T_DEFECTO);
+    jj_consume_token(DOSP);
+    L_SENTENCIAS();
+  }
+
+  final public void PARA() throws ParseException {
+    jj_consume_token(T_PARA);
+    jj_consume_token(PAR_IZQ);
+    DECLARACION_PARA();
+    jj_consume_token(PCOMA);
+    LOGICA_OR();
+    jj_consume_token(PCOMA);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case AUMENTO:{
+      jj_consume_token(AUMENTO);
+      break;
+      }
+    case DECREMENTO:{
+      jj_consume_token(DECREMENTO);
+      break;
+      }
+    default:
+      jj_la1[43] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
     jj_consume_token(PAR_DER);
+    jj_consume_token(LLAVE_IZQ);
+    L_SENTENCIAS();
+    jj_consume_token(LLAVE_DER);
+  }
+
+  final public void DECLARACION_PARA() throws ParseException {
+    jj_consume_token(T_DECLARAR);
+    jj_consume_token(ARROBA);
+    jj_consume_token(ID);
+    jj_consume_token(T_INTEGER);
+    jj_consume_token(IGUAL);
+    LOGICA_OR();
+  }
+
+  final public void MIENTRAS() throws ParseException {
+    jj_consume_token(T_MIENTRAS);
+    jj_consume_token(PAR_IZQ);
+    LOGICA_OR();
+    jj_consume_token(PAR_DER);
+    jj_consume_token(LLAVE_IZQ);
+    L_SENTENCIAS();
+    jj_consume_token(LLAVE_DER);
+  }
+
+  final public void BACKUP() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_BACKUP_USQL:{
+      jj_consume_token(T_BACKUP_USQL);
+      break;
+      }
+    case T_BACKUP_COMPLETO:{
+      jj_consume_token(T_BACKUP_COMPLETO);
+      break;
+      }
+    default:
+      jj_la1[44] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(ID);
+    jj_consume_token(ID);
+    jj_consume_token(PCOMA);
+  }
+
+  final public void RESTAURAR() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_RESTAURAR_USQL:{
+      jj_consume_token(T_RESTAURAR_USQL);
+      break;
+      }
+    case T_RESTAURAR_COMPLETO:{
+      jj_consume_token(T_RESTAURAR_COMPLETO);
+      break;
+      }
+    default:
+      jj_la1[45] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(CADENA);
+    jj_consume_token(PCOMA);
+  }
+
+  final public void FUNCINES_NATIVAS_VALOR() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_FECHA:{
+      jj_consume_token(T_FECHA);
+      jj_consume_token(PAR_IZQ);
+      jj_consume_token(PAR_DER);
+      break;
+      }
+    case T_FECHA_HORA:{
+      jj_consume_token(T_FECHA_HORA);
+      jj_consume_token(PAR_IZQ);
+      jj_consume_token(PAR_DER);
+      break;
+      }
+    case T_CONTAR:{
+      jj_consume_token(T_CONTAR);
+      SELECCIONAR();
+      break;
+      }
+    default:
+      jj_la1[46] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void LLAMADA_OBJETO() throws ParseException {
+    jj_consume_token(ID);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case PAR_IZQ:
+    case PUNTO:{
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case PAR_IZQ:{
+        jj_consume_token(PAR_IZQ);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case ARROBA:
+        case NOT:
+        case T_FECHA:
+        case T_FECHA_HORA:
+        case T_CONTAR:
+        case CADENA:
+        case ENTERO:
+        case DECIMAL:
+        case ID:{
+          L_EXPRESIONES();
+          break;
+          }
+        default:
+          jj_la1[47] = jj_gen;
+          ;
+        }
+        jj_consume_token(PAR_DER);
+        break;
+        }
+      case PUNTO:{
+        jj_consume_token(PUNTO);
+        jj_consume_token(ID);
+        break;
+        }
+      default:
+        jj_la1[48] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+      }
+    default:
+      jj_la1[49] = jj_gen;
+      ;
+    }
   }
 
   final public void L_EXPRESIONES() throws ParseException {
@@ -868,7 +1187,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[38] = jj_gen;
+      jj_la1[50] = jj_gen;
       ;
     }
   }
@@ -882,7 +1201,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[39] = jj_gen;
+      jj_la1[51] = jj_gen;
       ;
     }
   }
@@ -896,7 +1215,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[40] = jj_gen;
+      jj_la1[52] = jj_gen;
       ;
     }
   }
@@ -908,7 +1227,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[41] = jj_gen;
+      jj_la1[53] = jj_gen;
       ;
     }
     RELACIONAL();
@@ -949,7 +1268,7 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[42] = jj_gen;
+        jj_la1[54] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -957,7 +1276,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[43] = jj_gen;
+      jj_la1[55] = jj_gen;
       ;
     }
   }
@@ -979,14 +1298,14 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[44] = jj_gen;
+        jj_la1[56] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
       }
     default:
-      jj_la1[45] = jj_gen;
+      jj_la1[57] = jj_gen;
       ;
     }
   }
@@ -1008,14 +1327,14 @@ public class Analisis implements AnalisisConstants {
         break;
         }
       default:
-        jj_la1[46] = jj_gen;
+        jj_la1[58] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
       }
     default:
-      jj_la1[47] = jj_gen;
+      jj_la1[59] = jj_gen;
       ;
     }
   }
@@ -1029,7 +1348,7 @@ public class Analisis implements AnalisisConstants {
       break;
       }
     default:
-      jj_la1[48] = jj_gen;
+      jj_la1[60] = jj_gen;
       ;
     }
   }
@@ -1051,14 +1370,30 @@ public class Analisis implements AnalisisConstants {
     case ARROBA:{
       jj_consume_token(ARROBA);
       jj_consume_token(ID);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case PUNTO:{
+        jj_consume_token(PUNTO);
+        jj_consume_token(ID);
+        break;
+        }
+      default:
+        jj_la1[61] = jj_gen;
+        ;
+      }
       break;
       }
     case ID:{
-      LLAMADA_METODO();
+      LLAMADA_OBJETO();
+      break;
+      }
+    case T_FECHA:
+    case T_FECHA_HORA:
+    case T_CONTAR:{
+      FUNCINES_NATIVAS_VALOR();
       break;
       }
     default:
-      jj_la1[49] = jj_gen;
+      jj_la1[62] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1073,7 +1408,7 @@ public class Analisis implements AnalisisConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[50];
+  final private int[] jj_la1 = new int[63];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -1083,13 +1418,13 @@ public class Analisis implements AnalisisConstants {
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x8000,0x0,0xe0000000,0x0,0x0,0x8000,0xe0000000,0xe0000000,0x8000,0xe0000000,0x0,0x0,0x8000,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x8,0x8,0x0,0x40000,0x40000,0x40000,0x20000,0xe0000000,0x8000,0x80000,0x0,0x10040000,0x8000,0x8000000,0x4000000,0x10000000,0x3f00000,0x3f00000,0x6,0x6,0x18,0x18,0x20,0x40000,};
+      jj_la1_0 = new int[] {0x0,0x10040000,0x0,0x0,0x0,0x8000,0x0,0xe0000000,0x0,0x0,0x8000,0xe0000000,0xe0000000,0x8000,0xe0000000,0x0,0x0,0x8000,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x8,0x8,0x0,0x40000,0x40000,0x40000,0x40000,0x20000,0xe0000000,0x8000,0x80000,0x0,0x0,0x0,0x0,0xc0,0x0,0x0,0x0,0x10040000,0x80100,0x80100,0x8000,0x8000000,0x4000000,0x10000000,0x3f00000,0x3f00000,0x6,0x6,0x18,0x18,0x20,0x80000,0x40000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x358c0008,0x8c0008,0x8830,0xb830,0x0,0x7c0,0x7,0x7c0,0x7c0,0x0,0x7,0x7,0x0,0x7,0x8820,0x300000,0x0,0x300000,0x8830,0x35000000,0x0,0x8000000,0x0,0x8000000,0x0,0x80000000,0x0,0x0,0x0,0x35000000,0x35000000,0x0,0x0,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0x358c0008,0x0,0x8c0008,0x8830,0xb830,0x0,0x7c0,0x7,0x7c0,0x7c0,0x0,0x7,0x7,0x0,0x7,0x8820,0x300000,0x0,0x300000,0x8830,0x35000000,0x0,0x8000000,0x8000000,0x0,0x8000000,0x0,0x80000000,0x0,0x0,0x0,0x35000000,0x35000000,0x35000000,0x0,0x0,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x1c,0x0,0x0,0x0,0x0,0x0,0x2000000,0x0,0x0,0x0,0x0,0x2000000,0x0,0x2000000,0x0,0x0,0x0,0x0,0x0,0x0,0x2000000,0x0,0x2000000,0x0,0x3,0x0,0x2000000,0x2000000,0xc,0x1c,0x1c,0x10,0x0,0x2000000,0x0,0x0,0x40,0x3600000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3600000,};
+      jj_la1_2 = new int[] {0x21e001c,0x361c000,0x21e0000,0x0,0x0,0x0,0x0,0x2000000,0x0,0x0,0x0,0x0,0x2000000,0x0,0x2000000,0x0,0x0,0x0,0x0,0x0,0x0,0x2000000,0x0,0x0,0x2000000,0x0,0x3,0x0,0x2000000,0x2000000,0xc,0x3cbc,0x3cbc,0x3cbc,0x3cb0,0x0,0x2000000,0x0,0x0,0x40,0x100,0x200,0x1600000,0x0,0x60000,0x180000,0x1c000,0x361c000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x361c000,};
    }
 
   /** Constructor with InputStream. */
@@ -1103,7 +1438,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1117,7 +1452,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1127,7 +1462,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1137,7 +1472,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1146,7 +1481,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1155,7 +1490,7 @@ public class Analisis implements AnalisisConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 50; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 63; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1211,7 +1546,7 @@ public class Analisis implements AnalisisConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 63; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

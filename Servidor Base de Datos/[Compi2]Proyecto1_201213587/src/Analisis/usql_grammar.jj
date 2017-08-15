@@ -92,7 +92,7 @@ TOKEN:
     |<T_COLOCAR:("colocar")> {System.out.println(image);}
     |<T_PASSWORD:("password")> {System.out.println(image);}
     |<T_USAR:("usar")> {System.out.println(image);}
-    |<T_ALTERAR:("alaterar")> {System.out.println(image);}
+    |<T_ALTERAR:("alterar")> {System.out.println(image);}
     |<T_AGREGAR:("agregar")> {System.out.println(image);}
     |<T_QUITAR:("quitar")> {System.out.println(image);}
     |<T_CAMBIAR:("cambiar")> {System.out.println(image);}
@@ -168,6 +168,9 @@ void DDL():
     |CREATE()
     |ALTER()
     |ELIMINAR()
+    |BACKUP()
+    |RESTAURAR()
+    |<ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>
 }
 
 void CREATE():
@@ -263,7 +266,7 @@ void TIPO_DATO_ATRIBUTO():
 void CREATE_PROCEDIMIENTO():
 {}
 {
-    <T_PROCEDIMIENTO> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> <LLAVE_IZQ>    <LLAVE_DER>
+    <T_PROCEDIMIENTO> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> <LLAVE_IZQ>  L_SENTENCIAS()  <LLAVE_DER>
 }
 
 void L_PARAMETRO():
@@ -281,7 +284,7 @@ void PARAMETRO():
 void CREATE_FUNCION():
 {}
 {
-    <T_FUNCION> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> TIPO_DATO() <LLAVE_IZQ>    <LLAVE_DER>
+    <T_FUNCION> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> TIPO_DATO() <LLAVE_IZQ>  L_SENTENCIAS()  <LLAVE_DER>
 }
 
 void CREATE_USUARIO():
@@ -353,7 +356,7 @@ void INSERTAR():
 void ACTUALIZAR():
 {}
 {
-    <T_ACTUALIZAR> <T_TABLA> <ID> <PAR_IZQ> L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ> L_EXPRESIONES() <PAR_DER> <PCOMA>
+    <T_ACTUALIZAR> <T_TABLA> <ID> <PAR_IZQ> L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ> L_EXPRESIONES() <PAR_DER> (<T_DONDE> LOGICA_OR())? <PCOMA>
 }
 
 void BORRAR():
@@ -375,12 +378,24 @@ void DCL():
     |<T_DENEGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
 }
 
+void L_SENTENCIAS():
+{}
+{
+    (L_SENTENCIA())?
+}
+
 void L_SENTENCIA():
 {}
 {
-    (SSL()
+    SENTENCIA() (L_SENTENCIA())?
+}
+
+void SENTENCIA():
+{}
+{
+    SSL()
     |DML()
-    |DCL()) (L_SENTENCIA())?
+    |DCL()
 }
 
 void SSL():
@@ -388,6 +403,12 @@ void SSL():
 {
     DECLARACION()
     |ASIGNACION()
+    |SI()
+    |SELECCIONA()
+    |PARA()
+    |MIENTRAS()
+    |<T_DETENER> <PCOMA>
+    |<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER>
 }
 
 void DECLARACION():
@@ -412,13 +433,78 @@ void ASIGNACION():
 void SI():
 {}
 {
-    <T_SI> <PAR_DER> LOGICA_OR() <PAR_IZQ> <LLAVE_IZQ>   <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> <LLAVE_DER>)?
+    <T_SI> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS()  <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> <LLAVE_DER>)?
 }
 
-void LLAMADA_METODO():
+void SELECCIONA():
 {}
 {
-    <ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>
+    <T_SELECCIONA> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_CASOS() <LLAVE_DER>
+}
+
+void L_CASOS():
+{}
+{
+    <T_CASO> VALOR_CASO() <DOSP> L_SENTENCIAS() (L_CASOS())? (DEFECTO())?
+}
+
+void VALOR_CASO():
+{}
+{
+    <CADENA>
+    |<ENTERO>
+    |<DECIMAL>
+}
+
+void DEFECTO():
+{}
+{
+    <T_DEFECTO> <DOSP> L_SENTENCIAS() 
+}
+
+void PARA():
+{}
+{
+    <T_PARA> <PAR_IZQ> DECLARACION_PARA() <PCOMA> LOGICA_OR() <PCOMA> (<AUMENTO>|<DECREMENTO>) <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>
+}
+
+void DECLARACION_PARA():
+{}
+{
+    <T_DECLARAR> <ARROBA> <ID> <T_INTEGER> <IGUAL> LOGICA_OR()
+}
+
+void MIENTRAS():
+{}
+{
+    <T_MIENTRAS> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>
+}
+
+void BACKUP():
+{}
+{
+    (<T_BACKUP_USQL> | <T_BACKUP_COMPLETO>) <ID> <ID> <PCOMA>
+}
+
+void RESTAURAR():
+{}
+{
+    (<T_RESTAURAR_USQL> | <T_RESTAURAR_COMPLETO>) <CADENA> <PCOMA>
+}
+
+void FUNCINES_NATIVAS_VALOR():
+{}
+{
+    <T_FECHA> <PAR_IZQ> <PAR_DER>
+    |<T_FECHA_HORA> <PAR_IZQ> <PAR_DER>
+    |<T_CONTAR> SELECCIONAR()
+}
+
+void LLAMADA_OBJETO():
+{}
+{
+    //LLAMADA A COLUMNA, TABLA.COLUMNA O FUNCION
+    <ID> ((<PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>) | <PUNTO> <ID>)?
 }
 
 void L_EXPRESIONES():
@@ -477,6 +563,7 @@ void H():
     <CADENA>
     | <ENTERO>
     | <DECIMAL>
-    | <ARROBA> <ID>
-    | LLAMADA_METODO()
+    | <ARROBA> <ID> (<PUNTO> <ID>)?
+    | LLAMADA_OBJETO()
+    | FUNCINES_NATIVAS_VALOR()
 }

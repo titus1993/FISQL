@@ -249,7 +249,7 @@ public interface AnalisisConstants {
     "\"colocar\"",
     "\"password\"",
     "\"usar\"",
-    "\"alaterar\"",
+    "\"alterar\"",
     "\"agregar\"",
     "\"quitar\"",
     "\"cambiar\"",
