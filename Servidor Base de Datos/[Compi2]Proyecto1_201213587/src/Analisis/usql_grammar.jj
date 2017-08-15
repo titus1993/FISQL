@@ -11,7 +11,6 @@ public class Analisis {
   public static void main(String args[]) throws ParseException {
     Analisis parser = new Analisis(System.in);
     parser.S();
-    System.out.println("Exito!!");
   }
 }
 PARSER_END(Analisis)
@@ -41,8 +40,9 @@ TOKEN:
     |<COMA:",">{System.out.println(image);}
     |<DOSP:":">{System.out.println(image);}
     |<IGUAL:"=">{System.out.println(image);}
-    |<ARROBA:"@">{System.out.println(image);}
     |<PUNTO:".">{System.out.println(image);}
+    |<FLECHA_IZQ:"<<">{System.out.println(image);}
+    |<FLECHA_DER:">>">{System.out.println(image);}
 }
 
 TOKEN:
@@ -135,6 +135,7 @@ TOKEN:
     |<#NUMERO: ["0"-"9"]>
     |<DECIMAL: (<NUMERO>)+(".")(<NUMERO>)+> {System.out.println(image);}
     |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+    |<ARROBA:"@" (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*>{System.out.println(image);}
 }
 
 SKIP: 
@@ -147,18 +148,34 @@ SKIP:
 
 SPECIAL_TOKEN:
 {
-    <COMENTARIO_LINEA: "#" (~["\n"])>
-    |<COMENTARIO_MULTI: "#*" (~["*"]) "*#">
+    <COMENTARIO_LINEA: "#" (~["\n"])*>{System.out.println(image);}
+    |<COMENTARIO_MULTI: "#*" (~["*"])* "*#">{System.out.println(image);}
 }
 
-void S() :
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    (L_INSTRUCCION()) ?
+    {System.out.println("Exito!!");}
+}
+
+void L_INSTRUCCION():
+{}
+{
+    INSTRUCCION() (L_INSTRUCCION())?
+}
+
+void INSTRUCCION() :
 {}
 {    
-    DDL() 
-    | DML()
-    | DCL()
-    | DECLARACION()
+    {System.out.println("etntro llamada ddl");}DDL() 
+    | {System.out.println("etntro llamada d,ml");}DML()
+    | {System.out.println("etntro llamada dcl");}DCL()
+    | {System.out.println("etntro llamada decla");}DECLARACION()    
+    |{System.out.println("etntro llamada metodo");} LLAMADA_METODO()
+    |{System.out.println("etntro llamada imprimr");}<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER> <PCOMA> 
 }
+
 
 
 void DDL():
@@ -170,7 +187,43 @@ void DDL():
     |ELIMINAR()
     |BACKUP()
     |RESTAURAR()
-    |<ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>
+}
+
+void DML():
+{}
+{
+    INSERTAR()
+    |ACTUALIZAR()
+    |BORRAR()
+    |SELECCIONAR() <PCOMA>
+}
+
+void DCL():
+{}
+{
+    <T_OTORGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
+    |<T_DENEGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
+}
+
+void SSL():
+{}
+{
+    DECLARACION()
+    |ASIGNACION()
+    |SI()
+    |SELECCIONA()
+    |PARA()
+    |MIENTRAS()
+    |<T_DETENER> <PCOMA>
+    |<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER> <PCOMA> 
+    |RETORNO() <PCOMA>
+    |LLAMADA_METODO()
+}
+
+void LLAMADA_METODO():
+{}
+{
+    <ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER> <PCOMA>
 }
 
 void CREATE():
@@ -231,7 +284,7 @@ void COMPLEMENTO():
     |<T_NO_NULO>
     |<T_AUTOINCREMETABLE>
     |<T_LLAVE_PRIMARIA>
-    |<T_LLAVE_FORANEA>
+    |<T_LLAVE_FORANEA> <ID>
 }
 
 void CREATE_OBJETO():
@@ -278,7 +331,7 @@ void L_PARAMETRO():
 void PARAMETRO():
 {}
 {
-    TIPO_DATO() <ARROBA> <ID>
+    TIPO_DATO() <ARROBA> 
 }
 
 void CREATE_FUNCION():
@@ -338,14 +391,7 @@ void ELIMINAR():
     <T_ELIMINAR> (<T_TABLA> | <T_BASE_DATOS> | <T_OBJETO> | <T_USUARIO>) <ID> <PCOMA>
 }
 
-void DML():
-{}
-{
-    INSERTAR()
-    |ACTUALIZAR()
-    |BORRAR()
-    |SELECCIONAR()
-}
+
 
 void INSERTAR():
 {}
@@ -368,15 +414,9 @@ void BORRAR():
 void SELECCIONAR():
 {}
 {
-    <T_SELECCIONAR> (L_ID() | <POR>) <T_DE> L_ID() (<T_DONDE> LOGICA_OR())? (<T_ORDENAR> <ID> (<T_ASC>|<T_DESC>))? <PCOMA>
+    <T_SELECCIONAR> (L_ID() | <POR>) <T_DE> L_ID() (<T_DONDE> LOGICA_OR())? (<T_ORDENAR> <ID> (<T_ASC>|<T_DESC>))?
 }
 
-void DCL():
-{}
-{
-    <T_OTORGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
-    |<T_DENEGAR> L_ID() <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
-}
 
 void L_SENTENCIAS():
 {}
@@ -398,18 +438,7 @@ void SENTENCIA():
     |DCL()
 }
 
-void SSL():
-{}
-{
-    DECLARACION()
-    |ASIGNACION()
-    |SI()
-    |SELECCIONA()
-    |PARA()
-    |MIENTRAS()
-    |<T_DETENER> <PCOMA>
-    |<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER>
-}
+
 
 void DECLARACION():
 {}
@@ -421,19 +450,19 @@ void DECLARACION():
 void L_VARIABLE():
 {}
 {
-    <ARROBA> <ID> (<COMA> L_VARIABLE())?
+    <ARROBA> (<COMA> L_VARIABLE())?
 }
 
 void ASIGNACION():
 {}
 {
-    <ARROBA> <ID>(<PUNTO> <ID>)? <IGUAL> LOGICA_OR() <PCOMA>
+    <ARROBA> (<PUNTO> <ID>)? <IGUAL> LOGICA_OR() <PCOMA>
 }
 
 void SI():
 {}
 {
-    <T_SI> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS()  <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> <LLAVE_DER>)?
+    <T_SI> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS()  <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>)?
 }
 
 void SELECCIONA():
@@ -471,7 +500,7 @@ void PARA():
 void DECLARACION_PARA():
 {}
 {
-    <T_DECLARAR> <ARROBA> <ID> <T_INTEGER> <IGUAL> LOGICA_OR()
+    <T_DECLARAR> <ARROBA>  <T_INTEGER> <IGUAL> LOGICA_OR()
 }
 
 void MIENTRAS():
@@ -497,7 +526,7 @@ void FUNCINES_NATIVAS_VALOR():
 {
     <T_FECHA> <PAR_IZQ> <PAR_DER>
     |<T_FECHA_HORA> <PAR_IZQ> <PAR_DER>
-    |<T_CONTAR> SELECCIONAR()
+    |<T_CONTAR> <PAR_IZQ> <FLECHA_IZQ> SELECCIONAR() <FLECHA_DER> <PAR_DER>
 }
 
 void LLAMADA_OBJETO():
@@ -563,7 +592,7 @@ void H():
     <CADENA>
     | <ENTERO>
     | <DECIMAL>
-    | <ARROBA> <ID> (<PUNTO> <ID>)?
+    | <ARROBA> (<PUNTO> <ID>)?
     | LLAMADA_OBJETO()
     | FUNCINES_NATIVAS_VALOR()
 }

@@ -42,7 +42,7 @@ public class Compi2Proyecto1_201213587 {
             }
         } catch (IOException e) {
             System.out.print(e.toString());
-        }
+        }        
         
         Consola a = new Consola();
         a.setVisible(true);
