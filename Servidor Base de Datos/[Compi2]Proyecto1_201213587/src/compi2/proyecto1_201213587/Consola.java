@@ -5,9 +5,7 @@
  */
 package compi2.proyecto1_201213587;
 
-import Analisis.Analisis;
-import Analisis.ParseException;
-import Analisis.TokenMgrError;
+import Analisis.Usql.*;
 
 /**
  *

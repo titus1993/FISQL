@@ -1,11 +1,11 @@
 options {
 IGNORE_CASE = true;
 STATIC = false;
-OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\";
+
 }
 
 PARSER_BEGIN(Analisis)
-package Analisis;
+package Analisis.Usql;
 
 public class Analisis {
   public static void main(String args[]) throws ParseException {
