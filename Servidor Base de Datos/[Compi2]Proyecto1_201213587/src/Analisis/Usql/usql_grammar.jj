@@ -1,7 +1,6 @@
 options {
 IGNORE_CASE = true;
 STATIC = false;
-
 }
 
 PARSER_BEGIN(Analisis)
