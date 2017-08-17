@@ -5,7 +5,7 @@
  */
 package compi2.proyecto1_201213587;
 
-import Analisis.Usql.*;
+import Analisis.XML.TABLA.*;
 
 /**
  *
@@ -71,7 +71,7 @@ public class Consola extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Analisis g = new Analisis(new java.io.StringReader(this.jEditorPane1.getText()));
+       tablaGrammar g = new tablaGrammar(new java.io.StringReader(this.jEditorPane1.getText()));
         try {
             g.S();
             System.out.println("Funciona");

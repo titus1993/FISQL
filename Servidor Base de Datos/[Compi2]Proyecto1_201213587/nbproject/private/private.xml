@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/usql_grammar.jj</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Objeto/usql_grammar.jj</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/compi2/proyecto1_201213587/Consola.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/Analisis.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/AnalisisTokenManager.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Tabla/tablaGrammar.jj</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/Usql/usqlGrammar.jj</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/compi2/proyecto1_201213587/Compi2Proyecto1_201213587.java</file>
         </group>
     </open-files>

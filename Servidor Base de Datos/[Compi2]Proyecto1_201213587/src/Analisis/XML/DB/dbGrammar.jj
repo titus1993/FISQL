@@ -1,0 +1,160 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\DB\\";
+
+}
+
+PARSER_BEGIN(dbGrammar)
+package Analisis.XML.DB;
+
+public class dbGrammar {
+  public static void main(String args[]) throws ParseException {
+    dbGrammar parser = new dbGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(dbGrammar)
+
+
+TOKEN:
+{
+    <DIVISION:"/">{System.out.println(image);}
+    |<FLECHA_IZQ:"<">{System.out.println(image);}
+    |<FLECHA_IZQC: "</">{System.out.println(image);}
+    |<FLECHA_DER:">">{System.out.println(image);}
+}
+
+
+TOKEN:
+{
+  
+    <T_TABLA: ("tabla")> {System.out.println(image);}
+    |<T_PATH: ("path")> {System.out.println(image);}
+    |<T_OBJECT: ("object")> {System.out.println(image);}
+    |<T_PROCEDURE: ("procedure")> {System.out.println(image);}
+    |<T_NOMBRE: ("nombre")> {System.out.println(image);}
+    |<T_ROWS: ("rows")> {System.out.println(image);}
+}
+
+TOKEN:
+{
+  
+  <T_TEXT: ("text")> {System.out.println(image);}
+  |<T_INTEGER: ("integer")> {System.out.println(image);}
+  |<T_DOUBLE: ("double")> {System.out.println(image);}
+  |<T_BOOL:("bool")> {System.out.println(image);}
+  |<T_DATE: ("date")> {System.out.println(image);}
+  |<T_DATETIME: ("datetime")> {System.out.println(image);}
+}
+
+TOKEN:
+{  
+    <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+    
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    L_C()
+    {System.out.println("Exito!!");}
+}
+
+void L_C():
+{}
+{
+   C() (L_C())?
+}
+
+
+void C():
+{}
+{
+    PC()
+}
+
+void PC():
+{}
+{
+    <FLECHA_IZQ> (PROCEDURE() | OBJECT() | TABLA()) <FLECHA_DER>
+}
+
+void PROCEDURE():
+{}
+{
+    <T_PROCEDURE> <FLECHA_DER> 
+        PATH()
+    <FLECHA_IZQC> <T_PROCEDURE>  
+}
+
+void OBJECT():
+{}
+{
+    <T_OBJECT> <FLECHA_DER> 
+        PATH()
+    <FLECHA_IZQC> <T_OBJECT>  
+}
+
+void PATH():
+{}
+{
+    <FLECHA_IZQ> <T_PATH> <FLECHA_DER> 
+        <CADENA>
+    <FLECHA_IZQC> <T_PATH> <FLECHA_DER>
+}
+
+void TABLA():
+{}
+{
+    <T_TABLA> <FLECHA_DER> 
+        NOMBRE() 
+        PATH()
+        ROWS()
+    <FLECHA_IZQC> <T_TABLA> 
+}
+
+void NOMBRE():
+{}
+{
+    <FLECHA_IZQ> <T_NOMBRE> <FLECHA_DER> 
+        <CADENA>
+    <FLECHA_IZQC> <T_NOMBRE> <FLECHA_DER>
+}
+
+void ROWS():
+{}
+{
+    <FLECHA_IZQ> <T_ROWS> <FLECHA_DER> 
+        L_CAMPOS()
+    <FLECHA_IZQC> <T_ROWS> <FLECHA_DER>
+}
+
+void L_CAMPOS():
+{}
+{
+    CAMPO() (L_CAMPOS())?
+}
+
+void CAMPO():
+{}
+{
+    <FLECHA_IZQ>
+        (<T_INTEGER> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_INTEGER>
+        |<T_TEXT> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_TEXT>
+        |<T_DOUBLE> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DOUBLE>
+        |<T_BOOL> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_BOOL>
+        |<T_DATE> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DATE>
+        |<T_DATETIME> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DATETIME>
+        |<ID> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <ID>)
+    <FLECHA_DER>
+}

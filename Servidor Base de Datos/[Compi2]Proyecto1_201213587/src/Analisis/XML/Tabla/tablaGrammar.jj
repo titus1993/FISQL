@@ -1,0 +1,100 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\TABLA\\";
+
+}
+
+PARSER_BEGIN(tablaGrammar)
+package Analisis.XML.TABLA;
+
+public class tablaGrammar {
+  public static void main(String args[]) throws ParseException {
+    tablaGrammar parser = new tablaGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(tablaGrammar)
+
+
+TOKEN:
+{
+    <DIVISION:"/">{System.out.println(image);}
+    |<FLECHA_IZQ:"<">{System.out.println(image);}
+    |<FLECHA_IZQC: "</">{System.out.println(image);}
+    |<FLECHA_DER:">">{System.out.println(image);}
+}
+
+
+TOKEN:
+{
+  
+    <T_TABLA: ("tabla")> {System.out.println(image);}
+    |<T_PATH: ("path")> {System.out.println(image);}
+    |<T_OBJECT: ("object")> {System.out.println(image);}
+    |<T_PROCEDURE: ("procedure")> {System.out.println(image);}
+    |<T_NOMBRE: ("nombre")> {System.out.println(image);}
+    |<T_ROW: ("row")> {System.out.println(image);}
+}
+
+TOKEN:
+{
+  
+  <T_TEXT: ("text")> {System.out.println(image);}
+  |<T_INTEGER: ("integer")> {System.out.println(image);}
+  |<T_DOUBLE: ("double")> {System.out.println(image);}
+  |<T_BOOL:("bool")> {System.out.println(image);}
+  |<T_DATE: ("date")> {System.out.println(image);}
+  |<T_DATETIME: ("datetime")> {System.out.println(image);}
+}
+
+TOKEN:
+{  
+    <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+    
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    L_ROW()
+    {System.out.println("Exito!!");}
+}
+
+void L_ROW():
+{}
+{
+   ROW() (L_ROW())?
+}
+
+
+void ROW():
+{}
+{
+    <FLECHA_IZQ> <T_ROW> <FLECHA_DER> 
+        L_CAMPOS()
+    <FLECHA_IZQC> <T_ROW> <FLECHA_DER>
+}
+
+void L_CAMPOS():
+{}
+{
+    CAMPO() (L_CAMPOS())?
+}
+
+void CAMPO():
+{}
+{
+    <FLECHA_IZQ>
+        <ID> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <ID>
+    <FLECHA_DER>
+}

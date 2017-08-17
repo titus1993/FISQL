@@ -1,0 +1,73 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Maestro\\";
+
+}
+
+PARSER_BEGIN(maestroGrammar)
+package Analisis.XML.Maestro;
+
+public class maestroGrammar {
+  public static void main(String args[]) throws ParseException {
+    maestroGrammar parser = new maestroGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(maestroGrammar)
+
+
+TOKEN:
+{
+    <DIVISION:"/">{System.out.println(image);}
+    |<FLECHA_IZQ:"<">{System.out.println(image);}
+    |<FLECHA_DER:">">{System.out.println(image);}
+}
+
+
+TOKEN:
+{
+  
+  <T_DB: ("db")> {System.out.println(image);}
+  |<T_PATH: ("path")> {System.out.println(image);}
+  |<T_NOMBRE: ("nombre")> {System.out.println(image);}
+}
+
+TOKEN:
+{  
+    <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    L_DB()
+    {System.out.println("Exito!!");}
+}
+
+void L_DB():
+{}
+{
+    DB() (L_DB())?
+}
+
+void DB():
+{}
+{
+    <FLECHA_IZQ> <T_DB> <FLECHA_DER> 
+        <FLECHA_IZQ> <T_NOMBRE> <FLECHA_DER> 
+            <CADENA>
+        <FLECHA_IZQ> <DIVISION> <T_NOMBRE> <FLECHA_DER>
+        <FLECHA_IZQ> <T_PATH> <FLECHA_DER> 
+            <CADENA>
+        <FLECHA_IZQ> <DIVISION> <T_PATH> <FLECHA_DER>
+    <FLECHA_IZQ> <DIVISION> <T_DB> <FLECHA_DER>
+}

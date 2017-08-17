@@ -26,7 +26,7 @@ public class Compi2Proyecto1_201213587 {
             cmd[0] = "cmd.exe";
             cmd[1] = "/C";
             cmd[2] = "javacc";
-            cmd[3] = "D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\Usql\\usql_grammar.jj";
+            cmd[3] = "D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\Usql\\usqlGrammar.jj";
             /*
                         para poder ejecutar esta clase es necesario setear JavaCC a las varibles de entorno del sistema 
                         de tal forma que el simbolo del sistema (la terminal) reconozca el comando javacc o jjtree
@@ -42,7 +42,79 @@ public class Compi2Proyecto1_201213587 {
             }
         } catch (IOException e) {
             System.out.print(e.toString());
-        }        
+        }    
+        
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            String[] cmd = new String[4];
+            cmd[0] = "cmd.exe";
+            cmd[1] = "/C";
+            cmd[2] = "javacc";
+            cmd[3] = "D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Maestro\\maestroGrammar.jj";
+            /*
+                        para poder ejecutar esta clase es necesario setear JavaCC a las varibles de entorno del sistema 
+                        de tal forma que el simbolo del sistema (la terminal) reconozca el comando javacc o jjtree
+             */
+            Process proc = runtime.exec(cmd);
+            InputStream is = proc.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.print(e.toString());
+        }
+        
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            String[] cmd = new String[4];
+            cmd[0] = "cmd.exe";
+            cmd[1] = "/C";
+            cmd[2] = "javacc";
+            cmd[3] = "D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\DB\\dbGrammar.jj";
+            /*
+                        para poder ejecutar esta clase es necesario setear JavaCC a las varibles de entorno del sistema 
+                        de tal forma que el simbolo del sistema (la terminal) reconozca el comando javacc o jjtree
+             */
+            Process proc = runtime.exec(cmd);
+            InputStream is = proc.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.print(e.toString());
+        }
+        
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            String[] cmd = new String[4];
+            cmd[0] = "cmd.exe";
+            cmd[1] = "/C";
+            cmd[2] = "javacc";
+            cmd[3] = "D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Tabla\\tablaGrammar.jj";
+            /*
+                        para poder ejecutar esta clase es necesario setear JavaCC a las varibles de entorno del sistema 
+                        de tal forma que el simbolo del sistema (la terminal) reconozca el comando javacc o jjtree
+             */
+            Process proc = runtime.exec(cmd);
+            InputStream is = proc.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.print(e.toString());
+        }
         
         Consola a = new Consola();
         a.setVisible(true);
