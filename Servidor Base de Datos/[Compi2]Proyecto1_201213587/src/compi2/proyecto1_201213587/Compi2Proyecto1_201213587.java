@@ -5,6 +5,7 @@
  */
 package compi2.proyecto1_201213587;
 
+import Funciones.XML.Maestro;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -211,6 +212,8 @@ public class Compi2Proyecto1_201213587 {
         } catch (IOException e) {
             System.out.print(e.toString());
         }
+        
+        Maestro db = new Maestro();
         
         Consola a = new Consola();
         a.setVisible(true);
