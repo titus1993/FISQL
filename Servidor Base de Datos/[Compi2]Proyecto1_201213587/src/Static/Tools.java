@@ -5,7 +5,7 @@
  */
 package Static;
 
-import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -16,4 +16,6 @@ public class Tools {
     public static String localUsrXml = "C:\\FISQL_DB\\users.xml";
     public static String localDb = "C:\\FISQL_DB\\DB";
     public static String localMaestroXml = "C:\\FISQL_DB\\maestro.xml";
+    
+    public static SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 }

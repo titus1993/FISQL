@@ -7,6 +7,8 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 
 PARSER_BEGIN(usrGrammar)
 package Analisis.XML.Usuario;
+import java.util.ArrayList;
+
 
 public class usrGrammar {
   public static void main(String args[]) throws ParseException {
@@ -18,40 +20,40 @@ PARSER_END(usrGrammar)
 
 TOKEN:
 {
-    <T_USR_IZQ: ("<"(" ")*"usr")(" ")*">"> {System.out.println(image);}
-    |<T_USR_DER: ("<"(" ")*"/"(" ")*"usr")(" ")*">"> {System.out.println(image);}
-    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
-    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
-    |<T_PASS_IZQ: ("<"(" ")*"pass")(" ")*">"> {System.out.println(image);}
-    |<T_PASS_DER: ("<"(" ")*"/"(" ")*"pass")(" ")*">"> {System.out.println(image);}
-    |<T_TIPO_IZQ: ("<"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
-    |<T_TIPO_DER: ("<"(" ")*"/"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
-    |<T_ESTADO_IZQ: ("<"(" ")*"estado")(" ")*">"> {System.out.println(image);}
-    |<T_ESTADO_DER: ("<"(" ")*"/"(" ")*"estado")(" ")*">"> {System.out.println(image);}
-    |<T_SESION_IZQ: ("<"(" ")*"sesion")(" ")*">"> {System.out.println(image);}
-    |<T_SESION_DER: ("<"(" ")*"/"(" ")*"sesion")(" ")*">"> {System.out.println(image);}
-    |<T_PERMISOS_IZQ: ("<"(" ")*"permisos")(" ")*">"> {System.out.println(image);}
-    |<T_PERMISOS_DER: ("<"(" ")*"/"(" ")*"permisos")(" ")*">"> {System.out.println(image);}
-    |<T_DB_IZQ: ("<"(" ")*"db")(" ")*">"> {System.out.println(image);}
-    |<T_DB_DER: ("<"(" ")*"/"(" ")*"db")(" ")*">"> {System.out.println(image);}
-    |<T_FUNC_IZQ: ("<"(" ")*"func")(" ")*">"> {System.out.println(image);}
-    |<T_FUNC_DER: ("<"(" ")*"/"(" ")*"func")(" ")*">"> {System.out.println(image);}
-    |<T_OBJ_IZQ: ("<"(" ")*"obj")(" ")*">"> {System.out.println(image);}
-    |<T_OBJ_DER: ("<"(" ")*"/"(" ")*"obj")(" ")*">"> {System.out.println(image);}
-    |<T_PROC_IZQ: ("<"(" ")*"proc")(" ")*">"> {System.out.println(image);}
-    |<T_PROC_DER: ("<"(" ")*"/"(" ")*"proc")(" ")*">"> {System.out.println(image);}
-    |<T_TABLA_IZQ: ("<"(" ")*"tabla")(" ")*">"> {System.out.println(image);}
-    |<T_TABLA_DER: ("<"(" ")*"/"(" ")*"tabla")(" ")*">"> {System.out.println(image);}
+    <T_USR_IZQ: ("<"(" ")*"usr")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_USR_DER: ("<"(" ")*"/"(" ")*"usr")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PASS_IZQ: ("<"(" ")*"pass")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PASS_DER: ("<"(" ")*"/"(" ")*"pass")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_TIPO_IZQ: ("<"(" ")*"tipo")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_TIPO_DER: ("<"(" ")*"/"(" ")*"tipo")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_ESTADO_IZQ: ("<"(" ")*"estado")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_ESTADO_DER: ("<"(" ")*"/"(" ")*"estado")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_SESION_IZQ: ("<"(" ")*"sesion")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_SESION_DER: ("<"(" ")*"/"(" ")*"sesion")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PERMISOS_IZQ: ("<"(" ")*"permisos")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PERMISOS_DER: ("<"(" ")*"/"(" ")*"permisos")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_DB_IZQ: ("<"(" ")*"db")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_DB_DER: ("<"(" ")*"/"(" ")*"db")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_FUNC_IZQ: ("<"(" ")*"func")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_FUNC_DER: ("<"(" ")*"/"(" ")*"func")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_OBJ_IZQ: ("<"(" ")*"obj")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_OBJ_DER: ("<"(" ")*"/"(" ")*"obj")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PROC_IZQ: ("<"(" ")*"proc")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_PROC_DER: ("<"(" ")*"/"(" ")*"proc")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_TABLA_IZQ: ("<"(" ")*"tabla")(" ")*">"> {/*System.out.println(image);*/}
+    |<T_TABLA_DER: ("<"(" ")*"/"(" ")*"tabla")(" ")*">"> {/*System.out.println(image);*/}
 }
 
 TOKEN:
 {      
-    <T_ACTIVO: "activo"> {System.out.println(image);}
-    |<T_INACTIVO: "inactivo"> {System.out.println(image);}
-    |<T_ADMIN: "admin"> {System.out.println(image);}
-    |<T_USER: "user"> {System.out.println(image);}
-    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
-    |<CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    <T_ACTIVO: "activo"> {/*System.out.println(image);*/}
+    |<T_INACTIVO: "inactivo"> {/*System.out.println(image);*/}
+    |<T_ADMIN: "admin"> {/*System.out.println(image);*/}
+    |<T_USER: "user"> {/*System.out.println(image);*/}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {/*System.out.println(image);*/}
+    |<CADENA:"\"" (~["\""])*"\""> {/*System.out.println(image);*/}
 }
 
 SKIP: 
@@ -135,15 +137,21 @@ void L_DB():
 }
 
 void DB():
-{}
+{ArrayList<String> lp = new ArrayList<String>();}
 {
     <T_DB_IZQ>
     <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
     (L_TABLA())?
     (L_OBJETO())?
     (L_FUNC())?
-    (L_PROC())?
+    (lp = L_PROC())?
     <T_DB_DER>
+
+    {
+        for(int i = 0; i < lp.size(); i++){
+            System.out.println(lp.get(i));
+        }
+    }
 }
 
 void L_TABLA():
@@ -170,25 +178,43 @@ void OBJETO():
     <T_OBJ_IZQ> <ID> <T_OBJ_DER>
 }
 
-void L_FUNC():
-{}
+ArrayList<String> L_FUNC():
+{ArrayList<String> lf, lf2;}
 {
-    FUNC() (L_FUNC())?
+    lf=FUNC() (lf2=L_FUNC()
+                {
+                    for(int i=0; i < lf2.size(); i++){
+                        lf.add(lf2.get(i));
+                    }
+                }
+            )? {return lf;}
 }
 
-void FUNC():
-{}
+ArrayList<String> FUNC():
+{ArrayList<String> lf; Token f;}
 {
-    <T_FUNC_IZQ> <ID> <T_FUNC_DER>
+    <T_FUNC_IZQ> f=<ID> <T_FUNC_DER>    {   lf = new ArrayList<String>(); 
+                                            lf.add(f.image);
+                                            return lf;
+                                        }
 }
-void L_PROC():
-{}
+ArrayList<String> L_PROC():
+{ArrayList<String> lp, lp2;}
 {
-    PROC() (L_PROC())?
+    lp=PROC() (lp2=L_PROC()
+                {
+                    for(int i=0; i < lp2.size(); i++){
+                        lp.add(lp2.get(i));
+                    }
+                }
+                )? {return lp;}
 }
 
-void PROC():
-{}
+ArrayList<String> PROC():
+{ArrayList<String> lp; Token p;}
 {
-    <T_PROC_IZQ> <ID> <T_PROC_DER>
+    <T_PROC_IZQ> p=<ID> <T_PROC_DER>    {   lp = new ArrayList<String>(); 
+                                            lp.add(p.image);
+                                            return lp;
+                                        }
 }
