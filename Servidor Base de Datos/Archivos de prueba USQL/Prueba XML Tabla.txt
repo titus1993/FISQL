@@ -1,0 +1,15 @@
+<Row>
+	<Nombre_campo1> "1" </Nombre_campo1>
+	<Nombre_campo2> "Texto" </Nombre_campo2>
+	<Nombre_campo3> "True" </Nombre_campo3>
+</Row>
+<Row>
+	<Nombre_campo1> "2" </Nombre_campo1>
+	<objeto>
+		<campo1>"a"</campo1>
+		<campo2>"0"</campo2>
+		<campo3>"5.25"</campo3>
+	</objeto>
+	<Nombre_campo2> "Texto" </Nombre_campo2>
+	<Nombre_campo3> "False" </ Nombre_campo3>
+</Row>

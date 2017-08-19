@@ -11,41 +11,83 @@ public interface dbGrammarConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int DIVISION = 1;
+  int T_TABLA_IZQ = 1;
   /** RegularExpression Id. */
-  int FLECHA_IZQ = 2;
+  int T_PATH_IZQ = 2;
   /** RegularExpression Id. */
-  int FLECHA_IZQC = 3;
+  int T_OBJECT_IZQ = 3;
   /** RegularExpression Id. */
-  int FLECHA_DER = 4;
+  int T_PROCEDURE_IZQ = 4;
   /** RegularExpression Id. */
-  int T_TABLA = 5;
+  int T_FUNCION_IZQ = 5;
   /** RegularExpression Id. */
-  int T_PATH = 6;
+  int T_NOMBRE_IZQ = 6;
   /** RegularExpression Id. */
-  int T_OBJECT = 7;
+  int T_ROWS_IZQ = 7;
   /** RegularExpression Id. */
-  int T_PROCEDURE = 8;
+  int T_COMPLEMENTO_IZQ = 8;
   /** RegularExpression Id. */
-  int T_NOMBRE = 9;
+  int T_CAMPO_IZQ = 9;
   /** RegularExpression Id. */
-  int T_ROWS = 10;
+  int T_TABLA_DER = 10;
   /** RegularExpression Id. */
-  int T_TEXT = 11;
+  int T_PATH_DER = 11;
   /** RegularExpression Id. */
-  int T_INTEGER = 12;
+  int T_OBJECT_DER = 12;
   /** RegularExpression Id. */
-  int T_DOUBLE = 13;
+  int T_PROCEDURE_DER = 13;
   /** RegularExpression Id. */
-  int T_BOOL = 14;
+  int T_FUNCION_DER = 14;
   /** RegularExpression Id. */
-  int T_DATE = 15;
+  int T_NOMBRE_DER = 15;
   /** RegularExpression Id. */
-  int T_DATETIME = 16;
+  int T_ROWS_DER = 16;
   /** RegularExpression Id. */
-  int CADENA = 17;
+  int T_COMPLEMENTO_DER = 17;
   /** RegularExpression Id. */
-  int ID = 18;
+  int T_CAMPO_DER = 18;
+  /** RegularExpression Id. */
+  int T_NULO = 19;
+  /** RegularExpression Id. */
+  int T_NO_NULO = 20;
+  /** RegularExpression Id. */
+  int T_AUTOINCREMETABLE = 21;
+  /** RegularExpression Id. */
+  int T_LLAVE_PRIMARIA = 22;
+  /** RegularExpression Id. */
+  int T_FORANEA_IZQ = 23;
+  /** RegularExpression Id. */
+  int T_FORANEA_DER = 24;
+  /** RegularExpression Id. */
+  int T_TEXT_IZQ = 25;
+  /** RegularExpression Id. */
+  int T_INTEGER_IZQ = 26;
+  /** RegularExpression Id. */
+  int T_DOUBLE_IZQ = 27;
+  /** RegularExpression Id. */
+  int T_BOOL_IZQ = 28;
+  /** RegularExpression Id. */
+  int T_DATE_IZQ = 29;
+  /** RegularExpression Id. */
+  int T_DATETIME_IZQ = 30;
+  /** RegularExpression Id. */
+  int T_TEXT_DER = 31;
+  /** RegularExpression Id. */
+  int T_INTEGER_DER = 32;
+  /** RegularExpression Id. */
+  int T_DOUBLE_DER = 33;
+  /** RegularExpression Id. */
+  int T_BOOL_DER = 34;
+  /** RegularExpression Id. */
+  int T_DATE_DER = 35;
+  /** RegularExpression Id. */
+  int T_DATETIME_DER = 36;
+  /** RegularExpression Id. */
+  int CADENA = 37;
+  /** RegularExpression Id. */
+  int ID_IZQ = 38;
+  /** RegularExpression Id. */
+  int ID_DER = 39;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -53,24 +95,45 @@ public interface dbGrammarConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"/\"",
-    "\"<\"",
-    "\"</\"",
-    "\">\"",
-    "\"tabla\"",
-    "\"path\"",
-    "\"object\"",
-    "\"procedure\"",
-    "\"nombre\"",
-    "\"rows\"",
-    "\"text\"",
-    "\"integer\"",
-    "\"double\"",
-    "\"bool\"",
-    "\"date\"",
-    "\"datetime\"",
+    "<T_TABLA_IZQ>",
+    "<T_PATH_IZQ>",
+    "<T_OBJECT_IZQ>",
+    "<T_PROCEDURE_IZQ>",
+    "<T_FUNCION_IZQ>",
+    "<T_NOMBRE_IZQ>",
+    "<T_ROWS_IZQ>",
+    "<T_COMPLEMENTO_IZQ>",
+    "<T_CAMPO_IZQ>",
+    "<T_TABLA_DER>",
+    "<T_PATH_DER>",
+    "<T_OBJECT_DER>",
+    "<T_PROCEDURE_DER>",
+    "<T_FUNCION_DER>",
+    "<T_NOMBRE_DER>",
+    "<T_ROWS_DER>",
+    "<T_COMPLEMENTO_DER>",
+    "<T_CAMPO_DER>",
+    "\"nulo\"",
+    "\"no nulo\"",
+    "\"autoincrementable\"",
+    "\"llave_primaria\"",
+    "<T_FORANEA_IZQ>",
+    "<T_FORANEA_DER>",
+    "<T_TEXT_IZQ>",
+    "<T_INTEGER_IZQ>",
+    "<T_DOUBLE_IZQ>",
+    "<T_BOOL_IZQ>",
+    "<T_DATE_IZQ>",
+    "<T_DATETIME_IZQ>",
+    "<T_TEXT_DER>",
+    "<T_INTEGER_DER>",
+    "<T_DOUBLE_DER>",
+    "<T_BOOL_DER>",
+    "<T_DATE_DER>",
+    "<T_DATETIME_DER>",
     "<CADENA>",
-    "<ID>",
+    "<ID_IZQ>",
+    "<ID_DER>",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",

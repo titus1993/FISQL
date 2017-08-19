@@ -1,0 +1,194 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Usuario\\";
+
+}
+
+PARSER_BEGIN(usrGrammar)
+package Analisis.XML.Usuario;
+
+public class usrGrammar {
+  public static void main(String args[]) throws ParseException {
+    usrGrammar parser = new usrGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(usrGrammar)
+
+TOKEN:
+{
+    <T_USR_IZQ: ("<"(" ")*"usr")(" ")*">"> {System.out.println(image);}
+    |<T_USR_DER: ("<"(" ")*"/"(" ")*"usr")(" ")*">"> {System.out.println(image);}
+    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
+    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
+    |<T_PASS_IZQ: ("<"(" ")*"pass")(" ")*">"> {System.out.println(image);}
+    |<T_PASS_DER: ("<"(" ")*"/"(" ")*"pass")(" ")*">"> {System.out.println(image);}
+    |<T_TIPO_IZQ: ("<"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
+    |<T_TIPO_DER: ("<"(" ")*"/"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
+    |<T_ESTADO_IZQ: ("<"(" ")*"estado")(" ")*">"> {System.out.println(image);}
+    |<T_ESTADO_DER: ("<"(" ")*"/"(" ")*"estado")(" ")*">"> {System.out.println(image);}
+    |<T_SESION_IZQ: ("<"(" ")*"sesion")(" ")*">"> {System.out.println(image);}
+    |<T_SESION_DER: ("<"(" ")*"/"(" ")*"sesion")(" ")*">"> {System.out.println(image);}
+    |<T_PERMISOS_IZQ: ("<"(" ")*"permisos")(" ")*">"> {System.out.println(image);}
+    |<T_PERMISOS_DER: ("<"(" ")*"/"(" ")*"permisos")(" ")*">"> {System.out.println(image);}
+    |<T_DB_IZQ: ("<"(" ")*"db")(" ")*">"> {System.out.println(image);}
+    |<T_DB_DER: ("<"(" ")*"/"(" ")*"db")(" ")*">"> {System.out.println(image);}
+    |<T_FUNC_IZQ: ("<"(" ")*"func")(" ")*">"> {System.out.println(image);}
+    |<T_FUNC_DER: ("<"(" ")*"/"(" ")*"func")(" ")*">"> {System.out.println(image);}
+    |<T_OBJ_IZQ: ("<"(" ")*"obj")(" ")*">"> {System.out.println(image);}
+    |<T_OBJ_DER: ("<"(" ")*"/"(" ")*"obj")(" ")*">"> {System.out.println(image);}
+    |<T_PROC_IZQ: ("<"(" ")*"proc")(" ")*">"> {System.out.println(image);}
+    |<T_PROC_DER: ("<"(" ")*"/"(" ")*"proc")(" ")*">"> {System.out.println(image);}
+    |<T_TABLA_IZQ: ("<"(" ")*"tabla")(" ")*">"> {System.out.println(image);}
+    |<T_TABLA_DER: ("<"(" ")*"/"(" ")*"tabla")(" ")*">"> {System.out.println(image);}
+}
+
+TOKEN:
+{      
+    <T_ACTIVO: "activo"> {System.out.println(image);}
+    |<T_INACTIVO: "inactivo"> {System.out.println(image);}
+    |<T_ADMIN: "admin"> {System.out.println(image);}
+    |<T_USER: "user"> {System.out.println(image);}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+    |<CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    L_USR()
+    {System.out.println("Exito!!");}
+}
+
+void L_USR():
+{}
+{
+   USR() (L_USR())?
+}
+
+
+void USR():
+{}
+{
+    <T_USR_IZQ>
+        NOMBRE()
+        PASS()
+        TIPO()
+        ESTADO()
+        SESION()
+        PERMISOS()
+    <T_USR_DER>
+}
+
+void NOMBRE():
+{}
+{
+    <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
+}
+
+void PASS():
+{}
+{
+    <T_PASS_IZQ> <CADENA> <T_PASS_DER>
+}
+
+void TIPO():
+{}
+{
+    <T_TIPO_IZQ> (<T_ADMIN> | <T_USER>) <T_TIPO_DER>
+}
+
+void ESTADO():
+{}
+{
+    <T_ESTADO_IZQ> (<T_ACTIVO>|<T_INACTIVO>) <T_ESTADO_DER>
+}
+
+void SESION():
+{}
+{
+    <T_SESION_IZQ> <CADENA> <T_SESION_DER>
+}
+
+
+void PERMISOS():
+{}
+{
+    <T_PERMISOS_IZQ> 
+        (L_DB())?               
+    <T_PERMISOS_DER>
+}
+
+void L_DB():
+{}
+{
+    DB() (L_DB())?
+}
+
+void DB():
+{}
+{
+    <T_DB_IZQ>
+    <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
+    (L_TABLA())?
+    (L_OBJETO())?
+    (L_FUNC())?
+    (L_PROC())?
+    <T_DB_DER>
+}
+
+void L_TABLA():
+{}
+{
+    TABLA() (L_TABLA())?
+}
+
+void TABLA():
+{}
+{
+    <T_TABLA_IZQ> <ID> <T_TABLA_DER>
+}
+
+void L_OBJETO():
+{}
+{
+    OBJETO() (L_OBJETO())?
+}
+
+void OBJETO():
+{}
+{
+    <T_OBJ_IZQ> <ID> <T_OBJ_DER>
+}
+
+void L_FUNC():
+{}
+{
+    FUNC() (L_FUNC())?
+}
+
+void FUNC():
+{}
+{
+    <T_FUNC_IZQ> <ID> <T_FUNC_DER>
+}
+void L_PROC():
+{}
+{
+    PROC() (L_PROC())?
+}
+
+void PROC():
+{}
+{
+    <T_PROC_IZQ> <ID> <T_PROC_DER>
+}

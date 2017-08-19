@@ -533,7 +533,7 @@ void LLAMADA_OBJETO():
 {}
 {
     //LLAMADA A COLUMNA, TABLA.COLUMNA O FUNCION
-    <ID> ((<PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>) | <PUNTO> <ID>)?
+    <ID> ((<PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>) | (<PUNTO> <ID>(<PUNTO> <ID>)?))?
 }
 
 void L_EXPRESIONES():
@@ -583,10 +583,16 @@ void T():
 void G():
 {}
 {
-    H() (<POTENCIA> G())?
+    (<MENOS>)? H() 
 }
 
 void H():
+{}
+{
+    I() (<POTENCIA> H())?
+}
+
+void I():
 {}
 {
     <CADENA>

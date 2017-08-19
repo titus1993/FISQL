@@ -1,0 +1,15 @@
+<Obj>
+< nombre >nombre_obj1</ nombre >
+<attr>
+<int>Nombre_param1</int>
+<text>Nombre_param2</text>
+<bool>Nombre_param3</bool>
+</attr>
+</ Obj >
+
+<Obj>
+< nombre >nombre_obj2</ nombre >
+<attr>
+<int>Nombre_param1</int>
+</attr>
+</ Obj >

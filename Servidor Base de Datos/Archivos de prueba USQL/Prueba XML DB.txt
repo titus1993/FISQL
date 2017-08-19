@@ -1,0 +1,25 @@
+<Procedure>
+	<path>"C:/Documentos/BD/proc.usac"</path>
+</Procedure>
+<Object>
+	<path>"C:/Documentos/BD/obj.usac"</path>
+</Object>
+<Tabla>
+	<nombre>"nombre_tabla1"</nombre>
+	<path>"C:/Documentos/BD/nombre_tabla1.usac"</path>
+	<rows>
+		<campo>
+			<integer>"Nombre_campo1"</integer>
+			<complemento>nulo</complemento> 
+			<complemento>
+				<foranea>"titus"</foranea>
+			</complemento>
+		</campo>
+		<campo>
+			<text>"Nombre_campo2"</text>
+		</campo>
+		<campo>
+			<bool>"Nombre_campo3"</bool>
+		</campo>
+	</rows>
+</Tabla>

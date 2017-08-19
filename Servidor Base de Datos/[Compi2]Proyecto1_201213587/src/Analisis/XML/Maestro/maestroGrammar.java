@@ -17,7 +17,7 @@ System.out.println("Exito!!");
   final public void L_DB() throws ParseException {
     DB();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case FLECHA_IZQ:{
+    case T_DB_IZQ:{
       L_DB();
       break;
       }
@@ -28,29 +28,14 @@ System.out.println("Exito!!");
   }
 
   final public void DB() throws ParseException {
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(T_DB);
-    jj_consume_token(FLECHA_DER);
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(T_NOMBRE);
-    jj_consume_token(FLECHA_DER);
+    jj_consume_token(T_DB_IZQ);
+    jj_consume_token(T_NOMBRE_IZQ);
     jj_consume_token(CADENA);
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(DIVISION);
-    jj_consume_token(T_NOMBRE);
-    jj_consume_token(FLECHA_DER);
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(T_PATH);
-    jj_consume_token(FLECHA_DER);
+    jj_consume_token(T_NOMBRE_DER);
+    jj_consume_token(T_PATH_IZQ);
     jj_consume_token(CADENA);
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(DIVISION);
-    jj_consume_token(T_PATH);
-    jj_consume_token(FLECHA_DER);
-    jj_consume_token(FLECHA_IZQ);
-    jj_consume_token(DIVISION);
-    jj_consume_token(T_DB);
-    jj_consume_token(FLECHA_DER);
+    jj_consume_token(T_PATH_DER);
+    jj_consume_token(T_DB_DER);
   }
 
   /** Generated Token Manager. */
@@ -68,7 +53,7 @@ System.out.println("Exito!!");
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4,};
+      jj_la1_0 = new int[] {0x2,};
    }
 
   /** Constructor with InputStream. */

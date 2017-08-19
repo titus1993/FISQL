@@ -188,7 +188,8 @@ System.out.println("etntro llamada imprimr");
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_OTORGAR:{
       jj_consume_token(T_OTORGAR);
-      L_ID();
+      jj_consume_token(ID);
+      jj_consume_token(COMA);
       jj_consume_token(ID);
       jj_consume_token(PUNTO);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -210,7 +211,8 @@ System.out.println("etntro llamada imprimr");
       }
     case T_DENEGAR:{
       jj_consume_token(T_DENEGAR);
-      L_ID();
+      jj_consume_token(ID);
+      jj_consume_token(COMA);
       jj_consume_token(ID);
       jj_consume_token(PUNTO);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -296,6 +298,7 @@ System.out.println("etntro llamada imprimr");
     jj_consume_token(ID);
     jj_consume_token(PAR_IZQ);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MENOS:
     case NOT:
     case T_FECHA:
     case T_FECHA_HORA:
@@ -1235,6 +1238,7 @@ System.out.println("etntro llamada imprimr");
       case PAR_IZQ:{
         jj_consume_token(PAR_IZQ);
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case MENOS:
         case NOT:
         case T_FECHA:
         case T_FECHA_HORA:
@@ -1257,17 +1261,27 @@ System.out.println("etntro llamada imprimr");
       case PUNTO:{
         jj_consume_token(PUNTO);
         jj_consume_token(ID);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case PUNTO:{
+          jj_consume_token(PUNTO);
+          jj_consume_token(ID);
+          break;
+          }
+        default:
+          jj_la1[50] = jj_gen;
+          ;
+        }
         break;
         }
       default:
-        jj_la1[50] = jj_gen;
+        jj_la1[51] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
       }
     default:
-      jj_la1[51] = jj_gen;
+      jj_la1[52] = jj_gen;
       ;
     }
   }
@@ -1281,7 +1295,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[52] = jj_gen;
+      jj_la1[53] = jj_gen;
       ;
     }
   }
@@ -1295,7 +1309,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[53] = jj_gen;
+      jj_la1[54] = jj_gen;
       ;
     }
   }
@@ -1309,7 +1323,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[54] = jj_gen;
+      jj_la1[55] = jj_gen;
       ;
     }
   }
@@ -1321,7 +1335,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[55] = jj_gen;
+      jj_la1[56] = jj_gen;
       ;
     }
     RELACIONAL();
@@ -1362,7 +1376,7 @@ System.out.println("etntro llamada imprimr");
         break;
         }
       default:
-        jj_la1[56] = jj_gen;
+        jj_la1[57] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1370,7 +1384,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[57] = jj_gen;
+      jj_la1[58] = jj_gen;
       ;
     }
   }
@@ -1392,14 +1406,14 @@ System.out.println("etntro llamada imprimr");
         break;
         }
       default:
-        jj_la1[58] = jj_gen;
+        jj_la1[59] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
       }
     default:
-      jj_la1[59] = jj_gen;
+      jj_la1[60] = jj_gen;
       ;
     }
   }
@@ -1421,24 +1435,10 @@ System.out.println("etntro llamada imprimr");
         break;
         }
       default:
-        jj_la1[60] = jj_gen;
+        jj_la1[61] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-      break;
-      }
-    default:
-      jj_la1[61] = jj_gen;
-      ;
-    }
-  }
-
-  final public void G() throws ParseException {
-    H();
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case POTENCIA:{
-      jj_consume_token(POTENCIA);
-      G();
       break;
       }
     default:
@@ -1447,7 +1447,34 @@ System.out.println("etntro llamada imprimr");
     }
   }
 
+  final public void G() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MENOS:{
+      jj_consume_token(MENOS);
+      break;
+      }
+    default:
+      jj_la1[63] = jj_gen;
+      ;
+    }
+    H();
+  }
+
   final public void H() throws ParseException {
+    I();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case POTENCIA:{
+      jj_consume_token(POTENCIA);
+      H();
+      break;
+      }
+    default:
+      jj_la1[64] = jj_gen;
+      ;
+    }
+  }
+
+  final public void I() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case CADENA:{
       jj_consume_token(CADENA);
@@ -1470,7 +1497,7 @@ System.out.println("etntro llamada imprimr");
         break;
         }
       default:
-        jj_la1[63] = jj_gen;
+        jj_la1[65] = jj_gen;
         ;
       }
       break;
@@ -1486,7 +1513,7 @@ System.out.println("etntro llamada imprimr");
       break;
       }
     default:
-      jj_la1[64] = jj_gen;
+      jj_la1[66] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1501,7 +1528,7 @@ System.out.println("etntro llamada imprimr");
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[65];
+  final private int[] jj_la1 = new int[67];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -1513,16 +1540,16 @@ System.out.println("etntro llamada imprimr");
       jj_la1_init_3();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x8,0x8,0x0,0x0,0x20000000,0x0,0x0,0x8000,0x0,0xc0000000,0x0,0x0,0x8000,0xc0000000,0xc0000000,0x8000,0xc0000000,0x0,0x0,0x8000,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x20000,0xc0000000,0x8000,0x40000,0x0,0x0,0x0,0x0,0xc0,0x0,0x0,0x0,0x20000000,0x40100,0x40100,0x8000,0x10000000,0x8000000,0x20000000,0x7e00000,0x7e00000,0x6,0x6,0x18,0x18,0x20,0x40000,0x0,};
+      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x8,0x8,0x0,0x0,0x20000004,0x0,0x0,0x8000,0x0,0xc0000000,0x0,0x0,0x8000,0xc0000000,0xc0000000,0x8000,0xc0000000,0x0,0x0,0x8000,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x20000,0xc0000000,0x8000,0x40000,0x0,0x0,0x0,0x0,0xc0,0x0,0x0,0x0,0x20000004,0x40000,0x40100,0x40100,0x8000,0x10000000,0x8000000,0x20000000,0x7e00000,0x7e00000,0x6,0x6,0x18,0x18,0x4,0x20,0x40000,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x6b180010,0x6b180010,0x6b180010,0x1180010,0x6a000000,0x0,0x0,0x0,0x8000,0x0,0x11060,0x17060,0x0,0xf80,0xf,0xf80,0xf80,0x0,0xf,0xf,0x0,0xf,0x11040,0x600000,0x0,0x600000,0x11060,0x0,0x10000000,0x10000000,0x0,0x10000000,0x0,0x0,0x6a008000,0x6a008000,0x6a008000,0x0,0xf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0x6b180010,0x6b180010,0x6b180010,0x1180010,0x6a000000,0x0,0x0,0x0,0x8000,0x0,0x11060,0x17060,0x0,0xf80,0xf,0xf80,0xf80,0x0,0xf,0xf,0x0,0xf,0x11040,0x600000,0x0,0x600000,0x11060,0x0,0x10000000,0x10000000,0x0,0x10000000,0x0,0x0,0x6a008000,0x6a008000,0x6a008000,0x0,0xf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x43c4038,0x43c4038,0x43c4038,0x3c0000,0x0,0x4000000,0x4000000,0x18,0xc007960,0xec38000,0x0,0x0,0x0,0x0,0x4000000,0x0,0x0,0x0,0x0,0x4000000,0x0,0x4000000,0x0,0x0,0x0,0x0,0x0,0x4000000,0x0,0x0,0x4000000,0x0,0x6,0x1,0xc007978,0xc007978,0xc007978,0x0,0x4000000,0x0,0x0,0x80,0x200,0x400,0x2c00000,0x0,0xc0000,0x300000,0x38000,0xec38000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xec38000,};
+      jj_la1_2 = new int[] {0x43c4038,0x43c4038,0x43c4038,0x3c0000,0x0,0x4000000,0x4000000,0x18,0xc007960,0xec38000,0x0,0x0,0x0,0x0,0x4000000,0x0,0x0,0x0,0x0,0x4000000,0x0,0x4000000,0x0,0x0,0x0,0x0,0x0,0x4000000,0x0,0x0,0x4000000,0x0,0x6,0x1,0xc007978,0xc007978,0xc007978,0x0,0x4000000,0x0,0x0,0x80,0x200,0x400,0x2c00000,0x0,0xc0000,0x300000,0x38000,0xec38000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xec38000,};
    }
    private static void jj_la1_init_3() {
-      jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1536,7 +1563,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1550,7 +1577,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1560,7 +1587,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1570,7 +1597,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1579,7 +1606,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1588,7 +1615,7 @@ System.out.println("etntro llamada imprimr");
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 65; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 67; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1644,7 +1671,7 @@ System.out.println("etntro llamada imprimr");
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 65; i++) {
+    for (int i = 0; i < 67; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

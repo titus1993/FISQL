@@ -16,21 +16,15 @@ public class maestroGrammar {
 }
 PARSER_END(maestroGrammar)
 
-
-TOKEN:
-{
-    <DIVISION:"/">{System.out.println(image);}
-    |<FLECHA_IZQ:"<">{System.out.println(image);}
-    |<FLECHA_DER:">">{System.out.println(image);}
-}
-
-
 TOKEN:
 {
   
-  <T_DB: ("db")> {System.out.println(image);}
-  |<T_PATH: ("path")> {System.out.println(image);}
-  |<T_NOMBRE: ("nombre")> {System.out.println(image);}
+    <T_DB_IZQ: ("<"(" ")*"db"(" ")*">")> {System.out.println(image);}
+    |<T_PATH_IZQ: ("<"(" ")*"path"(" ")*">")> {System.out.println(image);}
+    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre"(" ")*">")> {System.out.println(image);}
+    |<T_DB_DER: ("<"(" ")*"/"(" ")*"db"(" ")*">")> {System.out.println(image);}
+    |<T_PATH_DER: ("<"(" ")*"/"(" ")*"path"(" ")*">")> {System.out.println(image);}
+    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre"(" ")*">")> {System.out.println(image);}
 }
 
 TOKEN:
@@ -62,12 +56,12 @@ void L_DB():
 void DB():
 {}
 {
-    <FLECHA_IZQ> <T_DB> <FLECHA_DER> 
-        <FLECHA_IZQ> <T_NOMBRE> <FLECHA_DER> 
+    <T_DB_IZQ> 
+        <T_NOMBRE_IZQ> 
             <CADENA>
-        <FLECHA_IZQ> <DIVISION> <T_NOMBRE> <FLECHA_DER>
-        <FLECHA_IZQ> <T_PATH> <FLECHA_DER> 
+        <T_NOMBRE_DER>
+        <T_PATH_IZQ> 
             <CADENA>
-        <FLECHA_IZQ> <DIVISION> <T_PATH> <FLECHA_DER>
-    <FLECHA_IZQ> <DIVISION> <T_DB> <FLECHA_DER>
+        <T_PATH_DER>
+    <T_DB_DER>
 }

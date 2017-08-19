@@ -1,0 +1,146 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Funcion\\";
+
+}
+
+PARSER_BEGIN(funcGrammar)
+package Analisis.XML.Funcion;
+
+public class funcGrammar {
+  public static void main(String args[]) throws ParseException {
+    funcGrammar parser = new funcGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(funcGrammar)
+
+TOKEN:
+{
+    <T_FUNC_IZQ: ("<"(" ")*"func")(" ")*">"> {System.out.println(image);}
+    |<T_FUNC_DER: ("<"(" ")*"/"(" ")*"func")(" ")*">"> {System.out.println(image);}
+    |<T_PARAMS_IZQ: ("<"(" ")*"params")(" ")*">"> {System.out.println(image);}
+    |<T_PARAMS_DER: ("<"(" ")*"/"(" ")*"params")(" ")*">"> {System.out.println(image);}
+    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
+    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre")(" ")*">"> {System.out.println(image);}
+    |<T_TIPO_IZQ: ("<"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
+    |<T_TIPO_DER: ("<"(" ")*"/"(" ")*"tipo")(" ")*">"> {System.out.println(image);}
+    |<T_SRC_IZQ: ("<"(" ")*"src")(" ")*">"> {System.out.println(image);}
+    |<T_SRC_DER: ("<"(" ")*"/"(" ")*"src")(" ")*">"> {System.out.println(image);}
+}
+
+TOKEN:
+{
+  
+    <T_TEXT_IZQ: ("<"(" ")*"text"(" ")*">")> {System.out.println(image);}
+    |<T_INTEGER_IZQ: ("<"(" ")*"integer"(" ")*">")> {System.out.println(image);}
+    |<T_DOUBLE_IZQ: ("<"(" ")*"double"(" ")*">")> {System.out.println(image);}
+    |<T_BOOL_IZQ:("<"(" ")*"bool"(" ")*">")> {System.out.println(image);}
+    |<T_DATE_IZQ: ("<"(" ")*"date"(" ")*">")> {System.out.println(image);}
+    |<T_DATETIME_IZQ: ("<"(" ")*"datetime"(" ")*">")> {System.out.println(image);}
+    |<T_TEXT_DER: ("<"(" ")*"/"(" ")*"text"(" ")*">")> {System.out.println(image);}
+    |<T_INTEGER_DER: ("<"(" ")*"/"(" ")*"integer"(" ")*">")> {System.out.println(image);}
+    |<T_DOUBLE_DER: ("<"(" ")*"/"(" ")*"double"(" ")*">")> {System.out.println(image);}
+    |<T_BOOL_DER:("<"(" ")*"/"(" ")*"bool"(" ")*">")> {System.out.println(image);}
+    |<T_DATE_DER: ("<"(" ")*"/"(" ")*"date"(" ")*">")> {System.out.println(image);}
+    |<T_DATETIME_DER: ("<"(" ")*"/"(" ")*"datetime"(" ")*">")> {System.out.println(image);}
+}
+
+TOKEN:
+{
+  
+  <T_TEXT: ("text")> {System.out.println(image);}
+  |<T_INTEGER: ("integer")> {System.out.println(image);}
+  |<T_DOUBLE: ("double")> {System.out.println(image);}
+  |<T_BOOL:("bool")> {System.out.println(image);}
+  |<T_DATE: ("date")> {System.out.println(image);}
+  |<T_DATETIME: ("datetime")> {System.out.println(image);}
+}
+
+TOKEN:
+{  
+    <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    |<SRC:"\u00a7" (~["\u00a7"])*"\u00a7"> {System.out.println(image);}
+    |<ID_IZQ: ("<"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
+    |<ID_DER: ("<"(" ")*"/"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
+    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+     
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+void S():
+{}
+{   {System.out.println("Comienza!!");}
+    L_FUNC()
+    {System.out.println("Exito!!");}
+}
+
+void L_FUNC():
+{}
+{
+   FUNC() (L_FUNC())?
+}
+
+
+void FUNC():
+{}
+{
+    <T_FUNC_IZQ>
+        TIPO()
+        NOMBRE()
+        (<T_PARAMS_IZQ> L_PARAMS() <T_PARAMS_DER>)?
+        SRC()
+    <T_FUNC_DER>
+}
+void TIPO():
+{}
+{
+    <T_TIPO_IZQ>
+    (
+    <T_TEXT>
+    |<T_INTEGER>
+    |<T_DOUBLE>
+    |<T_BOOL>
+    |<T_DATE>
+    |<T_DATETIME>
+    |<ID>
+    )
+    <T_TIPO_DER>
+}
+void NOMBRE():
+{}
+{
+    <T_NOMBRE_IZQ> <CADENA> <T_NOMBRE_DER>
+}
+
+void L_PARAMS():
+{}
+{
+    PARAMS() (L_PARAMS())?
+}
+
+void PARAMS():
+{}
+{    
+    (<T_TEXT_IZQ> <CADENA> <T_TEXT_DER>
+    |<T_INTEGER_IZQ> <CADENA> <T_INTEGER_DER>
+    |<T_DOUBLE_IZQ> <CADENA> <T_DOUBLE_DER>
+    |<T_BOOL_IZQ> <CADENA> <T_BOOL_DER>
+    |<T_DATE_IZQ> <CADENA> <T_DATE_DER>
+    |<T_DATETIME_IZQ> <CADENA> <T_DATETIME_DER>    
+    |<ID_IZQ> <CADENA> <ID_DER>)
+}
+
+void SRC():
+{}
+{
+    <T_SRC_IZQ> <SRC> <T_SRC_DER>
+}

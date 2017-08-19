@@ -1,0 +1,35 @@
+<usr>
+	<nombre>user1</nombre>
+	<pass>"123."</pass>
+	<tipo>admin</tipo>
+	<estado>activo</estado>
+	<sesion>"10/10/2010 00:00:00"</sesion>
+	<permisos>
+		
+	</permisos>
+</usr>
+
+<usr>
+	<nombre>user2</nombre>
+	<pass>"123."</pass>
+	<tipo>user</tipo>
+	<estado>inactivo</estado>
+	<sesion>"10/10/2010 00:00:00"</sesion>
+	<permisos>
+		<db>
+			<nombre>base1</nombre>
+			<tabla>tabla1</tabla>
+			<tabla>tabla2</tabla>
+			<obj>obj1</obj>
+			<func>fun1</func>
+			<proc>proc1</proc>
+		</db>
+		<db>
+			<nombre>base2</nombre>
+			<tabla>tabla1</tabla>
+			<tabla>tabla2</tabla>
+			<func>fun1</func>
+			<proc>proc1</proc>
+		</db>
+	</permisos>
+</usr>

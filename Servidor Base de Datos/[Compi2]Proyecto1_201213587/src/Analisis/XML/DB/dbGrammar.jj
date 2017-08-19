@@ -19,39 +19,57 @@ PARSER_END(dbGrammar)
 
 TOKEN:
 {
-    <DIVISION:"/">{System.out.println(image);}
-    |<FLECHA_IZQ:"<">{System.out.println(image);}
-    |<FLECHA_IZQC: "</">{System.out.println(image);}
-    |<FLECHA_DER:">">{System.out.println(image);}
-}
+  
+    <T_TABLA_IZQ: ("<"(" ")*"tabla"(" ")*">")> {System.out.println(image);}
+    |<T_PATH_IZQ: ("<"(" ")*"path"(" ")*">")> {System.out.println(image);}
+    |<T_OBJECT_IZQ: ("<"(" ")*"object"(" ")*">")> {System.out.println(image);}
+    |<T_PROCEDURE_IZQ: ("<"(" ")*"procedure"(" ")*">")> {System.out.println(image);}
+    |<T_FUNCION_IZQ: ("<"(" ")*"funcion"(" ")*">")> {System.out.println(image);}
+    |<T_NOMBRE_IZQ: ("<"(" ")*"nombre"(" ")*">")> {System.out.println(image);}
+    |<T_ROWS_IZQ: ("<"(" ")*"rows"(" ")*">")> {System.out.println(image);}
+    |<T_COMPLEMENTO_IZQ: ("<"(" ")*"complemento"(" ")*">")> {System.out.println(image);}
+    |<T_CAMPO_IZQ: ("<"(" ")*"campo"(" ")*">")> {System.out.println(image);}
+    |<T_TABLA_DER: ("<"(" ")*"/"(" ")*"tabla"(" ")*">")> {System.out.println(image);}
+    |<T_PATH_DER: ("<"(" ")*"/"(" ")*"path"(" ")*">")> {System.out.println(image);}
+    |<T_OBJECT_DER: ("<"(" ")*"/"(" ")*"object"(" ")*">")> {System.out.println(image);}
+    |<T_PROCEDURE_DER: ("<"(" ")*"/"(" ")*"procedure"(" ")*">")> {System.out.println(image);}
+    |<T_FUNCION_DER: ("<"(" ")*"/"(" ")*"funcion"(" ")*">")> {System.out.println(image);}
+    |<T_NOMBRE_DER: ("<"(" ")*"/"(" ")*"nombre"(" ")*">")> {System.out.println(image);}
+    |<T_ROWS_DER: ("<"(" ")*"/"(" ")*"rows"(" ")*">")> {System.out.println(image);}
+    |<T_COMPLEMENTO_DER: ("<"(" ")*"/"(" ")*"complemento"(" ")*">")> {System.out.println(image);}
+    |<T_CAMPO_DER: ("<"(" ")*"/"(" ")*"campo"(" ")*">")> {System.out.println(image);}
 
+    |<T_NULO:("nulo")> {System.out.println(image);}
+    |<T_NO_NULO:("no nulo")> {System.out.println(image);}
+    |<T_AUTOINCREMETABLE:("autoincrementable")> {System.out.println(image);}
+    |<T_LLAVE_PRIMARIA:("llave_primaria")> {System.out.println(image);}
+    |<T_FORANEA_IZQ:("<"(" ")*"foranea"(" ")*">")> {System.out.println(image);}
+    |<T_FORANEA_DER:("<"(" ")*"/"(" ")*"foranea"(" ")*">")> {System.out.println(image);}
+    
+}
 
 TOKEN:
 {
   
-    <T_TABLA: ("tabla")> {System.out.println(image);}
-    |<T_PATH: ("path")> {System.out.println(image);}
-    |<T_OBJECT: ("object")> {System.out.println(image);}
-    |<T_PROCEDURE: ("procedure")> {System.out.println(image);}
-    |<T_NOMBRE: ("nombre")> {System.out.println(image);}
-    |<T_ROWS: ("rows")> {System.out.println(image);}
-}
-
-TOKEN:
-{
-  
-  <T_TEXT: ("text")> {System.out.println(image);}
-  |<T_INTEGER: ("integer")> {System.out.println(image);}
-  |<T_DOUBLE: ("double")> {System.out.println(image);}
-  |<T_BOOL:("bool")> {System.out.println(image);}
-  |<T_DATE: ("date")> {System.out.println(image);}
-  |<T_DATETIME: ("datetime")> {System.out.println(image);}
+    <T_TEXT_IZQ: ("<"(" ")*"text"(" ")*">")> {System.out.println(image);}
+    |<T_INTEGER_IZQ: ("<"(" ")*"integer"(" ")*">")> {System.out.println(image);}
+    |<T_DOUBLE_IZQ: ("<"(" ")*"double"(" ")*">")> {System.out.println(image);}
+    |<T_BOOL_IZQ:("<"(" ")*"bool"(" ")*">")> {System.out.println(image);}
+    |<T_DATE_IZQ: ("<"(" ")*"date"(" ")*">")> {System.out.println(image);}
+    |<T_DATETIME_IZQ: ("<"(" ")*"datetime"(" ")*">")> {System.out.println(image);}
+    |<T_TEXT_DER: ("<"(" ")*"/"(" ")*"text"(" ")*">")> {System.out.println(image);}
+    |<T_INTEGER_DER: ("<"(" ")*"/"(" ")*"integer"(" ")*">")> {System.out.println(image);}
+    |<T_DOUBLE_DER: ("<"(" ")*"/"(" ")*"double"(" ")*">")> {System.out.println(image);}
+    |<T_BOOL_DER:("<"(" ")*"/"(" ")*"bool"(" ")*">")> {System.out.println(image);}
+    |<T_DATE_DER: ("<"(" ")*"/"(" ")*"date"(" ")*">")> {System.out.println(image);}
+    |<T_DATETIME_DER: ("<"(" ")*"/"(" ")*"datetime"(" ")*">")> {System.out.println(image);}
 }
 
 TOKEN:
 {  
     <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
-    |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
+    |<ID_IZQ: ("<"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
+    |<ID_DER: ("<"(" ")*"/"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
     
 }
 
@@ -66,77 +84,82 @@ SKIP:
 void S():
 {}
 {   {System.out.println("Comienza!!");}
-    L_C()
+    DB()
     {System.out.println("Exito!!");}
 }
 
-void L_C():
+
+void DB():
 {}
 {
-   C() (L_C())?
-}
-
-
-void C():
-{}
-{
-    PC()
-}
-
-void PC():
-{}
-{
-    <FLECHA_IZQ> (PROCEDURE() | OBJECT() | TABLA()) <FLECHA_DER>
+    PROCEDURE() 
+    OBJECT()
+    (L_TABLA())?
 }
 
 void PROCEDURE():
 {}
 {
-    <T_PROCEDURE> <FLECHA_DER> 
+    <T_PROCEDURE_IZQ> 
         PATH()
-    <FLECHA_IZQC> <T_PROCEDURE>  
+    <T_PROCEDURE_DER>  
+}
+
+void FUNCION():
+{}
+{
+    <T_FUNCION_IZQ> 
+        PATH()
+    <T_FUNCION_DER>  
 }
 
 void OBJECT():
 {}
 {
-    <T_OBJECT> <FLECHA_DER> 
+    <T_OBJECT_IZQ> 
         PATH()
-    <FLECHA_IZQC> <T_OBJECT>  
+    <T_OBJECT_DER>  
 }
 
 void PATH():
 {}
 {
-    <FLECHA_IZQ> <T_PATH> <FLECHA_DER> 
+    <T_PATH_IZQ> 
         <CADENA>
-    <FLECHA_IZQC> <T_PATH> <FLECHA_DER>
+    <T_PATH_DER>
+}
+
+
+void L_TABLA():
+{}
+{
+    TABLA() (L_TABLA())?
 }
 
 void TABLA():
 {}
 {
-    <T_TABLA> <FLECHA_DER> 
+    <T_TABLA_IZQ> 
         NOMBRE() 
         PATH()
         ROWS()
-    <FLECHA_IZQC> <T_TABLA> 
+    <T_TABLA_DER> 
 }
 
 void NOMBRE():
 {}
 {
-    <FLECHA_IZQ> <T_NOMBRE> <FLECHA_DER> 
+    <T_NOMBRE_IZQ> 
         <CADENA>
-    <FLECHA_IZQC> <T_NOMBRE> <FLECHA_DER>
+    <T_NOMBRE_DER>
 }
 
 void ROWS():
 {}
 {
-    <FLECHA_IZQ> <T_ROWS> <FLECHA_DER> 
+    <T_ROWS_IZQ> 
         L_CAMPOS()
-    <FLECHA_IZQC> <T_ROWS> <FLECHA_DER>
+    <T_ROWS_DER>
 }
 
 void L_CAMPOS():
@@ -148,13 +171,39 @@ void L_CAMPOS():
 void CAMPO():
 {}
 {
-    <FLECHA_IZQ>
-        (<T_INTEGER> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_INTEGER>
-        |<T_TEXT> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_TEXT>
-        |<T_DOUBLE> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DOUBLE>
-        |<T_BOOL> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_BOOL>
-        |<T_DATE> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DATE>
-        |<T_DATETIME> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <T_DATETIME>
-        |<ID> <FLECHA_DER> <CADENA> <FLECHA_IZQC> <ID>)
-    <FLECHA_DER>
+    <T_CAMPO_IZQ> 
+        (<T_INTEGER_IZQ> <CADENA> <T_INTEGER_DER>
+        |<T_TEXT_IZQ> <CADENA> <T_TEXT_DER>
+        |<T_DOUBLE_IZQ> <CADENA> <T_DOUBLE_DER>
+        |<T_BOOL_IZQ> <CADENA> <T_BOOL_DER>
+        |<T_DATE_IZQ> <CADENA> <T_DATE_DER>
+        |<T_DATETIME_IZQ> <CADENA> <T_DATETIME_DER>
+        |<ID_IZQ> <CADENA> <ID_DER>) 
+            (L_COMPLEMENTO())?        
+    <T_CAMPO_DER>
+    
+}
+
+void L_COMPLEMENTO():
+{}
+{
+    COMPLEMENTO() (L_COMPLEMENTO())?
+}
+
+void COMPLEMENTO():
+{}
+{
+    <T_COMPLEMENTO_IZQ>
+        (<T_NULO>
+        |<T_NO_NULO>
+        |<T_AUTOINCREMETABLE>
+        |<T_LLAVE_PRIMARIA>
+        |FORANEA())
+    <T_COMPLEMENTO_DER>
+}
+
+void FORANEA():
+{}
+{
+    <T_FORANEA_IZQ> <CADENA> <T_FORANEA_DER>
 }

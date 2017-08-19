@@ -11,17 +11,17 @@ public interface maestroGrammarConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int DIVISION = 1;
+  int T_DB_IZQ = 1;
   /** RegularExpression Id. */
-  int FLECHA_IZQ = 2;
+  int T_PATH_IZQ = 2;
   /** RegularExpression Id. */
-  int FLECHA_DER = 3;
+  int T_NOMBRE_IZQ = 3;
   /** RegularExpression Id. */
-  int T_DB = 4;
+  int T_DB_DER = 4;
   /** RegularExpression Id. */
-  int T_PATH = 5;
+  int T_PATH_DER = 5;
   /** RegularExpression Id. */
-  int T_NOMBRE = 6;
+  int T_NOMBRE_DER = 6;
   /** RegularExpression Id. */
   int CADENA = 7;
 
@@ -31,12 +31,12 @@ public interface maestroGrammarConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"/\"",
-    "\"<\"",
-    "\">\"",
-    "\"db\"",
-    "\"path\"",
-    "\"nombre\"",
+    "<T_DB_IZQ>",
+    "<T_PATH_IZQ>",
+    "<T_NOMBRE_IZQ>",
+    "<T_DB_DER>",
+    "<T_PATH_DER>",
+    "<T_NOMBRE_DER>",
     "<CADENA>",
     "\" \"",
     "\"\\n\"",
