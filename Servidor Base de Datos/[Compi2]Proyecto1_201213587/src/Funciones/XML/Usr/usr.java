@@ -23,10 +23,11 @@ public class usr {
 
     public usr(String _name, String _pass, int _type, int _state, String _sesion, ArrayList<permisosUsr> _permisos) {
         name = _name;
-        pass = _pass;
+        pass = _pass.substring(1, _pass.length()-1);
         type = _type;
         state = _state;
-
+        _sesion = _sesion.substring(1, _sesion.length()-1);
+        
         try {
             sesion = Tools.formatoFecha.parse(_sesion);
         } catch (ParseException e) {

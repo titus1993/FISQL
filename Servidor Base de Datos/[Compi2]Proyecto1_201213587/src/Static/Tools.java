@@ -17,5 +17,5 @@ public class Tools {
     public static String localDb = "C:\\FISQL_DB\\DB";
     public static String localMaestroXml = "C:\\FISQL_DB\\maestro.xml";
     
-    public static SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    public static SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 }

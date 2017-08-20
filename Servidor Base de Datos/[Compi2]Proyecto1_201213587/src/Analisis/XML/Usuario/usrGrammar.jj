@@ -8,6 +8,7 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(usrGrammar)
 package Analisis.XML.Usuario;
 import java.util.ArrayList;
+import Funciones.XML.Usr.*;
 
 
 public class usrGrammar {
@@ -48,10 +49,8 @@ TOKEN:
 
 TOKEN:
 {      
-    <T_ACTIVO: "activo"> {/*System.out.println(image);*/}
-    |<T_INACTIVO: "inactivo"> {/*System.out.println(image);*/}
-    |<T_ADMIN: "admin"> {/*System.out.println(image);*/}
-    |<T_USER: "user"> {/*System.out.println(image);*/}
+    <T_UNO: "1"> {/*System.out.println(image);*/}
+    |<T_CERO: "0"> {/*System.out.println(image);*/}
     |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {/*System.out.println(image);*/}
     |<CADENA:"\"" (~["\""])*"\""> {/*System.out.println(image);*/}
 }
@@ -64,118 +63,150 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<usr> S():
+{ArrayList<usr> us = new ArrayList<usr>();}
 {   {System.out.println("Comienza!!");}
-    L_USR()
+    us=L_USR(){return us;}
     {System.out.println("Exito!!");}
 }
 
-void L_USR():
-{}
+ArrayList<usr> L_USR():
+{ArrayList<usr> us = new ArrayList<usr>(); ArrayList<usr> us2 = new ArrayList<usr>();}
 {
-   USR() (L_USR())?
+   us=USR() (us2=L_USR()
+            {
+                    for(int i=0; i < us2.size(); i++){
+                        us.add(us2.get(i));
+                    }
+                }
+            )? {return us;}
 }
 
 
-void USR():
-{}
+ArrayList<usr> USR():
+{String n,p,s; int t,e; ArrayList<permisosUsr> pu = new ArrayList<permisosUsr>();}
 {
     <T_USR_IZQ>
-        NOMBRE()
-        PASS()
-        TIPO()
-        ESTADO()
-        SESION()
-        PERMISOS()
-    <T_USR_DER>
+        n = NOMBRE()
+        p = PASS()
+        t = TIPO()
+        e = ESTADO()
+        s = SESION()
+        pu = PERMISOS()
+    <T_USR_DER>     {
+                        ArrayList<usr> u = new ArrayList<usr>();
+                        u.add(new usr(n, p, t, e, s, pu));
+                        return u;
+                    }
 }
 
-void NOMBRE():
-{}
+String NOMBRE():
+{Token n;}
 {
-    <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
+    <T_NOMBRE_IZQ> n=<ID> <T_NOMBRE_DER> {return n.image;}
 }
 
-void PASS():
-{}
+String PASS():
+{Token p;}
 {
-    <T_PASS_IZQ> <CADENA> <T_PASS_DER>
+    <T_PASS_IZQ> p=<CADENA> <T_PASS_DER>{return p.image;}
 }
 
-void TIPO():
-{}
+int TIPO():
+{int t;}
 {
-    <T_TIPO_IZQ> (<T_ADMIN> | <T_USER>) <T_TIPO_DER>
+    <T_TIPO_IZQ> (<T_CERO> {t=0;} | <T_UNO> {t=1;}) <T_TIPO_DER> {return t;}
 }
 
-void ESTADO():
-{}
+int ESTADO():
+{int e;}
 {
-    <T_ESTADO_IZQ> (<T_ACTIVO>|<T_INACTIVO>) <T_ESTADO_DER>
+    <T_ESTADO_IZQ> (<T_UNO>{e=1;}|<T_CERO>{e=0;}) <T_ESTADO_DER> {return e;}
 }
 
-void SESION():
-{}
+String SESION():
+{Token s;}
 {
-    <T_SESION_IZQ> <CADENA> <T_SESION_DER>
+    <T_SESION_IZQ> s=<CADENA> <T_SESION_DER>{return s.image;}
 }
 
 
-void PERMISOS():
-{}
+ArrayList<permisosUsr> PERMISOS():
+{ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>();}
 {
     <T_PERMISOS_IZQ> 
-        (L_DB())?               
-    <T_PERMISOS_DER>
+        (lu=L_DB())?               
+    <T_PERMISOS_DER> {return lu;}
 }
 
-void L_DB():
-{}
+ArrayList<permisosUsr> L_DB():
+{ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>(); ArrayList<permisosUsr> lu2 = new ArrayList<permisosUsr>();}
 {
-    DB() (L_DB())?
+    lu=DB() (lu2=L_DB()
+            {
+                for(int i=0; i < lu2.size(); i++){
+                    lu.add(lu2.get(i));
+                }
+            }
+            )?  {return lu;}
 }
 
-void DB():
-{ArrayList<String> lp = new ArrayList<String>();}
+ArrayList<permisosUsr> DB():
+{Token n; ArrayList<String> lp = new ArrayList<String>();ArrayList<String> lf = new ArrayList<String>();ArrayList<String> lo = new ArrayList<String>();ArrayList<String> lt = new ArrayList<String>();}
 {
     <T_DB_IZQ>
-    <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
-    (L_TABLA())?
-    (L_OBJETO())?
-    (L_FUNC())?
+    <T_NOMBRE_IZQ> n=<ID> <T_NOMBRE_DER>
+    (lt=L_TABLA())?
+    (lp=L_OBJETO())?
+    (lf=L_FUNC())?
     (lp = L_PROC())?
-    <T_DB_DER>
-
-    {
-        for(int i = 0; i < lp.size(); i++){
-            System.out.println(lp.get(i));
-        }
-    }
+    <T_DB_DER>  {
+                    ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>();
+                    lu.add(new permisosUsr(n.image, lt, lo, lf, lp));
+                    return lu;
+                }
 }
 
-void L_TABLA():
-{}
+ArrayList<String> L_TABLA():
+{ArrayList<String> lt, lt2;}
 {
-    TABLA() (L_TABLA())?
+    lt=TABLA() (lt2=L_TABLA()
+                {
+                    for(int i=0; i < lt2.size(); i++){
+                        lt.add(lt2.get(i));
+                    }
+                }
+            )? {return lt;}
 }
 
-void TABLA():
-{}
+ArrayList<String> TABLA():
+{ArrayList<String> lt; Token t;}
 {
-    <T_TABLA_IZQ> <ID> <T_TABLA_DER>
+    <T_TABLA_IZQ> t=<ID> <T_TABLA_DER>  {   lt = new ArrayList<String>(); 
+                                            lt.add(t.image);
+                                            return lt;
+                                        } 
 }
 
-void L_OBJETO():
-{}
+ArrayList<String> L_OBJETO():
+{ArrayList<String> lo, lo2;}
 {
-    OBJETO() (L_OBJETO())?
+    lo=OBJETO() (lo2=L_OBJETO()
+                    {
+                        for(int i=0; i < lo2.size(); i++){
+                            lo.add(lo2.get(i));
+                        }
+                    }
+                )? {return lo;}
 }
 
-void OBJETO():
-{}
+ArrayList<String> OBJETO():
+{ArrayList<String> lo; Token o;}
 {
-    <T_OBJ_IZQ> <ID> <T_OBJ_DER>
+    <T_OBJ_IZQ> o=<ID> <T_OBJ_DER>      {   lo = new ArrayList<String>(); 
+                                            lo.add(o.image);
+                                            return lo;
+                                        }
 }
 
 ArrayList<String> L_FUNC():

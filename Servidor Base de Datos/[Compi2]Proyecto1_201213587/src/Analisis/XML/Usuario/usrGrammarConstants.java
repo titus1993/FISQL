@@ -59,17 +59,13 @@ public interface usrGrammarConstants {
   /** RegularExpression Id. */
   int T_TABLA_DER = 24;
   /** RegularExpression Id. */
-  int T_ACTIVO = 25;
+  int T_UNO = 25;
   /** RegularExpression Id. */
-  int T_INACTIVO = 26;
+  int T_CERO = 26;
   /** RegularExpression Id. */
-  int T_ADMIN = 27;
+  int ID = 27;
   /** RegularExpression Id. */
-  int T_USER = 28;
-  /** RegularExpression Id. */
-  int ID = 29;
-  /** RegularExpression Id. */
-  int CADENA = 30;
+  int CADENA = 28;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -101,10 +97,8 @@ public interface usrGrammarConstants {
     "<T_PROC_DER>",
     "<T_TABLA_IZQ>",
     "<T_TABLA_DER>",
-    "\"activo\"",
-    "\"inactivo\"",
-    "\"admin\"",
-    "\"user\"",
+    "\"1\"",
+    "\"0\"",
     "<ID>",
     "<CADENA>",
     "\" \"",

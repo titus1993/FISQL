@@ -13,11 +13,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Analisis.XML.Usuario.*;
+import Funciones.XML.Usr.usr;
+import java.util.ArrayList;
 
 /**
  *
@@ -44,40 +45,35 @@ public class Maestro {
 
         if (!raiz.exists()) {
             crearDB(raiz);
-        }else{
+        } else {
             cargar();
         }
     }
 
-    
-    private void cargar(){
+    private void cargar() {
         String texto = "";
-        
-        
-        
+
         File usr = new File(Tools.localUsrXml);
-        
+
         try {
             Scanner sc = new Scanner(usr);
-             while (sc.hasNextLine()) {
+            while (sc.hasNextLine()) {
                 texto += sc.nextLine();
-                
-                usrGrammar gramaticaUsuario = new usrGrammar(new java.io.StringReader(texto));
-                /*Usuario usuario = gramaticaUsuario.S();
-                
-                if(usuario == null){
-                    //reportamos error
-                }else{
-                    
-                }*/
-                
             }
+            
+            
+            usrGrammar gramaticaUsuario = new usrGrammar(new java.io.StringReader(texto));
+            ArrayList<usr> usuario = gramaticaUsuario.S();
+
+            ArrayList<usr> usuario2 = usuario;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
+
     private void crearDB(File raiz) {
         if (raiz.mkdirs()) {
             try {
@@ -103,7 +99,7 @@ public class Maestro {
                         + "	<pass>\"admin\"</pass>\n"
                         + "	<tipo>admin</tipo>\n"
                         + "	<estado>inactivo</estado>\n"
-                        + "	<sesion>\"01/01/2010 00:00:00\"</sesion>\n"
+                        + "	<sesion>\"01-01-2010 00:00:00\"</sesion>\n"
                         + "	<permisos>		\n"
                         + "	</permisos>\n"
                         + "</usr>");
@@ -119,7 +115,7 @@ public class Maestro {
         //creacion del archivo xml maestro, inicialmente no tiene ninguna db
         ruta = new File(Tools.localMaestroXml);
         if (!ruta.exists()) {
-            ruta.createNewFile();           
+            ruta.createNewFile();
         }
 
         //creaio de la carpeta donde estaran todas las db, inicialmente no existe ninguna
@@ -128,5 +124,4 @@ public class Maestro {
             ruta.mkdirs();
         }
     }
-
 }
