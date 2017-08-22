@@ -8,6 +8,10 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(funcGrammar)
 package Analisis.XML.Funcion;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
 public class funcGrammar {
   public static void main(String args[]) throws ParseException {
     funcGrammar parser = new funcGrammar(System.in);
@@ -76,71 +80,91 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<Funcion> S():
+{ArrayList<Funcion> f = new ArrayList<Funcion>();}
 {   {System.out.println("Comienza!!");}
-    L_FUNC()
+    (f=L_FUNC())?
+    {return f;}
     {System.out.println("Exito!!");}
 }
 
-void L_FUNC():
-{}
+arrayList<Funcion> L_FUNC():
+{ArrayList<Funcion> f = new ArrayList<Procedimiento>; ArrayList<Funcion> f2 = new ArrayList<Procedimiento>;}
 {
-   FUNC() (L_FUNC())?
+   f=FUNC() (f2=L_FUNC(){
+                    for(int i=0; i < f2.size(); i++){
+                        f.add(f2.get(i));
+                    }
+                }
+            )? {return f;}
 }
 
 
-void FUNC():
-{}
+ArrayList<Funcion> FUNC():
+{String t, n,s; ArrayList<Parametro> p = new ArrayList<Parametro>();}
 {
     <T_FUNC_IZQ>
-        TIPO()
-        NOMBRE()
-        (<T_PARAMS_IZQ> L_PARAMS() <T_PARAMS_DER>)?
-        SRC()
+        t=TIPO()
+        n=NOMBRE()
+        (<T_PARAMS_IZQ> p=L_PARAMS() <T_PARAMS_DER>)?
+        s=SRC()
     <T_FUNC_DER>
+    {ArrayList<Funcion> fun = new ArrayList<Funcion>();
+        fun.add(new Funcion(t, n, s, p));
+        return fun;
+    }
 }
-void TIPO():
-{}
+
+String TIPO():
+{String t; Token a;}
 {
     <T_TIPO_IZQ>
     (
-    <T_TEXT>
-    |<T_INTEGER>
-    |<T_DOUBLE>
-    |<T_BOOL>
-    |<T_DATE>
-    |<T_DATETIME>
-    |<ID>
+    <T_TEXT>    {t=Tools.ttext;}
+    |<T_INTEGER>    {t=Tools.tinteger;}
+    |<T_DOUBLE> {t=Tools.tdouble;}
+    |<T_BOOL>   {t=Tools.tbool;}
+    |<T_DATE>   {t=Tools.tdate;}
+    |<T_DATETIME>   {t=Tools.tdatetime;}
+    |a=<ID> {t=a.image;}
     )
     <T_TIPO_DER>
-}
-void NOMBRE():
-{}
-{
-    <T_NOMBRE_IZQ> <CADENA> <T_NOMBRE_DER>
+    {return t;}
 }
 
-void L_PARAMS():
-{}
+String NOMBRE():
+{Token t;}
 {
-    PARAMS() (L_PARAMS())?
+    <T_NOMBRE_IZQ> t=<CADENA> <T_NOMBRE_DER> {return t.image.substring(1, t.image.length());}
 }
 
-void PARAMS():
-{}
+ArrayList<Parametro> L_PARAMS():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); ArrayList<Parametro> p2 = new ArrayList<Parametro>();}
+{
+    p=PARAMS() (p2=L_PARAMS(){
+                    for(int i=0; i < p2.size(); i++){
+                        p.add(p2.get(i));
+                    }
+                }
+            )? {return p;}
+}
+
+ArrayList<Parametro> PARAMS():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); Token c,t;}
 {    
-    (<T_TEXT_IZQ> <CADENA> <T_TEXT_DER>
-    |<T_INTEGER_IZQ> <CADENA> <T_INTEGER_DER>
-    |<T_DOUBLE_IZQ> <CADENA> <T_DOUBLE_DER>
-    |<T_BOOL_IZQ> <CADENA> <T_BOOL_DER>
-    |<T_DATE_IZQ> <CADENA> <T_DATE_DER>
-    |<T_DATETIME_IZQ> <CADENA> <T_DATETIME_DER>    
-    |<ID_IZQ> <CADENA> <ID_DER>)
+    (<T_TEXT_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.ttext));} <T_TEXT_DER>
+    |<T_INTEGER_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tinteger));} <T_INTEGER_DER>
+    |<T_DOUBLE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdouble));} <T_DOUBLE_DER>
+    |<T_BOOL_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tbool));} <T_BOOL_DER>
+    |<T_DATE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdate));} <T_DATE_DER>
+    |<T_DATETIME_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdatetime));} <T_DATETIME_DER>    
+    |t=<ID_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t.image.substring(1, t.image.length() - 1).trim()));} <ID_DER>) 
+    
+    {return p;}
 }
 
-void SRC():
-{}
+String SRC():
+{Token t;}
 {
-    <T_SRC_IZQ> <SRC> <T_SRC_DER>
+    <T_SRC_IZQ> t=<SRC> <T_SRC_DER> {return t.image.substring(1, t.image.length() - 1);}
 }

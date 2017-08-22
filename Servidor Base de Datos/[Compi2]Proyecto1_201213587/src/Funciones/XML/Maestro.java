@@ -17,7 +17,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Analisis.XML.Usuario.*;
-import Funciones.XML.Usr.usr;
 import java.util.ArrayList;
 
 /**
@@ -63,9 +62,9 @@ public class Maestro {
             
             
             usrGrammar gramaticaUsuario = new usrGrammar(new java.io.StringReader(texto));
-            ArrayList<usr> usuario = gramaticaUsuario.S();
+            ArrayList<Usuario> usuario = gramaticaUsuario.S();
 
-            ArrayList<usr> usuario2 = usuario;
+            ArrayList<Usuario> usuario2 = usuario;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {

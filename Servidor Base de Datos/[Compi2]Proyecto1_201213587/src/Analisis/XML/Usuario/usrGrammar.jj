@@ -8,7 +8,7 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(usrGrammar)
 package Analisis.XML.Usuario;
 import java.util.ArrayList;
-import Funciones.XML.Usr.*;
+import Funciones.XML.*;
 
 
 public class usrGrammar {
@@ -63,15 +63,15 @@ SKIP:
 | "\t"
 }
 
-ArrayList<usr> S():
-{ArrayList<usr> us = new ArrayList<usr>();}
+ArrayList<Usuario> S():
+{ArrayList<Usuario> us = new ArrayList<Usuario>();}
 {   {System.out.println("Comienza!!");}
     us=L_USR(){return us;}
     {System.out.println("Exito!!");}
 }
 
-ArrayList<usr> L_USR():
-{ArrayList<usr> us = new ArrayList<usr>(); ArrayList<usr> us2 = new ArrayList<usr>();}
+ArrayList<Usuario> L_USR():
+{ArrayList<Usuario> us = new ArrayList<Usuario>(); ArrayList<Usuario> us2 = new ArrayList<Usuario>();}
 {
    us=USR() (us2=L_USR()
             {
@@ -83,8 +83,8 @@ ArrayList<usr> L_USR():
 }
 
 
-ArrayList<usr> USR():
-{String n,p,s; int t,e; ArrayList<permisosUsr> pu = new ArrayList<permisosUsr>();}
+ArrayList<Usuario> USR():
+{String n,p,s; int t,e; ArrayList<PermisosUsr> pu = new ArrayList<PermisosUsr>();}
 {
     <T_USR_IZQ>
         n = NOMBRE()
@@ -94,8 +94,8 @@ ArrayList<usr> USR():
         s = SESION()
         pu = PERMISOS()
     <T_USR_DER>     {
-                        ArrayList<usr> u = new ArrayList<usr>();
-                        u.add(new usr(n, p, t, e, s, pu));
+                        ArrayList<Usuario> u = new ArrayList<Usuario>();
+                        u.add(new Usuario(n, p, t, e, s, pu));
                         return u;
                     }
 }
@@ -131,16 +131,16 @@ String SESION():
 }
 
 
-ArrayList<permisosUsr> PERMISOS():
-{ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>();}
+ArrayList<PermisosUsr> PERMISOS():
+{ArrayList<PermisosUsr> lu = new ArrayList<PermisosUsr>();}
 {
     <T_PERMISOS_IZQ> 
         (lu=L_DB())?               
     <T_PERMISOS_DER> {return lu;}
 }
 
-ArrayList<permisosUsr> L_DB():
-{ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>(); ArrayList<permisosUsr> lu2 = new ArrayList<permisosUsr>();}
+ArrayList<PermisosUsr> L_DB():
+{ArrayList<PermisosUsr> lu = new ArrayList<PermisosUsr>(); ArrayList<PermisosUsr> lu2 = new ArrayList<PermisosUsr>();}
 {
     lu=DB() (lu2=L_DB()
             {
@@ -151,7 +151,7 @@ ArrayList<permisosUsr> L_DB():
             )?  {return lu;}
 }
 
-ArrayList<permisosUsr> DB():
+ArrayList<PermisosUsr> DB():
 {Token n; ArrayList<String> lp = new ArrayList<String>();ArrayList<String> lf = new ArrayList<String>();ArrayList<String> lo = new ArrayList<String>();ArrayList<String> lt = new ArrayList<String>();}
 {
     <T_DB_IZQ>
@@ -161,8 +161,8 @@ ArrayList<permisosUsr> DB():
     (lf=L_FUNC())?
     (lp = L_PROC())?
     <T_DB_DER>  {
-                    ArrayList<permisosUsr> lu = new ArrayList<permisosUsr>();
-                    lu.add(new permisosUsr(n.image, lt, lo, lf, lp));
+                    ArrayList<PermisosUsr> lu = new ArrayList<PermisosUsr>();
+                    lu.add(new PermisosUsr(n.image, lt, lo, lf, lp  ));
                     return lu;
                 }
 }

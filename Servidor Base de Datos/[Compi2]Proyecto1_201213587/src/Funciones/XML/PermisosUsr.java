@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Funciones.XML.Usr;
+package Funciones.XML;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,12 @@ import java.util.ArrayList;
  Clase que contiene el listado de objetos en que un usuario tiene permisos, si no existe el nombre del objeto no tiene permisos.
  * @author Titus
  */
-public class permisosUsr {
+public class PermisosUsr {
 
     String name;
     ArrayList<String> tables, objects, functions, procedures;
 
-    public permisosUsr(String _name, ArrayList<String> _tables, ArrayList<String> _objects, ArrayList<String> _functions, ArrayList<String> _procedures) {
+    public PermisosUsr(String _name, ArrayList<String> _tables, ArrayList<String> _objects, ArrayList<String> _functions, ArrayList<String> _procedures) {
         name = _name;
         tables = _tables;
         objects = _objects;

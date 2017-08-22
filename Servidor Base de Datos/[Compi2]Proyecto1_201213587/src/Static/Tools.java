@@ -18,4 +18,13 @@ public class Tools {
     public static String localMaestroXml = "C:\\FISQL_DB\\maestro.xml";
     
     public static SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    
+    public static String ttext = "text";
+    public static String tinteger = "integer";
+    public static String tdouble = "double";
+    public static String tbool = "bool";
+    public static String tdate = "date";
+    public static String tdatetime = "datetime";
+    public static String tobjeto = "objeto";
+    
 }

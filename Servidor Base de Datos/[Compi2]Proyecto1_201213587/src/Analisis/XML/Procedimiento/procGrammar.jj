@@ -8,6 +8,11 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(procGrammar)
 package Analisis.XML.Procedimiento;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
+
 public class procGrammar {
   public static void main(String args[]) throws ParseException {
     procGrammar parser = new procGrammar(System.in);
@@ -62,56 +67,73 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<Procedimiento> S():
+{ArrayList<Procedimiento> p = new ArrayList<Procedimiento>();}
 {   {System.out.println("Comienza!!");}
-    L_PROC()
+    (p=L_PROC())?
+    {return p;}
     {System.out.println("Exito!!");}
 }
 
-void L_PROC():
-{}
+ArrayList<Procedimiento> L_PROC():
+{ArrayList<Procedimiento> p = new ArrayList<Procedimiento>; ArrayList<Procedimiento> p2 = new ArrayList<Procedimiento>;}
 {
-   PROC() (L_PROC())?
+   p=PROC() (p2=L_PROC(){
+                    for(int i=0; i < p2.size(); i++){
+                        p.add(p2.get(i));
+                    }
+                }
+            )? {return p;}
 }
 
 
-void PROC():
-{}
+ArrayList<Procedimiento> PROC():
+{String n, s; ArrayList<Parametro> p = new ArrayList<Parametro>;}
 {
     <T_PROC_IZQ>
-        NOMBRE()
-        (<T_PARAMS_IZQ> L_PARAMS() <T_PARAMS_DER>)?
-        SRC()
+        n=NOMBRE()
+        (<T_PARAMS_IZQ> p=L_PARAMS() <T_PARAMS_DER>)?
+        s=SRC()
     <T_PROC_DER>
+    {ArrayList<Procedimiento> proc = new ArrayList<Procedimiento>;
+        proc.add(new Procedimiento(n, s, p));
+        return proc;
+    }
 }
 
-void NOMBRE():
-{}
+String NOMBRE():
+{Token t;}
 {
-    <T_NOMBRE_IZQ> <CADENA> <T_NOMBRE_DER>
+    <T_NOMBRE_IZQ> t=<CADENA> <T_NOMBRE_DER> {return t.image.substring(1, t.image.length());}
 }
 
-void L_PARAMS():
-{}
+ArrayList<Parametro> L_PARAMS():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); ArrayList<Parametro> p2 = new ArrayList<Parametro>();}
 {
-    PARAMS() (L_PARAMS())?
+    p=PARAMS() (p2=L_PARAMS(){
+                    for(int i=0; i < p2.size(); i++){
+                        p.add(p2.get(i));
+                    }
+                }
+            )? {return p;}
 }
 
-void PARAMS():
-{}
+ArrayList<Parametro> PARAMS():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); Token c,t;}
 {    
-    (<T_TEXT_IZQ> <CADENA> <T_TEXT_DER>
-    |<T_INTEGER_IZQ> <CADENA> <T_INTEGER_DER>
-    |<T_DOUBLE_IZQ> <CADENA> <T_DOUBLE_DER>
-    |<T_BOOL_IZQ> <CADENA> <T_BOOL_DER>
-    |<T_DATE_IZQ> <CADENA> <T_DATE_DER>
-    |<T_DATETIME_IZQ> <CADENA> <T_DATETIME_DER>    
-    |<ID_IZQ> <CADENA> <ID_DER>)
+    (<T_TEXT_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.ttext));} <T_TEXT_DER> 
+    |<T_INTEGER_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tinteger));} <T_INTEGER_DER> 
+    |<T_DOUBLE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdouble));} <T_DOUBLE_DER> 
+    |<T_BOOL_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tbool));} <T_BOOL_DER> 
+    |<T_DATE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdate));} <T_DATE_DER> 
+    |<T_DATETIME_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdatetime));} <T_DATETIME_DER>   
+    |t=<ID_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t.image.substring(1, t.image.length() - 1).trim()));} <ID_DER>)    
+
+    {return p;}
 }
 
-void SRC():
-{}
+String SRC():
+{Token t;}
 {
-    <T_SRC_IZQ> <SRC> <T_SRC_DER>
+    <T_SRC_IZQ> t=<SRC> <T_SRC_DER> {return t.image.substring(1, t.image.length() - 1);}
 }

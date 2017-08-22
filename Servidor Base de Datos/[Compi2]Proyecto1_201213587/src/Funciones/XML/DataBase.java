@@ -9,6 +9,6 @@ package Funciones.XML;
  *
  * @author Titus
  */
-public class dataBase {
+public class DataBase {
     
 }
