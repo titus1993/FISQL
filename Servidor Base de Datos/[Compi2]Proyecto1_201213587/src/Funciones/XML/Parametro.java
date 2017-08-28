@@ -10,17 +10,17 @@ package Funciones.XML;
  * @author Titus
  */
 public class Parametro {
-    public String tipo, nombre, objeto;
+    public String tipo, nombre, nombreObjeto;
     
     public Parametro(String _tipo, String _nombre){
         tipo = _tipo;
         nombre = _nombre;
-        objeto = "";
+        nombreObjeto = "";
     }
     
-    public Parametro(String _tipo, String _nombre, String _objeto){
+    public Parametro(String _tipo, String _nombre, String _nombreObjeto){
         tipo = _tipo;
         nombre = _nombre;
-        objeto = _objeto;
+        nombreObjeto = _nombreObjeto;
     }
 }

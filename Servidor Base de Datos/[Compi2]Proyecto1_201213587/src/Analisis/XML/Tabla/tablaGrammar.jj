@@ -8,6 +8,10 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(tablaGrammar)
 package Analisis.XML.Tabla;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
 public class tablaGrammar {
   public static void main(String args[]) throws ParseException {
     tablaGrammar parser = new tablaGrammar(System.in);
@@ -39,48 +43,75 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<ArrayList<Columna>> S():
+{ArrayList<ArrayList<Columna>> c = new ArrayList<ArrayList<Columna>>();}
 {   {System.out.println("Comienza!!");}
-    L_ROW()
-    {System.out.println("Exito!!");}
+    (c=L_ROW())?
+    {System.out.println("Exito!!"); return c;}
 }
 
-void L_ROW():
-{}
+ArrayList<ArrayList<Columna>> L_ROW():
+{ArrayList<ArrayList<Columna>> c = new ArrayList<ArrayList<Columna>>(); ArrayList<ArrayList<Columna>> c2 = new ArrayList<ArrayList<Columna>>();}
 {
-   ROW() (L_ROW())?
+   c=ROW() (c2=L_ROW(){
+                    for(int i=0; i < c2.size(); i++){
+                        c.add(c2.get(i));
+                    }
+                }
+            )? {return c;}
 }
 
 
-void ROW():
-{}
+ArrayList<ArrayList<Columna>> ROW():
+{ArrayList<Columna> c = new ArrayList<Columna>();}
 {
     <T_ROW_IZQ> 
-        L_CAMPOS()
-    <T_ROW_DER>
+        c = L_CAMPOS()
+    <T_ROW_DER> {ArrayList<ArrayList<Columna>> row = new ArrayList<ArrayList<Columna>>();
+                    row.add(c);
+                    return row;
+                }
 }
 
-void L_CAMPOS():
-{}
+ArrayList<Columna> L_CAMPOS():
+{ArrayList<Columna> c = new ArrayList<Columna>(); ArrayList<Columna> c2 = new ArrayList<Columna>();}
 {
-    CAMPO() (L_CAMPOS())?
+    c=CAMPO() (c2=L_CAMPOS(){
+                    for(int i=0; i < c2.size(); i++){
+                        c.add(c2.get(i));
+                    }
+                }
+            )? {return c;}
 }
 
-void CAMPO():
-{}
+ArrayList<Columna> CAMPO():
+{Token t,c; ArrayList<Columna> o = new ArrayList<Columna>();}
 {
-    <ID_IZQ> (<CADENA>|L_OBJETO()) <ID_DER>
+    c=<ID_IZQ> (t=<CADENA>{ o.add(new Columna(c.image.substring(1, c.image.length() - 1).trim(), t.image.substring(1, t.image.length() - 1).trim()));}
+                |o=L_OBJETO()   {
+                                    columnaObjeto co = new columnaObjeto(o);
+                                    o = new ArrayList<Columna>();
+                                    o.add(new Columna(c.image.substring(1, c.image.length() - 1).trim(), co));
+                                }) <ID_DER> {return o;}
 }
 
-void L_OBJETO():
-{}
+ArrayList<Columna> L_OBJETO():
+{ArrayList<Columna> c = new ArrayList<Columna>(); ArrayList<Columna> c2 = new ArrayList<Columna>();}
 {
-    OBJETO() (L_OBJETO())?
+    c=OBJETO() (c2=L_OBJETO(){
+                    for(int i=0; i < c2.size(); i++){
+                        c.add(c2.get(i));
+                    }
+                }
+            )? {return c;}
 }
 
-void OBJETO():
-{}
+ArrayList<Columna> OBJETO():
+{Token t,i;}
 {
-    <ID_IZQ> <CADENA> <ID_DER>
+   i=<ID_IZQ> t=<CADENA> <ID_DER> {
+                                    ArrayList<Columna> c = new ArrayList<Columna>();
+                                    c.add(new Columna(i.image.substring(1, i.image.length() - 1).trim(), t.image.substring(1, t.image.length() - 1).trim()));
+                                    return c;
+                                    }
 }

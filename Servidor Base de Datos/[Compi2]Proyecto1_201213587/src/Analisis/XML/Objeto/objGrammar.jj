@@ -8,6 +8,10 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(objGrammar)
 package Analisis.XML.Objeto;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
 public class objGrammar {
   public static void main(String args[]) throws ParseException {
     objGrammar parser = new objGrammar(System.in);
@@ -59,49 +63,65 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<Objeto> S():
+{ArrayList<Objeto> o = new ArrayList<Objeto>();}
 {   {System.out.println("Comienza!!");}
-    L_OBJ()
+    (o=L_OBJ())?
+    {return o;}
     {System.out.println("Exito!!");}
 }
 
-void L_OBJ():
-{}
+ArrayList<Objeto> L_OBJ():
+{ArrayList<Objeto> o = new ArrayList<Objeto>(); ArrayList<Objeto> o2 = new ArrayList<Objeto>();}
 {
-   OBJ() (L_OBJ())?
+   o=OBJ() (o2=L_OBJ(){
+                    for(int i=0; i < o2.size(); i++){
+                        o.add(o2.get(i));
+                    }
+                }
+            )? {return o;}
 }
 
 
-void OBJ():
-{}
+ArrayList<Objeto> OBJ():
+{String n; ArrayList<Parametro> p = new ArrayList<Parametro>();}
 {
     <T_OBJ_IZQ>
-        NOMBRE()
-        <T_ATTR_IZQ> L_ATTR() <T_ATTR_DER>
+        n = NOMBRE()
+        <T_ATTR_IZQ> p=L_ATTR() <T_ATTR_DER>
     <T_OBJ_DER>
+    {ArrayList<Objeto> obj = new ArrayList<Objeto>();
+        obj.add(new Objeto(n, p));
+        return obj;
+    }
 }
 
-void NOMBRE():
-{}
+String NOMBRE():
+{Token t;}
 {
-    <T_NOMBRE_IZQ> <ID> <T_NOMBRE_DER>
+    <T_NOMBRE_IZQ> t=<ID> <T_NOMBRE_DER> {return t.image;}
 }
 
-void L_ATTR():
-{}
+ArrayList<Parametro> L_ATTR():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); ArrayList<Parametro> p2 = new ArrayList<Parametro>();}
 {
-    ATTR() (L_ATTR())?
+    p=ATTR() (p2=L_ATTR(){
+                    for(int i=0; i < p2.size(); i++){
+                        p.add(p2.get(i));
+                    }
+                }
+            )? {return p;}
 }
 
-void ATTR():
-{}
+ArrayList<Parametro> ATTR():
+{ArrayList<Parametro> p = new ArrayList<Parametro>(); Token c;}
 {    
-    <T_TEXT_IZQ> <ID> <T_TEXT_DER>
-    |<T_INTEGER_IZQ> <ID> <T_INTEGER_DER>
-    |<T_DOUBLE_IZQ> <ID> <T_DOUBLE_DER>
-    |<T_BOOL_IZQ> <ID> <T_BOOL_DER>
-    |<T_DATE_IZQ> <ID> <T_DATE_DER>
-    |<T_DATETIME_IZQ> <ID> <T_DATETIME_DER>    
-    |<ID_IZQ> <ID> <ID_DER>
+    (<T_TEXT_IZQ> c=<ID> {p.add(new Parametro(Tools.ttext, c.image));} <T_TEXT_DER> 
+    |<T_INTEGER_IZQ> c=<ID> {p.add(new Parametro(Tools.tinteger, c.image));} <T_INTEGER_DER> 
+    |<T_DOUBLE_IZQ> c=<ID> {p.add(new Parametro(Tools.tdouble, c.image));} <T_DOUBLE_DER> 
+    |<T_BOOL_IZQ> c=<ID> {p.add(new Parametro(Tools.tbool, c.image));} <T_BOOL_DER> 
+    |<T_DATE_IZQ> c=<ID> {p.add(new Parametro(Tools.tdate, c.image));} <T_DATE_DER> 
+    |<T_DATETIME_IZQ> c=<ID> {p.add(new Parametro(Tools.tdatetime, c.image));} <T_DATETIME_DER>)    
+
+    {return p;}
 }

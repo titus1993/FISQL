@@ -193,9 +193,13 @@ public interface usqlGrammarConstants {
   /** RegularExpression Id. */
   int ARROBA = 91;
   /** RegularExpression Id. */
-  int COMENTARIO_LINEA = 96;
+  int DATE = 92;
   /** RegularExpression Id. */
-  int COMENTARIO_MULTI = 97;
+  int TIME = 93;
+  /** RegularExpression Id. */
+  int COMENTARIO_LINEA = 98;
+  /** RegularExpression Id. */
+  int COMENTARIO_MULTI = 99;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -294,6 +298,8 @@ public interface usqlGrammarConstants {
     "<DECIMAL>",
     "<ID>",
     "<ARROBA>",
+    "<DATE>",
+    "<TIME>",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",

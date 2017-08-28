@@ -12,23 +12,38 @@ public class funcGrammar implements funcGrammarConstants {
     parser.S();
   }
 
-  final public void S() throws ParseException {
+  final public ArrayList<Funcion> S() throws ParseException {ArrayList<Funcion> f = new ArrayList<Funcion>();
 System.out.println("Comienza!!");
-    L_FUNC();
-System.out.println("Exito!!");
-  }
-
-  final public void L_FUNC() throws ParseException {
-    FUNC();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_FUNC_IZQ:{
-      L_FUNC();
+      f = L_FUNC();
       break;
       }
     default:
       jj_la1[0] = jj_gen;
       ;
     }
+{if ("" != null) return f;}
+System.out.println("Exito!!");
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ArrayList<Funcion> L_FUNC() throws ParseException {ArrayList<Funcion> f = new ArrayList<Funcion>(); ArrayList<Funcion> f2 = new ArrayList<Funcion>();
+    f = FUNC();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case T_FUNC_IZQ:{
+      f2 = L_FUNC();
+for(int i=0; i < f2.size(); i++){
+                        f.add(f2.get(i));
+                    }
+      break;
+      }
+    default:
+      jj_la1[1] = jj_gen;
+      ;
+    }
+{if ("" != null) return f;}
+    throw new Error("Missing return statement in function");
   }
 
   final public ArrayList<Funcion> FUNC() throws ParseException {String t, n,s; ArrayList<Parametro> p = new ArrayList<Parametro>();
@@ -43,7 +58,7 @@ System.out.println("Exito!!");
       break;
       }
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[2] = jj_gen;
       ;
     }
     s = SRC();
@@ -93,7 +108,7 @@ t=a.image;
       break;
       }
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -106,7 +121,7 @@ t=a.image;
     jj_consume_token(T_NOMBRE_IZQ);
     t = jj_consume_token(CADENA);
     jj_consume_token(T_NOMBRE_DER);
-{if ("" != null) return t.image.substring(1, t.image.length());}
+{if ("" != null) return t.image.substring(1, t.image.length() - 1);}
     throw new Error("Missing return statement in function");
   }
 
@@ -127,7 +142,7 @@ for(int i=0; i < p2.size(); i++){
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       ;
     }
 {if ("" != null) return p;}
@@ -139,54 +154,54 @@ for(int i=0; i < p2.size(); i++){
     case T_TEXT_IZQ:{
       jj_consume_token(T_TEXT_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.ttext));
+p.add(new Parametro(Tools.ttext, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_TEXT_DER);
       break;
       }
     case T_INTEGER_IZQ:{
       jj_consume_token(T_INTEGER_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tinteger));
+p.add(new Parametro(Tools.tinteger, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_INTEGER_DER);
       break;
       }
     case T_DOUBLE_IZQ:{
       jj_consume_token(T_DOUBLE_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdouble));
+p.add(new Parametro(Tools.tdouble, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_DOUBLE_DER);
       break;
       }
     case T_BOOL_IZQ:{
       jj_consume_token(T_BOOL_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tbool));
+p.add(new Parametro(Tools.tbool, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_BOOL_DER);
       break;
       }
     case T_DATE_IZQ:{
       jj_consume_token(T_DATE_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdate));
+p.add(new Parametro(Tools.tdate, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_DATE_DER);
       break;
       }
     case T_DATETIME_IZQ:{
       jj_consume_token(T_DATETIME_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdatetime));
+p.add(new Parametro(Tools.tdatetime, c.image.substring(1, c.image.length() - 1)));
       jj_consume_token(T_DATETIME_DER);
       break;
       }
     case ID_IZQ:{
       t = jj_consume_token(ID_IZQ);
       c = jj_consume_token(CADENA);
-p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t.image.substring(1, t.image.length() - 1).trim()));
+p.add(new Parametro(Tools.tobjeto, c.image.substring(1, c.image.length() - 1), t.image.substring(1, t.image.length() - 1).trim()));
       jj_consume_token(ID_DER);
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -211,7 +226,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[5];
+  final private int[] jj_la1 = new int[6];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -219,10 +234,10 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x2,0x8,0x1f800000,0x8001f800,0x8001f800,};
+      jj_la1_0 = new int[] {0x2,0x2,0x8,0x1f800000,0x8001f800,0x8001f800,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x2,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x2,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -236,7 +251,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -250,7 +265,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -260,7 +275,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -270,7 +285,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -279,7 +294,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -288,7 +303,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 6; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -344,7 +359,7 @@ p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

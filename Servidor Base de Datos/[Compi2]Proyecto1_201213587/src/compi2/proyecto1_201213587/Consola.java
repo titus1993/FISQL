@@ -5,7 +5,9 @@
  */
 package compi2.proyecto1_201213587;
 
-import Analisis.XML.Usuario.*;
+import Analisis.XML.Tabla.*;
+import Funciones.XML.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -72,9 +74,10 @@ public class Consola extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       usrGrammar g = new usrGrammar(new java.io.StringReader(this.jTextArea1.getText()));
+       tablaGrammar g = new tablaGrammar(new java.io.StringReader(this.jTextArea1.getText()));
         try {
-            g.S();
+            ArrayList<ArrayList<Columna>> a = g.S();
+            a = a;
             System.out.println("Funciona");
         } catch (ParseException | TokenMgrError e) {
             System.out.println(e.getMessage());

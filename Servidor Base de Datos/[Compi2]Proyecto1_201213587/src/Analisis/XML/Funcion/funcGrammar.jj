@@ -88,8 +88,8 @@ ArrayList<Funcion> S():
     {System.out.println("Exito!!");}
 }
 
-arrayList<Funcion> L_FUNC():
-{ArrayList<Funcion> f = new ArrayList<Procedimiento>; ArrayList<Funcion> f2 = new ArrayList<Procedimiento>;}
+ArrayList<Funcion> L_FUNC():
+{ArrayList<Funcion> f = new ArrayList<Funcion>(); ArrayList<Funcion> f2 = new ArrayList<Funcion>();}
 {
    f=FUNC() (f2=L_FUNC(){
                     for(int i=0; i < f2.size(); i++){
@@ -135,7 +135,7 @@ String TIPO():
 String NOMBRE():
 {Token t;}
 {
-    <T_NOMBRE_IZQ> t=<CADENA> <T_NOMBRE_DER> {return t.image.substring(1, t.image.length());}
+    <T_NOMBRE_IZQ> t=<CADENA> <T_NOMBRE_DER> {return t.image.substring(1, t.image.length() - 1);}
 }
 
 ArrayList<Parametro> L_PARAMS():
@@ -152,13 +152,13 @@ ArrayList<Parametro> L_PARAMS():
 ArrayList<Parametro> PARAMS():
 {ArrayList<Parametro> p = new ArrayList<Parametro>(); Token c,t;}
 {    
-    (<T_TEXT_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.ttext));} <T_TEXT_DER>
-    |<T_INTEGER_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tinteger));} <T_INTEGER_DER>
-    |<T_DOUBLE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdouble));} <T_DOUBLE_DER>
-    |<T_BOOL_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tbool));} <T_BOOL_DER>
-    |<T_DATE_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdate));} <T_DATE_DER>
-    |<T_DATETIME_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tdatetime));} <T_DATETIME_DER>    
-    |t=<ID_IZQ> c=<CADENA> {p.add(new Parametro(c.image.substring(1, c.image.length() - 1), Tools.tobjeto, t.image.substring(1, t.image.length() - 1).trim()));} <ID_DER>) 
+    (<T_TEXT_IZQ> c=<CADENA> {p.add(new Parametro(Tools.ttext, c.image.substring(1, c.image.length() - 1)));} <T_TEXT_DER>
+    |<T_INTEGER_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tinteger, c.image.substring(1, c.image.length() - 1)));} <T_INTEGER_DER>
+    |<T_DOUBLE_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tdouble, c.image.substring(1, c.image.length() - 1)));} <T_DOUBLE_DER>
+    |<T_BOOL_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tbool, c.image.substring(1, c.image.length() - 1)));} <T_BOOL_DER>
+    |<T_DATE_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tdate, c.image.substring(1, c.image.length() - 1)));} <T_DATE_DER>
+    |<T_DATETIME_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tdatetime, c.image.substring(1, c.image.length() - 1)));} <T_DATETIME_DER>    
+    |t=<ID_IZQ> c=<CADENA> {p.add(new Parametro(Tools.tobjeto, c.image.substring(1, c.image.length() - 1), t.image.substring(1, t.image.length() - 1).trim()));} <ID_DER>) 
     
     {return p;}
 }
