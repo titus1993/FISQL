@@ -6,6 +6,7 @@
 package compi2.proyecto1_201213587;
 
 import Funciones.XML.Maestro;
+import Static.Tools;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -213,7 +214,7 @@ public class Compi2Proyecto1_201213587 {
             System.out.print(e.toString());
         }
         
-        Maestro db = new Maestro();
+        Tools.Base_de_datos.GuardarMaestro();
         
         Consola a = new Consola();
         a.setVisible(true);

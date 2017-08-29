@@ -6,25 +6,24 @@
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Procedimiento.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Funcion.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Static/Tools.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/Usql/usqlGrammarTokenManager.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Tabla.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Columna.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Tabla.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Tabla/tablaGrammar.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Procedimiento/procGrammar.jj</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Objeto.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/ColumnaEstructura.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/DataBase.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/DB/dbGrammar.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/compi2/proyecto1_201213587/Consola.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/columnaObjeto.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/Usql/usqlGrammar.jj</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/DB/dbGrammar.jj</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/compi2/proyecto1_201213587/Compi2Proyecto1_201213587.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Objeto/objGrammar.java</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Maestro.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Funcion/funcGrammar.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Maestro.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Funcion/funcGrammar.jj</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Parametro.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/TablaEstructura.java</file>
+            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Funciones/XML/Complemento.java</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Tabla/tablaGrammar.jj</file>
             <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Objeto/objGrammar.jj</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Usuario/usrGrammar.jj</file>
-            <file>file:/D:/Titus/Documents/Proyectos/Compiladores%202/Proyecto%201/FISQL/Servidor%20Base%20de%20Datos/%5BCompi2%5DProyecto1_201213587/src/Analisis/XML/Procedimiento/procGrammar.java</file>
         </group>
     </open-files>
 </project-private>

@@ -12,11 +12,15 @@ import java.util.ArrayList;
  * @author Titus
  */
 public class Tabla {
-    public String Nombre;
+    public ArrayList<ColumnaEstructura> Columnas;
+    public String Nombre, Path;
     public ArrayList<ArrayList<Columna>> Filas;
     
-    public Tabla(ArrayList<ArrayList<Columna>> _filas){
-        Filas = _filas;
+    
+    public Tabla(String nombre, String path, ArrayList<ColumnaEstructura> columnas){
+        Nombre = nombre;
+        Path = path;
+        Columnas = columnas;
     }
 }
 

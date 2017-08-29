@@ -24,6 +24,34 @@ public class PermisosUsr {
         procedures = _procedures;
     }
     
+    public String getXML(){
+        String cadena = "";
+        
+        
+        cadena += "\t\t<db>\n"
+                + "\t\t\t<nombre>" + name + "</nombre>\n";
+        
+        for(int i = 0; i < tables.size(); i++){
+            cadena += "\t\t\t<tabla>" + tables.get(i) + "</tabla>\n";
+        }
+        
+        for(int i = 0; i < objects.size(); i++){
+            cadena += "\t\t\t<obj>" + objects.get(i) + "</obj>\n";
+        }
+        
+        for(int i = 0; i < functions.size(); i++){
+            cadena += "\t\t\t<func>" + functions.get(i) + "</func>\n";
+        }
+        
+        for(int i = 0; i < procedures.size(); i++){
+            cadena += "\t\t\t<proc>" + procedures.get(i) + "</proc>\n";
+        }
+        
+        cadena += "\t\t</db>\n";
+        
+        return cadena;
+    }
+    
     public void addTable(String _name){
         tables.add(_name);
     }

@@ -8,6 +8,10 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(maestroGrammar)
 package Analisis.XML.Maestro;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
 public class maestroGrammar {
   public static void main(String args[]) throws ParseException {
     maestroGrammar parser = new maestroGrammar(System.in);
@@ -40,28 +44,39 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+ArrayList<DataBase> S():
+{ArrayList<DataBase> d = new ArrayList<DataBase>();}
 {   {System.out.println("Comienza!!");}
-    L_DB()
+    (d=L_DB())?
+    {return d;}
     {System.out.println("Exito!!");}
 }
 
-void L_DB():
-{}
+ArrayList<DataBase> L_DB():
+{ArrayList<DataBase> d = new ArrayList<DataBase>();ArrayList<DataBase> d2 = new ArrayList<DataBase>();}
 {
-    DB() (L_DB())?
+    d=DB() (d2=L_DB(){
+                    for(int i=0; i < d2.size(); i++){
+                        d.add(d2.get(i));
+                    }
+                }
+            )? {return d;}
 }
 
-void DB():
-{}
+ArrayList<DataBase> DB():
+{Token nombre, path;}
 {
     <T_DB_IZQ> 
         <T_NOMBRE_IZQ> 
-            <CADENA>
+            nombre=<CADENA>
         <T_NOMBRE_DER>
         <T_PATH_IZQ> 
-            <CADENA>
+            path=<CADENA>
         <T_PATH_DER>
     <T_DB_DER>
+    {   
+        ArrayList<DataBase> l = new ArrayList<DataBase>();
+        l.add(new DataBase(nombre.image.substring(1, nombre.image.length() - 1).trim(), path.image.substring(1, path.image.length() - 1).trim()));
+        return l;
+    }
 }

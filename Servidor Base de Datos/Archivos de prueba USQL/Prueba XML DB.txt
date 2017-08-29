@@ -1,16 +1,19 @@
 <Procedure>
-	<path>"C:/Documentos/BD/proc.usac"</path>
+	<path>"C:\FISQL_DB\BD1\Procedimientos.xml"</path>
 </Procedure>
+<Funcion>
+	<path>"C:\FISQL_DB\BD1\Funciones.xml"</path>
+</Funcion>
 <Object>
-	<path>"C:/Documentos/BD/obj.usac"</path>
+	<path>"C:\FISQL_DB\BD1\Objetos.xml"</path>
 </Object>
 <Tabla>
 	<nombre>"nombre_tabla1"</nombre>
-	<path>"C:/Documentos/BD/nombre_tabla1.usac"</path>
+	<path>"C:\FISQL_DB\BD1\nombre_tabla1.xml"</path>
 	<rows>
 		<campo>
 			<integer>"Nombre_campo1"</integer>
-			<complemento>nulo</complemento> 
+			<complemento>nulo</complemento>
 			<complemento>
 				<foranea>"titus"</foranea>
 			</complemento>

@@ -8,6 +8,10 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(dbGrammar)
 package Analisis.XML.DB;
 
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
 public class dbGrammar {
   public static void main(String args[]) throws ParseException {
     dbGrammar parser = new dbGrammar(System.in);
@@ -81,129 +85,164 @@ SKIP:
 | "\t"
 }
 
-void S():
-{}
+DataBase S():
+{DataBase b;}
 {   {System.out.println("Comienza!!");}
-    DB()
-    {System.out.println("Exito!!");}
+    b=DB()
+    {System.out.println("Exito!!");
+    return b;}
 }
 
 
-void DB():
-{}
+DataBase DB():
+{String p,f,o; ArrayList<Tabla> t = new ArrayList<Tabla>();}
 {
-    PROCEDURE() 
-    OBJECT()
-    (L_TABLA())?
+    p=PROCEDURE() 
+    f=FUNCION()
+    o=OBJECT()
+    (t=L_TABLA())?
+    {DataBase d = new DataBase(p, f, o, t); return d;}
 }
 
-void PROCEDURE():
-{}
+String PROCEDURE():
+{String t;}
 {
     <T_PROCEDURE_IZQ> 
-        PATH()
-    <T_PROCEDURE_DER>  
+        t=PATH()
+    <T_PROCEDURE_DER>  {return t;}
 }
 
-void FUNCION():
-{}
+String FUNCION():
+{String t;}
 {
     <T_FUNCION_IZQ> 
-        PATH()
-    <T_FUNCION_DER>  
+        t=PATH()
+    <T_FUNCION_DER>  {return t;}
 }
 
-void OBJECT():
-{}
+String OBJECT():
+{String t;}
 {
     <T_OBJECT_IZQ> 
-        PATH()
-    <T_OBJECT_DER>  
+        t=PATH()
+    <T_OBJECT_DER>  {return t;}
 }
 
-void PATH():
-{}
+String PATH():
+{Token t;}
 {
     <T_PATH_IZQ> 
-        <CADENA>
-    <T_PATH_DER>
+        t=<CADENA>
+    <T_PATH_DER> {return t.image.substring(1, t.image.length() - 1).trim();}
 }
 
 
-void L_TABLA():
-{}
+ArrayList<Tabla> L_TABLA():
+{ArrayList<Tabla> c = new ArrayList<Tabla>();
+ArrayList<Tabla> c2 = new ArrayList<Tabla>();}
 {
-    TABLA() (L_TABLA())?
+    c=TABLA() (c2=L_TABLA(){
+                    for(int i=0; i < c2.size(); i++){
+                        c.add(c2.get(i));
+                    }
+                }
+            )? {return c;}
 }
 
-void TABLA():
-{}
+ArrayList<Tabla> TABLA():
+{String n, p; ArrayList<ColumnaEstructura> ce;}
 {
     <T_TABLA_IZQ> 
-        NOMBRE() 
-        PATH()
-        ROWS()
-    <T_TABLA_DER> 
+        n=NOMBRE() 
+        p=PATH()
+        ce=ROWS()
+    <T_TABLA_DER>
+
+        {Tabla t = new Tabla(n, p, ce);
+        ArrayList<Tabla> l = new ArrayList<Tabla>();
+        l.add(t);
+            return l;
+        }
 }
 
-void NOMBRE():
-{}
+String NOMBRE():
+{Token t;}
 {
     <T_NOMBRE_IZQ> 
-        <CADENA>
+        t=<CADENA>
     <T_NOMBRE_DER>
+    {return t.image.substring(1, t.image.length() - 1).trim();}
 }
 
-void ROWS():
-{}
+ArrayList<ColumnaEstructura> ROWS():
+{ArrayList<ColumnaEstructura> c;}
 {
     <T_ROWS_IZQ> 
-        L_CAMPOS()
+        c=L_CAMPOS()
     <T_ROWS_DER>
+    {return c;}
 }
 
-void L_CAMPOS():
-{}
+ArrayList<ColumnaEstructura> L_CAMPOS():
+{ArrayList<ColumnaEstructura> c = new ArrayList<ColumnaEstructura>();
+ArrayList<ColumnaEstructura> c2 = new ArrayList<ColumnaEstructura>();}
 {
-    CAMPO() (L_CAMPOS())?
+    c=CAMPO() (c2=L_CAMPOS(){
+                    for(int i=0; i < c2.size(); i++){
+                        c.add(c2.get(i));
+                    }
+                }
+            )? {return c;}
 }
 
-void CAMPO():
-{}
+ArrayList<ColumnaEstructura> CAMPO():
+{Token t,i; Complemento c = new Complemento(); ColumnaEstructura ce = new ColumnaEstructura();}
 {
     <T_CAMPO_IZQ> 
-        (<T_INTEGER_IZQ> <CADENA> <T_INTEGER_DER>
-        |<T_TEXT_IZQ> <CADENA> <T_TEXT_DER>
-        |<T_DOUBLE_IZQ> <CADENA> <T_DOUBLE_DER>
-        |<T_BOOL_IZQ> <CADENA> <T_BOOL_DER>
-        |<T_DATE_IZQ> <CADENA> <T_DATE_DER>
-        |<T_DATETIME_IZQ> <CADENA> <T_DATETIME_DER>
-        |<ID_IZQ> <CADENA> <ID_DER>) 
-            (L_COMPLEMENTO())?        
+        (<T_INTEGER_IZQ> t=<CADENA> <T_INTEGER_DER> {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.tinteger;}
+        |<T_TEXT_IZQ> t=<CADENA> <T_TEXT_DER> {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.ttext;}
+        |<T_DOUBLE_IZQ> t=<CADENA> <T_DOUBLE_DER> {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.tdouble;}
+        |<T_BOOL_IZQ> t=<CADENA> <T_BOOL_DER>   {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.tbool;}
+        |<T_DATE_IZQ> t=<CADENA> <T_DATE_DER>  {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.tdate;}
+        |<T_DATETIME_IZQ> t=<CADENA> <T_DATETIME_DER>  {ce.Tipo = 0; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = Tools.tdatetime;}
+        |i=<ID_IZQ> t=<CADENA> <ID_DER> {ce.Tipo = 1; ce.NombreCampo = t.image.substring(1, t.image.length() - 1).trim(); ce.TipoCampo = i.image.substring(1, i.image.length() - 1).trim();}) 
+            (c=L_COMPLEMENTO() {ce.Complementos = c;})?        
     <T_CAMPO_DER>
+    {
+        ArrayList<ColumnaEstructura> l = new ArrayList<ColumnaEstructura>();
+        l.add(ce);
+        return l;}
     
 }
 
-void L_COMPLEMENTO():
-{}
+Complemento L_COMPLEMENTO():
+{Complemento c; Complemento c2;}
 {
-    COMPLEMENTO() (L_COMPLEMENTO())?
+    c=COMPLEMENTO() (c2=L_COMPLEMENTO(){
+                                        c.isNulo = c2.isNulo;
+                                        c.isAutoincrementable = c2.isAutoincrementable;
+                                        c.isPrimary = c2.isPrimary;
+                                        c.isForanea = c2.isForanea;
+                                        c.Foranea = c2.Foranea;
+                                        })?
+    {return c;}
 }
 
-void COMPLEMENTO():
-{}
+Complemento COMPLEMENTO():
+{String c; Complemento com = new Complemento();}
 {
     <T_COMPLEMENTO_IZQ>
-        (<T_NULO>
-        |<T_NO_NULO>
-        |<T_AUTOINCREMETABLE>
-        |<T_LLAVE_PRIMARIA>
-        |FORANEA())
+        (<T_NULO> {com.isNulo = true;}
+        |<T_NO_NULO> {com.isNulo = false;}
+        |<T_AUTOINCREMETABLE> {com.isAutoincrementable = true;}
+        |<T_LLAVE_PRIMARIA> {com.isPrimary = true;}
+        |c=FORANEA(){com.isForanea = true; com.Foranea = c;})
     <T_COMPLEMENTO_DER>
+    {return com;}
 }
 
-void FORANEA():
-{}
+String FORANEA():
+{Token t;}
 {
-    <T_FORANEA_IZQ> <CADENA> <T_FORANEA_DER>
+    <T_FORANEA_IZQ> t=<CADENA> <T_FORANEA_DER> {return t.image.substring(1,t.image.length() - 1).trim();}
 }

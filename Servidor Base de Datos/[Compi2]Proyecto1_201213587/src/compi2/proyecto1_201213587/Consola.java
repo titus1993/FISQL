@@ -7,7 +7,13 @@ package compi2.proyecto1_201213587;
 
 import Analisis.XML.Tabla.*;
 import Funciones.XML.*;
+import Static.Tools;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.ArrayList;
+import javax.swing.JScrollPane;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
@@ -20,6 +26,26 @@ public class Consola extends javax.swing.JFrame {
      */
     public Consola() {
         initComponents();
+        iniciarComponentes();
+        Tools.ImprimirConsola("Iniciando Base de datos");
+    }
+    
+    private void iniciarComponentes(){
+        setLayout(new GridLayout());
+        Tools.Consola.setBackground(Color.BLACK);
+        Tools.Consola.setForeground(Color.WHITE);
+        Tools.Consola.setFont(new Font("", Font.PLAIN, 18));
+        Tools.Consola.setEditable(false);
+        JScrollPane panel = new JScrollPane(Tools.Consola);
+        DefaultCaret caret = (DefaultCaret) Tools.Consola.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        panel.setViewportView(Tools.Consola);
+        this.add(panel);
+        int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+        int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+        this.setBounds((ancho / 2) - (this.getWidth() / 2), (alto / 2) - (this.getHeight() / 2), this.getWidth(), this.getHeight());
+        
+        
     }
 
     /**
@@ -31,58 +57,21 @@ public class Consola extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
-                .addContainerGap())
+            .addGap(0, 959, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+            .addGap(0, 497, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       tablaGrammar g = new tablaGrammar(new java.io.StringReader(this.jTextArea1.getText()));
-        try {
-            ArrayList<ArrayList<Columna>> a = g.S();
-            a = a;
-            System.out.println("Funciona");
-        } catch (ParseException | TokenMgrError e) {
-            System.out.println(e.getMessage());
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -120,8 +109,5 @@ public class Consola extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }
