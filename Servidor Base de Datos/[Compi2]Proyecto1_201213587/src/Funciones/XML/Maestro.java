@@ -34,7 +34,6 @@ public class Maestro {
     private void GuardarUsuarios(){
         String cadena = "";
         for(int i = 0; i < Usuarios.size(); i++){
-            Usuarios.get(i).name ="Anicka";
             cadena = Usuarios.get(i).getXML();            
         }
         Tools.guardarArchivo(Tools.localUsrXml, cadena);
