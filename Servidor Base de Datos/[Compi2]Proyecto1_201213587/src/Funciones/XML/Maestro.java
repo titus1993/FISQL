@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import Analisis.XML.Usuario.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -25,15 +26,29 @@ public class Maestro {
         iniciarDB();
     }
 
-    public void GuardarMaestro() {
+    public void Guardar() {
+        GuardarMaestro();
         GuardarUsuarios();
         GuardarBaseDatos();
+    }
+
+    private void GuardarMaestro() {
+        String cadena = "";
+
+        for (DataBase temp : BaseDatos) {
+            cadena += "<DB>\n"
+                    + "\t<Nombre>\"" + temp.Nombre + "\"</Nombre>\n"
+                    + "\t<Path>\"" + temp.Path + "\"</Path>\n"
+                    + "</DB>\n";
+        }
+
+        Tools.guardarArchivo(Tools.localMaestroXml, cadena);
     }
 
     private void GuardarUsuarios() {
         String cadena = "";
         for (int i = 0; i < Usuarios.size(); i++) {
-            cadena = Usuarios.get(i).getXML();
+            cadena += Usuarios.get(i).getXML();
         }
         Tools.guardarArchivo(Tools.localUsrXml, cadena);
     }
@@ -45,7 +60,7 @@ public class Maestro {
             temp.GuardarBaseDatos();
             cadena = temp.getXML();
             Tools.guardarArchivo(temp.Path, cadena);
-        }        
+        }
     }
 
     private void iniciarDB() {
@@ -155,30 +170,94 @@ public class Maestro {
         }
     }
 
-    public void DLLCrearUsuario() {
-
+    public Usuario ExisteUsuario(String nombre) {
+        for (Usuario usr : Usuarios) {
+            if (nombre.toLowerCase().equals(usr.name.toLowerCase())) {
+                return usr;
+            }
+        }
+        return null;
     }
 
-    public String DLLCrearBaseDatos(String nombre) {
-        if (!existeBaseDatos(nombre)) {
+    public String DLLCrearUsuario(String nombre, String pass) {
+        if (ExisteUsuario(nombre) == null) {
+            Usuario nuevo = new Usuario(nombre, pass, 1, 0, Tools.formatoFecha.format(new Date()), new ArrayList<PermisosUsr>());
+            Usuarios.add(nuevo);
+            this.Guardar();
+        } else {
+            //error que ya existe
+        }
+
+        return "";
+    }
+
+    public String DLLCrearBaseDatos(String nombre, String usuario) {
+        if (ExisteBaseDatos(nombre) == null) {
             //primero creamos la carpeta de la base de datos
             String carpetaDB = Tools.localDb + "\\" + nombre;
             Tools.CrearCarpeta(carpetaDB);
 
-            //creamos el archivo de la base de datos
-            DataBase nueva = new DataBase(nombre, Tools.localDb + "\\");
+            //creamos la instancia de la base de datos
+            DataBase nueva = new DataBase(nombre, Tools.localDb + "\\" + nombre + "\\" + nombre + ".xml");
+
+            //asignamos las rutas de los archivos xml
+            nueva.RutaFuncion = Tools.localDb + "\\" + nombre + "\\Funciones.xml";
+            nueva.RutaObjetos = Tools.localDb + "\\" + nombre + "\\Objetos.xml";
+            nueva.RutaProcedimiento = Tools.localDb + "\\" + nombre + "\\Procedimientos.xml";
+
+            //creamos los archivos xml de la base de datos
+            Tools.crearArchivo(nueva.RutaFuncion, "");
+            Tools.crearArchivo(nueva.RutaProcedimiento, "");
+            Tools.crearArchivo(nueva.RutaObjetos, "");
+            Tools.crearArchivo(nueva.Path, "");
+
+            BaseDatos.add(nueva);
+
+            DMLOtorgarPermisosBaseDatos(nombre, usuario);
+
+            this.Guardar();
         } else {
             //retornar error que ya existe
         }
         return "";
     }
 
-    public boolean existeBaseDatos(String nombre) {
-        for (int i = 0; i < BaseDatos.size(); i++) {
-            if (BaseDatos.get(i).Nombre.equals(nombre)) {
+    public boolean DMLOtorgarPermisosBaseDatos(String base, String usuario) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Usuario usr = ExisteUsuario(usuario);
+            if (usr != null) {
+                usr.DarPermisosBaseDatos(db.Nombre);
+                this.Guardar();
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean DMLOtorgarPermisosObjeto(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Objeto obj = db.ExisteObjeto(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.DarPermisosBaseDatos(db.Nombre);
+                    usr.DarPermisosObjeto(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public DataBase ExisteBaseDatos(String nombre) {
+        for (int i = 0; i < BaseDatos.size(); i++) {
+            if (BaseDatos.get(i).Nombre.equals(nombre)) {
+                return BaseDatos.get(i);
+            }
+        }
+        return null;
     }
 }

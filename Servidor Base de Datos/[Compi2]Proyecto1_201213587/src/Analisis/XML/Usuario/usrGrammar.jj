@@ -109,7 +109,7 @@ String NOMBRE():
 String PASS():
 {Token p;}
 {
-    <T_PASS_IZQ> p=<CADENA> <T_PASS_DER>{return p.image;}
+    <T_PASS_IZQ> p=<CADENA> <T_PASS_DER>{return p.image.substring(1, p.image.length() - 1).trim()   ;}
 }
 
 int TIPO():
@@ -127,7 +127,7 @@ int ESTADO():
 String SESION():
 {Token s;}
 {
-    <T_SESION_IZQ> s=<CADENA> <T_SESION_DER>{return s.image;}
+    <T_SESION_IZQ> s=<CADENA> <T_SESION_DER>{return s.image.substring(1, s.image.length() - 1).trim();}
 }
 
 

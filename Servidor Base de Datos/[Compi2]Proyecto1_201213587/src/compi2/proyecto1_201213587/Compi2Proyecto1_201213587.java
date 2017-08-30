@@ -22,6 +22,16 @@ public class Compi2Proyecto1_201213587 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Cargar();
+        Tools.Base_de_datos.DLLCrearUsuario("anicka", "anicka");
+        Tools.Base_de_datos.DLLCrearBaseDatos("DBAnicka","anicka");        
+        //Tools.Base_de_datos.DMLOtorgarPermisosObjeto("DB1", "titus2", "nombre_obj1");
+        
+        Consola a = new Consola();
+        a.setVisible(true);
+    }    
+    
+    public static void Cargar(){
         try {
             Runtime runtime = Runtime.getRuntime();
             String[] cmd = new String[4];
@@ -213,10 +223,5 @@ public class Compi2Proyecto1_201213587 {
         } catch (IOException e) {
             System.out.print(e.toString());
         }
-        
-        Tools.Base_de_datos.GuardarMaestro();
-        
-        Consola a = new Consola();
-        a.setVisible(true);
-    }    
+    }
 }

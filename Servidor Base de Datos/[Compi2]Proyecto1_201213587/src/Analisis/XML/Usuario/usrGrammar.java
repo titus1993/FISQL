@@ -64,7 +64,7 @@ ArrayList<Usuario> u = new ArrayList<Usuario>();
     jj_consume_token(T_PASS_IZQ);
     p = jj_consume_token(CADENA);
     jj_consume_token(T_PASS_DER);
-{if ("" != null) return p.image;}
+{if ("" != null) return p.image.substring(1, p.image.length() - 1).trim()   ;}
     throw new Error("Missing return statement in function");
   }
 
@@ -118,7 +118,7 @@ e=0;
     jj_consume_token(T_SESION_IZQ);
     s = jj_consume_token(CADENA);
     jj_consume_token(T_SESION_DER);
-{if ("" != null) return s.image;}
+{if ("" != null) return s.image.substring(1, s.image.length() - 1).trim();}
     throw new Error("Missing return statement in function");
   }
 

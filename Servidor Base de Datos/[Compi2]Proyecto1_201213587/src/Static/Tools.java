@@ -46,6 +46,12 @@ public class Tools {
     public static String tdate = "date";
     public static String tdatetime = "datetime";
     public static String tobjeto = "objeto";
+    
+    public static final String permisoTabla = "tabla";
+    public static final String permisoBase = "base";
+    public static final String permisoFunc = "func";
+    public static final String permisoProc = "proc";
+    public static final String permisoObj = "obj";
 
     
     public static Maestro Base_de_datos = new Maestro();

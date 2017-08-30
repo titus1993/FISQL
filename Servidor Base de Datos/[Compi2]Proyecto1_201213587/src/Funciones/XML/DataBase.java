@@ -39,6 +39,43 @@ public class DataBase {
         Tablas = tablas;
     }
     
+    
+    public Tabla ExisteTabla(String nombre){
+        for(Tabla tab : Tablas){
+            if(tab.Nombre.equals(nombre)){
+                return tab;
+            }
+        }
+        return null;
+    }    
+    
+    public Procedimiento ExisteProcedimiento(String nombre){
+        for(Procedimiento proc : Procedimientos){
+            if(proc.nombre.equals(nombre)){
+                return proc;
+            }
+        }
+        return null;
+    }
+    
+    public Funcion ExisteFuncion(String nombre){
+        for(Funcion fun : Funciones){
+            if(fun.nombre.equals(nombre)){
+                return fun;
+            }
+        }
+        return null;
+    }
+    
+    public Objeto ExisteObjeto(String nombre){
+        for(Objeto obj : Objetos){
+            if(obj.nombre.equals(nombre)){
+                return obj;
+            }
+        }
+        return null;
+    }
+    
     public String getXML(){
         String cadena ="";
         
@@ -199,5 +236,4 @@ public class DataBase {
             }
         }
     }
-
 }
