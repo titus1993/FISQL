@@ -11,10 +11,21 @@ import java.util.ArrayList;
  *
  * @author Titus
  */
-public class columnaObjeto{
+public class columnaObjeto {
+
     ArrayList<Columna> Filas;
-    
-    public columnaObjeto(ArrayList<Columna> _filas){
+
+    public columnaObjeto(ArrayList<Columna> _filas) {
         Filas = _filas;
+    }
+
+    public String getXML() {
+        String cadena = "";
+
+        for (Columna temp : Filas) {
+            cadena += "\t" + temp.getXML();
+        }
+
+        return cadena;
     }
 }

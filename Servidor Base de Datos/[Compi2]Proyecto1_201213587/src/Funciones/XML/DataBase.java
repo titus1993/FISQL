@@ -38,6 +38,56 @@ public class DataBase {
         RutaObjetos = rutaobjeto;
         Tablas = tablas;
     }
+    
+    public String getXML(){
+        String cadena ="";
+        
+        
+        cadena += "<Procedure>\n"
+                + "\t<Path>\"" + RutaProcedimiento + "\"</Path>\n"
+                + "</Procedure>\n"
+                + "<Funcion>\n"
+                + "\t<Path>\"" + RutaFuncion + "\"</Path>\n"
+                + "</Funcion>\n"
+                + "<Object>\n"
+                + "\t<Path>\"" + RutaObjetos + "\"</Path>\n"
+                + "</Object>\n"
+                ;
+        
+        for(int i =0; i < Tablas.size(); i++){
+            cadena += Tablas.get(i).getXML();
+        }
+        
+        return cadena;
+    }
+    
+    public void GuardarBaseDatos(){
+        String cadena = "";
+        for(int i = 0; i < Objetos.size(); i++){
+            Objeto temp = Objetos.get(i);
+            cadena += temp.getXML();
+        }
+        Tools.guardarArchivo(RutaObjetos, cadena);
+        
+        cadena = "";
+        for(int i = 0; i < Funciones.size(); i++){
+            Funcion temp = Funciones.get(i);
+            cadena  += temp.getXML();
+        }
+        Tools.guardarArchivo(RutaFuncion, cadena);
+        
+        cadena = "";
+        for(int i = 0; i < Procedimientos.size(); i++){
+            Procedimiento temp = Procedimientos.get(i);
+            cadena += temp.getXML();
+        }
+        Tools.guardarArchivo(RutaProcedimiento, cadena);
+        
+        for(int i = 0; i < Tablas.size(); i++){
+            Tabla temp = Tablas.get(i);
+            temp.GuardarTabla();
+        }
+    }
 
     public void Cargar() {
         if (CargarDB()) {

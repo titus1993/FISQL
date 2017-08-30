@@ -21,4 +21,23 @@ public class Funcion {
         src = _src;
         parametros = _parametros;
     }
+    
+    public String getXML(){
+        String cadena = "";
+        
+        cadena += "<Func>\n"
+                + "\t<Tipo>" + tipo + "</Tipo>\n"
+                + "\t<Nombre>\"" + nombre + "\"</Nombre>\n"
+                + "\t<Params>\n";
+        
+        for(int i = 0; i < parametros.size(); i++){
+            cadena += parametros.get(i).getXMLComillas();
+        }
+        
+        cadena += "\t</Params>\n"
+                + "\t<src>§" + src + "§\n\t</src>\n"
+                + "</Func>\n";
+        
+        return cadena;
+    }
 }

@@ -20,31 +20,33 @@ public class Maestro {
 
     ArrayList<Usuario> Usuarios = null;
     ArrayList<DataBase> BaseDatos = null;
-    
+
     public Maestro() {
         iniciarDB();
     }
-    
-    
-    public void GuardarMaestro(){
+
+    public void GuardarMaestro() {
         GuardarUsuarios();
         GuardarBaseDatos();
     }
-    
-    private void GuardarUsuarios(){
+
+    private void GuardarUsuarios() {
         String cadena = "";
-        for(int i = 0; i < Usuarios.size(); i++){
-            cadena = Usuarios.get(i).getXML();            
+        for (int i = 0; i < Usuarios.size(); i++) {
+            cadena = Usuarios.get(i).getXML();
         }
         Tools.guardarArchivo(Tools.localUsrXml, cadena);
     }
-    
-    private void GuardarBaseDatos(){
-        for(int i = 0; i < BaseDatos.size(); i++){
-            
-        }
+
+    private void GuardarBaseDatos() {
+        String cadena = "";
+        for (int i = 0; i < BaseDatos.size(); i++) {
+            DataBase temp = BaseDatos.get(i);
+            temp.GuardarBaseDatos();
+            cadena = temp.getXML();
+            Tools.guardarArchivo(temp.Path, cadena);
+        }        
     }
-    
 
     private void iniciarDB() {
         if (!Tools.Existe(Tools.local)) {
@@ -79,8 +81,8 @@ public class Maestro {
             Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void CargarMaster(){
+
+    private void CargarMaster() {
         try {
             if (Tools.Existe(Tools.localMaestroXml)) {
                 String texto = Tools.LeerArchivo(Tools.localMaestroXml);
@@ -97,20 +99,20 @@ public class Maestro {
             Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void CargarDB(){
-        for(int i = 0; i < BaseDatos.size(); i++){
+
+    private void CargarDB() {
+        for (int i = 0; i < BaseDatos.size(); i++) {
             DataBase temp = BaseDatos.get(i);
-            if(Tools.Existe(temp.Path)){
+            if (Tools.Existe(temp.Path)) {
                 temp.Cargar();
                 System.out.println("Existe");
-            }else{
+            } else {
                 System.out.println("No existe la base de datos " + temp.Nombre + "en la ruta " + temp.Path);
             }
         }
     }
 
-    private void CrearDB() {        
+    private void CrearDB() {
         if (Tools.CrearCarpeta(Tools.local)) {
             CrearArchivos();
         }
@@ -152,28 +154,28 @@ public class Maestro {
             //reportar error
         }
     }
-    
-    public void DLLCrearUsuario(){
-        
+
+    public void DLLCrearUsuario() {
+
     }
-    
-    public String DLLCrearBaseDatos(String nombre){
-        if(!existeBaseDatos(nombre)){
+
+    public String DLLCrearBaseDatos(String nombre) {
+        if (!existeBaseDatos(nombre)) {
             //primero creamos la carpeta de la base de datos
             String carpetaDB = Tools.localDb + "\\" + nombre;
             Tools.CrearCarpeta(carpetaDB);
-            
+
             //creamos el archivo de la base de datos
             DataBase nueva = new DataBase(nombre, Tools.localDb + "\\");
-        }else{
+        } else {
             //retornar error que ya existe
         }
         return "";
     }
-    
-    public boolean existeBaseDatos(String nombre){
-        for(int i = 0; i < BaseDatos.size(); i++){
-            if(BaseDatos.get(i).Nombre.equals(nombre)){
+
+    public boolean existeBaseDatos(String nombre) {
+        for (int i = 0; i < BaseDatos.size(); i++) {
+            if (BaseDatos.get(i).Nombre.equals(nombre)) {
                 return true;
             }
         }
