@@ -27,11 +27,11 @@ import javax.swing.JTextArea;
 public class Tools {
 
     public static JTextArea Consola = new JTextArea();
-    
+
     public static void ImprimirConsola(String texto) {
         Consola.setText(Consola.getText() + ">> " + texto + "\n");
     }
-    
+
     public static String local = "C:\\FISQL_DB";
     public static String localUsrXml = "C:\\FISQL_DB\\users.xml";
     public static String localDb = "C:\\FISQL_DB\\DB";
@@ -46,16 +46,15 @@ public class Tools {
     public static String tdate = "date";
     public static String tdatetime = "datetime";
     public static String tobjeto = "objeto";
-    
+
     public static final String permisoTabla = "tabla";
     public static final String permisoBase = "base";
     public static final String permisoFunc = "func";
     public static final String permisoProc = "proc";
     public static final String permisoObj = "obj";
 
-    
     public static Maestro Base_de_datos = new Maestro();
-    
+
     public static String LeerArchivo(String ruta) {
         String contenido = "";
         try {
@@ -74,7 +73,7 @@ public class Tools {
 
     public static boolean CrearCarpeta(String ruta) {
         File archivo = new File(ruta);
-        
+
         return archivo.mkdirs();
     }
 
@@ -133,9 +132,16 @@ public class Tools {
 
         return false;
     }
-    
+
     public static boolean Existe(String ruta) {
         File archivo = new File(ruta);
         return archivo.exists();
+    }
+
+    public static String getAbolutePath(String ruta) {
+        File f = new File(ruta);
+        String path = "";
+        path = f.getParent();
+        return path;
     }
 }

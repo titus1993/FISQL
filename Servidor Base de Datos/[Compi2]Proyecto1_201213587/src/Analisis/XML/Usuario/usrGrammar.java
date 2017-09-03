@@ -172,7 +172,7 @@ for(int i=0; i < lu2.size(); i++){
     }
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_OBJ_IZQ:{
-      lp = L_OBJETO();
+      lo = L_OBJETO();
       break;
       }
     default:

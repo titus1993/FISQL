@@ -92,7 +92,7 @@ ArrayList<Procedimiento> PROC():
 {
     <T_PROC_IZQ>
         n=NOMBRE()
-        (<T_PARAMS_IZQ> p=L_PARAMS() <T_PARAMS_DER>)?
+        <T_PARAMS_IZQ> (p=L_PARAMS())? <T_PARAMS_DER>
         s=SRC()
     <T_PROC_DER>
     {ArrayList<Procedimiento> proc = new ArrayList<Procedimiento>();

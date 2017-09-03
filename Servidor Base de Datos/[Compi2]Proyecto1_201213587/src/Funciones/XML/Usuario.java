@@ -37,21 +37,26 @@ public class Usuario {
         permisos = _permisos;
     }
 
-    public void DarPermisos(String tipo, String user, String nombreObjeto) {
+    public void DarPermisos(String tipo, String base, String nombreObjeto) {
         switch (tipo) {
             case Tools.permisoTabla:
+                DarPermisosTabla(base, nombreObjeto);
                 break;
 
             case Tools.permisoBase:
+                DarPermisosBaseDatos(base);
                 break;
 
             case Tools.permisoFunc:
+                DarPermisosFuncion(base, nombreObjeto);
                 break;
 
             case Tools.permisoProc:
+                DarPermisosProcedimiento(base, nombreObjeto);
                 break;
 
             case Tools.permisoObj:
+                DarPermisosObjeto(base, nombreObjeto);
                 break;
 
         }
@@ -72,11 +77,66 @@ public class Usuario {
         return false;
     }
 
+    public boolean ExisteTabla (String nombre, String tabla) {
+        for (PermisosUsr tempo : permisos) {
+            if (tempo.name.equals(nombre)) {
+                if(tempo.existsTable(tabla)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean ExisteObjeto (String nombre, String objeto) {
+        for (PermisosUsr tempo : permisos) {
+            if (tempo.name.equals(nombre)) {
+                if(tempo.existsObject(objeto)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean ExisteFuncion (String nombre, String funcion) {
+        for (PermisosUsr tempo : permisos) {
+            if (tempo.name.equals(nombre)) {
+                if(tempo.existsFunction(funcion)){
+                    return true;
+                }
+            }
+        }
+        return false;       
+    }
+    
+    public boolean ExisteProcedimiento (String nombre, String tabla) {
+        for (PermisosUsr tempo : permisos) {
+            if (tempo.name.equals(nombre)) {
+                if(tempo.existsProcedure(tabla)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public void DarPermisosTabla(String base, String nombreobjeto) {
         for (PermisosUsr temp : permisos) {
             if (temp.name.equals(base)) {
                 if (!temp.existsTable(nombreobjeto)) {
                     temp.addTable(nombreobjeto);
+                }
+                break;
+            }
+        }
+    }
+
+    public void QuitarPermisosTabla(String base, String nombreobjeto) {
+        for (PermisosUsr temp : permisos) {
+            if (temp.name.equals(base)) {
+                if (temp.existsTable(nombreobjeto)) {
+                    temp.removeTable(name);
                 }
                 break;
             }
@@ -93,7 +153,18 @@ public class Usuario {
             }
         }
     }
-    
+
+    public void QuitarPermisosObjeto(String base, String nombreobjeto) {
+        for (PermisosUsr temp : permisos) {
+            if (temp.name.equals(base)) {
+                if (temp.existsObject(nombreobjeto)) {
+                    temp.removeObject(nombreobjeto);
+                }
+                break;
+            }
+        }
+    }
+
     public void DarPermisosFuncion(String base, String nombreobjeto) {
         for (PermisosUsr temp : permisos) {
             if (temp.name.equals(base)) {
@@ -104,12 +175,34 @@ public class Usuario {
             }
         }
     }
-    
+
+    public void QuitarPermisosFuncion(String base, String nombreobjeto) {
+        for (PermisosUsr temp : permisos) {
+            if (temp.name.equals(base)) {
+                if (temp.existsFunction(nombreobjeto)) {
+                    temp.removeFunction(nombreobjeto);
+                }
+                break;
+            }
+        }
+    }
+
     public void DarPermisosProcedimiento(String base, String nombreobjeto) {
         for (PermisosUsr temp : permisos) {
             if (temp.name.equals(base)) {
                 if (!temp.existsProcedure(nombreobjeto)) {
                     temp.addProcedure(nombreobjeto);
+                }
+                break;
+            }
+        }
+    }
+
+    public void QuitarPermisosProcedimiento(String base, String nombreobjeto) {
+        for (PermisosUsr temp : permisos) {
+            if (temp.name.equals(base)) {
+                if (temp.existsProcedure(nombreobjeto)) {
+                    temp.removeProcedure(nombreobjeto);
                 }
                 break;
             }

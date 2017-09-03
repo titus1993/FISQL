@@ -5,12 +5,14 @@
  */
 package compi2.proyecto1_201213587;
 
-import Funciones.XML.Maestro;
+
+import Funciones.XML.*;
 import Static.Tools;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,9 +25,50 @@ public class Compi2Proyecto1_201213587 {
      */
     public static void main(String[] args) {
         //Cargar();
-        Tools.Base_de_datos.DLLCrearUsuario("anicka", "anicka");
-        Tools.Base_de_datos.DLLCrearBaseDatos("DBAnicka","anicka");        
+        //Tools.Base_de_datos.DLLCrearUsuario("masterchef", "master");
+        //Tools.Base_de_datos.DLLCrearBaseDatos("dbnueva","masterchef");    
+        //Tools.Base_de_datos.DMLCrearFuncion("dbnueva", "masterchef", new Funcion(Tools.tbool, "funcion5", "use db1;", new ArrayList<>()));
+        //Tools.Base_de_datos.DMLCrearProcedimiento("dbnueva", "masterchef", new Procedimiento("proc3", "use proc1;", new ArrayList()));
+        //ArrayList<Parametro> l = new ArrayList<>();
+        //l.add(new Parametro(Tools.tinteger, "id"));
+        //Tools.Base_de_datos.DMLCrearObjeto("dbnueva", "masterchef", new Objeto("obj9", l));
+        
         //Tools.Base_de_datos.DMLOtorgarPermisosObjeto("DB1", "titus2", "nombre_obj1");
+        
+        //Metiendo una tabla
+        /*ArrayList<ColumnaEstructura> lce = new ArrayList<>();
+        ColumnaEstructura ce = new ColumnaEstructura();
+        ce.NombreCampo = "col1";
+        ce.Tipo = 0;
+        ce.TipoCampo = Tools.ttext;
+        lce.add(ce);
+        Tabla t = new Tabla("tabla3", "", lce);
+        t.Filas = new ArrayList<ArrayList<Columna>>();
+        Columna c = new Columna(Tools.tinteger, "5");
+        ArrayList<Columna> ac = new ArrayList<>();
+        ac.add(c);
+        t.Filas.add(ac);
+        Tools.Base_de_datos.DMLCrearTabla("dbnueva", "masterchef", t);*/
+        
+        
+        //prueba altertable
+        /*ColumnaEstructura ce = new ColumnaEstructura();
+        ce.Complementos.isAutoincrementable = true;
+        ce.Tipo = 1;
+        ce.TipoCampo = "obj2";
+        ce.NombreCampo = "estenoesunobjeto";
+        ArrayList<ColumnaEstructura> lce = new ArrayList<>();
+        lce.add(ce);
+        Tools.Base_de_datos.DLLAlterTable("dbnueva", "masterchef", "tabla3", lce);*/
+        
+        //prueba alter objeto agregar
+        /*Parametro p = new Parametro(Tools.ttext, "nombre");
+        ArrayList<Parametro> lp = new ArrayList<>();
+        lp.add(p);              
+        
+        Tools.Base_de_datos.DLLAlterObjetoAgregar("dbnueva", "masterchef", "obj1", lp);*/
+        
+        
         
         Consola a = new Consola();
         a.setVisible(true);

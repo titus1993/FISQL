@@ -24,6 +24,39 @@ public class Tabla {
         Columnas = columnas;
     }
 
+    public boolean ExistePrimaria() {
+        for (ColumnaEstructura col : Columnas) {
+            if (col.Complementos.isPrimary) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void AgregarCampo(ColumnaEstructura c) {
+        Columnas.add(c);
+    }
+
+    public void QuitarCampo(String c) {
+        int pos = PosColumna(c);
+
+        if (pos >= 0) {
+            Columnas.remove(pos);
+            for (int i = 0; i < Filas.size(); i++) {
+                Filas.get(i).remove(pos);
+            }
+        }
+    }
+
+    public int PosColumna(String nombre) {
+        for (int i = 0; i < Columnas.size(); i++) {
+            if (Columnas.get(i).NombreCampo.equals(nombre)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public String getXML() {
         String cadena = "";
 
@@ -48,11 +81,11 @@ public class Tabla {
             ArrayList<Columna> temp = Filas.get(i);
             cadena += "<Row>\n";
             for (Columna celda : temp) {
-                cadena += celda.getXML();                        
+                cadena += celda.getXML();
             }
             cadena += "</Row>\n";
         }
-        
+
         Tools.guardarArchivo(Path, cadena);
     }
 }

@@ -32,7 +32,7 @@ public class ColumnaEstructura {
         }
         
         if(Complementos.isAutoincrementable){
-            cadena += "\t\t\t<Complemento>autoincrementbles</Complemento>\n";
+            cadena += "\t\t\t<Complemento>autoincrementable</Complemento>\n";
         }
         
         if(Complementos.isPrimary){

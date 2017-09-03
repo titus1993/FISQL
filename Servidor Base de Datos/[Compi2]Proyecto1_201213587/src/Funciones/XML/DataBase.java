@@ -40,6 +40,67 @@ public class DataBase {
     }
     
     
+    
+    public boolean PruebaAlterTablaAgregar(String nombretabla, ArrayList<ColumnaEstructura> nuevas){
+        Tabla tabla = ExisteTabla(nombretabla);
+        
+        for (ColumnaEstructura col : nuevas) {
+            //comprobamos que no exista mas de una primaria
+            if (tabla.ExistePrimaria() && col.Complementos.isPrimary) {
+                //Error ya existe una llave primaria
+                return false;
+            }
+            
+            //comprobamos que no se repita el nombre
+            for (ColumnaEstructura col2 : tabla.Columnas) {
+                if (col.NombreCampo.equals(col2.NombreCampo)) {
+                    //Error ya existe el nombre
+                    return false;
+                }
+            }
+            
+            //comprobamos que existe la tabla foranea con llave primaria
+            if(col.Complementos.isForanea){
+              Tabla tablaforanea = ExisteTabla(col.Complementos.Foranea);
+              if(tablaforanea != null){
+                  if(!tablaforanea.ExistePrimaria()){
+                      //Error la tabla no tiene una llave primaria para la relacion
+                      return false;
+                  }
+              }else{
+                  //Error no existe la tabla para hacer la relacion foranea
+                  return false;
+              }
+            }
+            
+            if(col.Tipo != 0){
+                Objeto obj = ExisteObjeto(col.TipoCampo);
+                if(obj == null){
+                    //Error no existe el objeto
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public boolean PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas){
+        Objeto objeto = ExisteObjeto(nombreobjeto);
+        
+        for (Parametro par : nuevas) {
+                        
+            //comprobamos que no se repita el nombre
+            for (Parametro par2 : objeto.parametros) {
+                if (par.nombre.equals(par2.nombre)) {
+                    //Error ya existe el nombre
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    
     public Tabla ExisteTabla(String nombre){
         for(Tabla tab : Tablas){
             if(tab.Nombre.equals(nombre)){

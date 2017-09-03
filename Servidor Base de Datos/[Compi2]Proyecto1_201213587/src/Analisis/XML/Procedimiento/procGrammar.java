@@ -50,17 +50,23 @@ for(int i=0; i < p2.size(); i++){
   final public ArrayList<Procedimiento> PROC() throws ParseException {String n, s; ArrayList<Parametro> p = new ArrayList<Parametro>();
     jj_consume_token(T_PROC_IZQ);
     n = NOMBRE();
+    jj_consume_token(T_PARAMS_IZQ);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case T_PARAMS_IZQ:{
-      jj_consume_token(T_PARAMS_IZQ);
+    case T_TEXT_IZQ:
+    case T_INTEGER_IZQ:
+    case T_DOUBLE_IZQ:
+    case T_BOOL_IZQ:
+    case T_DATE_IZQ:
+    case T_DATETIME_IZQ:
+    case ID_IZQ:{
       p = L_PARAMS();
-      jj_consume_token(T_PARAMS_DER);
       break;
       }
     default:
       jj_la1[2] = jj_gen;
       ;
     }
+    jj_consume_token(T_PARAMS_DER);
     s = SRC();
     jj_consume_token(T_PROC_DER);
 ArrayList<Procedimiento> proc = new ArrayList<Procedimiento>();
@@ -184,7 +190,7 @@ p.add(new Parametro(Tools.tobjeto, c.image.substring(1, c.image.length() - 1), t
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x2,0x2,0x8,0x807e00,0x807e00,};
+      jj_la1_0 = new int[] {0x2,0x2,0x807e00,0x807e00,0x807e00,};
    }
 
   /** Constructor with InputStream. */

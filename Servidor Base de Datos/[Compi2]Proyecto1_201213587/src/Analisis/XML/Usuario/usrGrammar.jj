@@ -157,7 +157,7 @@ ArrayList<PermisosUsr> DB():
     <T_DB_IZQ>
     <T_NOMBRE_IZQ> n=<ID> <T_NOMBRE_DER>
     (lt=L_TABLA())?
-    (lp=L_OBJETO())?
+    (lo=L_OBJETO())?
     (lf=L_FUNC())?
     (lp = L_PROC())?
     <T_DB_DER>  {

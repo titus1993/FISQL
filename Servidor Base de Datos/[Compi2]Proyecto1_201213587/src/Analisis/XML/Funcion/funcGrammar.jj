@@ -106,7 +106,7 @@ ArrayList<Funcion> FUNC():
     <T_FUNC_IZQ>
         t=TIPO()
         n=NOMBRE()
-        (<T_PARAMS_IZQ> p=L_PARAMS() <T_PARAMS_DER>)?
+        <T_PARAMS_IZQ> (p=L_PARAMS())? <T_PARAMS_DER>
         s=SRC()
     <T_FUNC_DER>
     {ArrayList<Funcion> fun = new ArrayList<Funcion>();

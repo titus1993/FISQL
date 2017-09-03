@@ -10,6 +10,7 @@ import Static.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Analisis.XML.Usuario.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -213,7 +214,7 @@ public class Maestro {
 
             BaseDatos.add(nueva);
 
-            DMLOtorgarPermisosBaseDatos(nombre, usuario);
+            DSLOtorgarPermisosBaseDatos(nombre, usuario);
 
             this.Guardar();
         } else {
@@ -222,7 +223,200 @@ public class Maestro {
         return "";
     }
 
-    public boolean DMLOtorgarPermisosBaseDatos(String base, String usuario) {
+    public boolean DLLCrearFuncion(String base, String usuario, Funcion funcion) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Procedimiento p = db.ExisteProcedimiento(funcion.nombre);
+            if (p == null) {
+                Funcion f = db.ExisteFuncion(funcion.nombre);
+                if (f == null) {
+                    Usuario usr = ExisteUsuario(usuario);
+                    if (usr != null) {
+                        if (usr.ExisteBaseDatos(base)) {
+                            db.Funciones.add(funcion);
+                            DSLOtorgarPermisosFuncion(base, usuario, funcion.nombre);
+                        } else {
+                            //no tiene permisos sobre la base de datos
+                        }
+                    } else {
+                        //no existe usuario
+                    }
+                } else {
+                    //ya existe una funcion
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DLLCrearProcedimiento(String base, String usuario, Procedimiento proc) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Funcion f = db.ExisteFuncion(proc.nombre);
+            if (f == null) {
+                Procedimiento p = db.ExisteProcedimiento(proc.nombre);
+                if (p == null) {
+                    Usuario usr = ExisteUsuario(usuario);
+                    if (usr != null) {
+                        if (usr.ExisteBaseDatos(base)) {
+                            db.Procedimientos.add(proc);
+                            DSLOtorgarPermisosProcedimiento(base, usuario, proc.nombre);
+                        } else {
+                            //no tiene permisos sobre la base de datos
+                        }
+                    } else {
+                        //no existe usuario
+                    }
+                } else {
+                    //ya existe una funcion
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DLLCrearObjeto(String base, String usuario, Objeto obj) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Objeto o = db.ExisteObjeto(obj.nombre);
+            if (o == null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    if (usr.ExisteBaseDatos(base)) {
+                        db.Objetos.add(obj);
+                        DSLOtorgarPermisosObjeto(base, usuario, obj.nombre);
+                    } else {
+                        //no tiene permisos sobre la base de datos
+                    }
+                } else {
+                    //no existe usuario
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DLLCrearTabla(String base, String usuario, Tabla tabla) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tabla t = db.ExisteTabla(tabla.Nombre);
+            if (t == null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    if (usr.ExisteBaseDatos(base)) {
+                        tabla.Path = Tools.getAbolutePath(db.Path) + "\\" + tabla.Nombre + ".xml";
+                        Tools.crearArchivo(tabla.Path, "");
+                        db.Tablas.add(tabla);
+                        DSLOtorgarPermisosTabla(base, usuario, tabla.Nombre);
+                    } else {
+                        //no tiene permisos sobre la base de datos
+                    }
+                } else {
+                    //no existe usuario
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DLLAlterTableAgregar(String base, String usuario, String tabla, ArrayList<ColumnaEstructura> columnas) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tabla t = db.ExisteTabla(tabla);
+            if (t != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    if (usr.ExisteBaseDatos(base) && usr.ExisteTabla(base, tabla)) {
+                        if (db.PruebaAlterTablaAgregar(t.Nombre, columnas)) {
+                            for (ColumnaEstructura nuevacol : columnas) {
+                                t.Columnas.add(nuevacol);
+
+                                Columna c;
+
+                                if (nuevacol.Tipo == 0) {
+                                    c = new Columna(nuevacol.TipoCampo, "");
+
+                                } else {
+                                    columnaObjeto co = new columnaObjeto(new ArrayList<>());
+                                    Objeto obj = db.ExisteObjeto(nuevacol.TipoCampo);
+
+                                    for (Parametro p : obj.parametros) {
+                                        co.Filas.add(new Columna(p.tipo, ""));
+                                    }
+
+                                    c = new Columna(nuevacol.NombreCampo, co);
+
+                                }
+
+                                for (ArrayList<Columna> ac : t.Filas) {
+                                    ac.add(c);
+                                }
+                            }
+                            this.Guardar();
+                        }
+                    } else {
+                        //no tiene permisos sobre la tabla
+                    }
+                } else {
+                    //no existe usuario
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DLLAlterObjetoAgregar(String base, String usuario, String objeto, ArrayList<Parametro> columnas) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Objeto o = db.ExisteObjeto(objeto);
+            if (o != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    if (usr.ExisteBaseDatos(base) && usr.ExisteObjeto(base, objeto)) {
+                        if (db.PruebaAlterObjetoAgregar(o.nombre, columnas)) {
+                            for (Parametro nuevapar : columnas) {
+                                o.parametros.add(nuevapar);
+
+                                for (Tabla tab : db.Tablas) {
+                                    for (ArrayList<Columna> ce : tab.Filas) {
+                                        for (Columna col : ce) {
+                                            if (col.Tipo == 1) {
+                                                if(col.Campo.equals(objeto)){
+                                                    col.campoObjeto.Filas.add(new Columna(nuevapar.tipo, ""));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            this.Guardar();
+                        }else{
+                            //error 
+                        }
+                    } else {
+                        //no tiene permisos sobre la tabla
+                    }
+                } else {
+                    //no existe usuario
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+
+    public boolean DSLOtorgarPermisosBaseDatos(String base, String usuario) {
         DataBase db = ExisteBaseDatos(base);
         if (db != null) {
             Usuario usr = ExisteUsuario(usuario);
@@ -235,7 +429,7 @@ public class Maestro {
         return false;
     }
 
-    public boolean DMLOtorgarPermisosObjeto(String base, String usuario, String Objeto) {
+    public boolean DSLOtorgarPermisosObjeto(String base, String usuario, String Objeto) {
         DataBase db = ExisteBaseDatos(base);
         if (db != null) {
             Objeto obj = db.ExisteObjeto(Objeto);
@@ -244,6 +438,121 @@ public class Maestro {
                 if (usr != null) {
                     usr.DarPermisosBaseDatos(db.Nombre);
                     usr.DarPermisosObjeto(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLDenegarPermisosObjeto(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Objeto obj = db.ExisteObjeto(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.QuitarPermisosObjeto(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLOtorgarPermisosFuncion(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Funcion obj = db.ExisteFuncion(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.DarPermisosBaseDatos(db.Nombre);
+                    usr.DarPermisosFuncion(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLDenegarPermisosFuncion(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Funcion obj = db.ExisteFuncion(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.QuitarPermisosFuncion(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLOtorgarPermisosProcedimiento(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Procedimiento obj = db.ExisteProcedimiento(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.DarPermisosBaseDatos(db.Nombre);
+                    usr.DarPermisosProcedimiento(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLDenegarPermisosProcedimiento(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Procedimiento obj = db.ExisteProcedimiento(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.QuitarPermisosProcedimiento(db.Nombre, obj.nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLOtorgarPermisosTabla(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tabla obj = db.ExisteTabla(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.DarPermisosBaseDatos(db.Nombre);
+                    usr.DarPermisosTabla(db.Nombre, obj.Nombre);
+                    this.Guardar();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean DSLDenegarPermisosTabla(String base, String usuario, String Objeto) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tabla obj = db.ExisteTabla(Objeto);
+            if (obj != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    usr.QuitarPermisosTabla(db.Nombre, obj.Nombre);
                     this.Guardar();
                     return true;
                 }

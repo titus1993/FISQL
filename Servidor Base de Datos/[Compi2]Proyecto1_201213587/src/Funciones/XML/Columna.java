@@ -11,9 +11,9 @@ package Funciones.XML;
  */
 public class Columna {
 
-    int Tipo;
-    String Campo, Valor;
-    columnaObjeto campoObjeto;
+    public int Tipo;
+    public String Campo, Valor;
+    public columnaObjeto campoObjeto;
 
     public Columna(String _campo, String _valor) {
         Tipo = 0;
