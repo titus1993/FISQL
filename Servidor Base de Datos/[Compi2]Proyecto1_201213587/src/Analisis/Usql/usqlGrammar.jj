@@ -7,6 +7,9 @@ OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\F
 PARSER_BEGIN(usqlGrammar)
 package Analisis.Usql;
 
+import Funciones.Usql.*;
+import Static.*;
+
 public class usqlGrammar {
   public static void main(String args[]) throws ParseException {
     usqlGrammar parser = new usqlGrammar(System.in);
@@ -131,6 +134,8 @@ TOKEN:
 {  
     <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
     |<ENTERO: (["0"-"9"])+ > {System.out.println(image);}
+    |<FALSO:"falso"> {System.out.println(image);}
+    |<VERDADERO:"verdadero"> {System.out.println(image);}
     |<#NUMERO: ["0"-"9"]>
     |<DECIMAL: (<NUMERO>)+(".")(<NUMERO>)+> {System.out.println(image);}
     |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
@@ -594,14 +599,20 @@ void H():
     I() (<POTENCIA> H())?
 }
 
-void I():
-{}
+FNodoExpresion I():
+{Token t, t2; String c="";}
 {
-    <CADENA>
-    | <ENTERO>
-    | <DECIMAL>
-    | <DATE> (<TIME>)?
+    t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<DATE> t2=<TIME>{c=t.image + " " + t2.image;} { if(!c.equals("")){ return new FNodoExpresion(null, null, Constante.TDateTime, Constante.TDateTime, t.beginLine, t.beginColumn, c);}
+                                                        else{
+                                                            return new FNodoExpresion(null, null, Constante.TDate, Constante.TDateTime, t.beginLine, t.beginColumn, t.image);
+                                                        }
+                                                        }  
     | <ARROBA> (<PUNTO> <ID>)?
+    | t=<FALSO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
+    | t=<VERDADERO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
     | LLAMADA_OBJETO()
     | FUNCINES_NATIVAS_VALOR()
 }

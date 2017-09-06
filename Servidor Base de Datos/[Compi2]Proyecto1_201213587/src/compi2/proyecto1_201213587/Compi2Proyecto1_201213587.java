@@ -70,6 +70,8 @@ public class Compi2Proyecto1_201213587 {
         
         
         
+        
+        
         Consola a = new Consola();
         a.setVisible(true);
     }    

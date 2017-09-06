@@ -375,6 +375,34 @@ public class Maestro {
         return true;
     }
 
+        //Titus aqui te quedaste ahi te acuerdas pilas con el USQL :P
+    public boolean DLLAlterTableQuitar(String base, String usuario, String tabla, ArrayList<ColumnaEstructura> columnas) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tabla t = db.ExisteTabla(tabla);
+            if (t != null) {
+                Usuario usr = ExisteUsuario(usuario);
+                if (usr != null) {
+                    if (usr.ExisteBaseDatos(base) && usr.ExisteTabla(base, tabla)) {
+                        if (db.PruebaAlterTablaQuitar(t.Nombre, columnas)) {
+                            for (ColumnaEstructura nuevacol : columnas) {
+                                
+                            }
+                            this.Guardar();
+                        }
+                    } else {
+                        //no tiene permisos sobre la tabla
+                    }
+                } else {
+                    //no existe usuario
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+            }
+        }
+        return true;
+    }
+    
     public boolean DLLAlterObjetoAgregar(String base, String usuario, String objeto, ArrayList<Parametro> columnas) {
         DataBase db = ExisteBaseDatos(base);
         if (db != null) {

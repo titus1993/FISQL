@@ -84,6 +84,23 @@ public class DataBase {
         return true;
     }
     
+    public boolean PruebaAlterTablaQuitar(String nombretabla, ArrayList<ColumnaEstructura> nuevas){
+        Tabla tabla = ExisteTabla(nombretabla);
+        
+        for (ColumnaEstructura col : nuevas) {
+            //comprobamos que no se quiera eliminar una llave primaria
+            for(ColumnaEstructura ce :tabla.Columnas){
+                if(ce.NombreCampo.equals(col.NombreCampo)){
+                    if(ce.Complementos.isPrimary){
+                        return false;
+                    }
+                }
+            }            
+            
+        }
+        return true;
+    }
+    
     public boolean PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas){
         Objeto objeto = ExisteObjeto(nombreobjeto);
         

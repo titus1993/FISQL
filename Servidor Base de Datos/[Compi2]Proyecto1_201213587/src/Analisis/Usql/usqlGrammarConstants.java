@@ -185,21 +185,25 @@ public interface usqlGrammarConstants {
   /** RegularExpression Id. */
   int ENTERO = 87;
   /** RegularExpression Id. */
-  int NUMERO = 88;
+  int FALSO = 88;
   /** RegularExpression Id. */
-  int DECIMAL = 89;
+  int VERDADERO = 89;
   /** RegularExpression Id. */
-  int ID = 90;
+  int NUMERO = 90;
   /** RegularExpression Id. */
-  int ARROBA = 91;
+  int DECIMAL = 91;
   /** RegularExpression Id. */
-  int DATE = 92;
+  int ID = 92;
   /** RegularExpression Id. */
-  int TIME = 93;
+  int ARROBA = 93;
   /** RegularExpression Id. */
-  int COMENTARIO_LINEA = 98;
+  int DATE = 94;
   /** RegularExpression Id. */
-  int COMENTARIO_MULTI = 99;
+  int TIME = 95;
+  /** RegularExpression Id. */
+  int COMENTARIO_LINEA = 100;
+  /** RegularExpression Id. */
+  int COMENTARIO_MULTI = 101;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -294,6 +298,8 @@ public interface usqlGrammarConstants {
     "\"restaurar completo\"",
     "<CADENA>",
     "<ENTERO>",
+    "\"falso\"",
+    "\"verdadero\"",
     "<NUMERO>",
     "<DECIMAL>",
     "<ID>",
