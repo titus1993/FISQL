@@ -18,7 +18,7 @@ public class Simbolo {
     public Object Valor;
     
     
-    public Simbolo(String tipo, String nombre, String rol, int fila, int columna, Ambito ambito, Object valor){     
+    public Simbolo(String tipo, String nombre, String rol, Ambito ambito, Object valor, int fila, int columna){     
         this.Tipo = tipo;
         this.Nombre = nombre;
         this.Rol = rol;

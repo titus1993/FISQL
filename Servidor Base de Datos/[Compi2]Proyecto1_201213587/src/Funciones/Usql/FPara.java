@@ -16,12 +16,12 @@ import java.util.ArrayList;
  */
 public class FPara {
 
-    public Simbolo AccionSiguiente;
+    public String AccionSiguiente;
     public Simbolo AccionAnterior;
     public FNodoExpresion Condicion;
     public Ambito Ambito;
 
-    public FPara(Simbolo anterior, FNodoExpresion condicion, Simbolo siguiente, Ambito ambito) {
+    public FPara(Simbolo anterior, FNodoExpresion condicion, String siguiente, Ambito ambito) {
         this.AccionAnterior = anterior;
         this.Condicion = condicion;
         this.AccionSiguiente = siguiente;

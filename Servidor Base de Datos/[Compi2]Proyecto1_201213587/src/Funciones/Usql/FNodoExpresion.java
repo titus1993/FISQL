@@ -24,9 +24,10 @@ public class FNodoExpresion {
     public String Cadena;
     public boolean Bool;
     public String Date, DateTime;
-    //public FLlamadaObjeto Objeto;
+    public FLlamadaVariable Variable;
     //public Objeto Obj;
-    //public FLlamadaMetodo Metodo;
+    public FLlamadaMetodo Metodo;
+    public FLlamadaTabla Tabla;
     //public FNodoArreglo Arreglo;
     //public Arreglo ArregloResuelto;
     //public FNodoExpresion PosArreglo;
@@ -87,6 +88,18 @@ public class FNodoExpresion {
 
             case Constante.TDateTime:
                 this.DateTime = valor.toString();
+                break;
+
+            case Constante.TMetodo:
+                this.Metodo = (FLlamadaMetodo) valor;
+                break;
+
+            case Constante.TVariable:
+                this.Variable = (FLlamadaVariable) valor;
+                break;
+
+            case Constante.TTabla:
+                this.Tabla = (FLlamadaTabla) valor;
                 break;
 
         }
@@ -181,10 +194,6 @@ public class FNodoExpresion {
                 break;
 
             case Constante.TDecimal:
-                aux = new FNodoExpresion(nodo);
-                break;
-
-            case Constante.TCaracter:
                 aux = new FNodoExpresion(nodo);
                 break;
 
@@ -1228,5 +1237,5 @@ public class FNodoExpresion {
         }
 
         return aux;
-    }    
+    }
 }

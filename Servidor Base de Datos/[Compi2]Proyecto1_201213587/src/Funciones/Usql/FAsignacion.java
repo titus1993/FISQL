@@ -17,15 +17,13 @@ public class FAsignacion {
 
     public Ambito Ambito;
     public Ambito Padre;
-    public String Tipo;
-    public FLlamadaObjeto Nombre;
+    public FLlamadaVariable Nombre;
     public FNodoExpresion Valor;
 
-    public FAsignacion(String tipo, FLlamadaObjeto nombre, Ambito ambito, Object valor) {
+    public FAsignacion(FLlamadaVariable nombre, Ambito ambito, Object valor) {
         this.Ambito = ambito;
         this.Padre = null;
         this.Nombre = nombre;
-        this.Tipo = tipo;
         this.Valor = (FNodoExpresion) valor;
 
     }

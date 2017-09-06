@@ -13,16 +13,15 @@ import java.util.ArrayList;
  */
 public class FLlamadaMetodo {
     //public Ambito Ambito;
-    public String Nombre, Tipo;
+    public String Nombre;
     public int Fila, Columna;
     public ArrayList<FNodoExpresion> Parametros = new ArrayList<>();
     
-    public FLlamadaMetodo(String nombre, ArrayList<FNodoExpresion> parametros, int fila, int columna, String tipo){
+    public FLlamadaMetodo(String nombre, ArrayList<FNodoExpresion> parametros, int fila, int columna){
         this.Nombre = nombre;
         this.Parametros = parametros;
         this.Fila  = fila;
         this.Columna = columna;
-        this.Tipo = tipo;
         //this.Ambito = new Ambito(Constante.TMetodo);
     }
     

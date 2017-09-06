@@ -187,7 +187,7 @@ void INSTRUCCION() :
 
 
 
-void DDL():
+Simbolo DDL():
 {}
 {
     <T_USAR> <ID> <PCOMA>
@@ -196,25 +196,27 @@ void DDL():
     |ELIMINAR()
     |BACKUP()
     |RESTAURAR()
+
+    {return null;}
 }
 
-void DML():
+Simbolo DML():
 {}
 {
     INSERTAR()
     |ACTUALIZAR()
     |BORRAR()
-    |SELECCIONAR() <PCOMA>
+    |SELECCIONAR() <PCOMA> {return null;}
 }
 
-void DCL():
+Simbolo DCL():
 {}
 {
     <T_OTORGAR> <ID> <COMA> <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
-    |<T_DENEGAR> <ID> <COMA> <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
+    |<T_DENEGAR> <ID> <COMA> <ID> <PUNTO> (<POR> | <ID>) <PCOMA> {return null;}
 }
 
-void SSL():
+Simbolo SSL():
 {}
 {
     DECLARACION()
@@ -226,7 +228,7 @@ void SSL():
     |<T_DETENER> <PCOMA>
     |<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER> <PCOMA> 
     |RETORNO() <PCOMA>
-    |LLAMADA_METODO()
+    |LLAMADA_METODO() {return null;}
 }
 
 void LLAMADA_METODO():
@@ -314,15 +316,15 @@ void ATRIBUTO():
     TIPO_DATO_ATRIBUTO() <ID>
 }
 
-void TIPO_DATO_ATRIBUTO():
+String TIPO_DATO_ATRIBUTO():
 {}
 {
-    <T_TEXT>
-    |<T_INTEGER>
-    |<T_DOUBLE>
-    |<T_BOOL>
-    |<T_DATE>
-    |<T_DATETIME>
+    <T_TEXT> {return Constante.TCadena;}
+    |<T_INTEGER> {return Constante.TEntero;}
+    |<T_DOUBLE> {return Constante.TDecimal;}
+    |<T_BOOL>   {return Constante.TBool;}
+    |<T_DATE>   {return Constante.TDate;}
+    |<T_DATETIME>   {return Constante.TDateTime;}
 }
 
 void CREATE_PROCEDIMIENTO():
@@ -340,7 +342,7 @@ void L_PARAMETRO():
 void PARAMETRO():
 {}
 {
-    TIPO_DATO() <ARROBA> 
+    TIPO_DATO() <ARROBA>
 }
 
 void CREATE_FUNCION():
@@ -427,51 +429,99 @@ void SELECCIONAR():
 }
 
 
-void L_SENTENCIAS():
-{}
+ArrayList<Simbolo> L_SENTENCIAS():
+{ArrayList<Simbolo> ls = new ArrayList<Simbolo>();}
 {
-    (L_SENTENCIA())?
+    (ls=L_SENTENCIA())? {return ls;}
 }
 
-void L_SENTENCIA():
-{}
+ArrayList<Simbolo> L_SENTENCIA():
+{ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); ArrayList<Simbolo> ls2 = new ArrayList<Simbolo>();}
 {
-    SENTENCIA() (L_SENTENCIA())?
+    ls=SENTENCIA() (ls2=L_SENTENCIA())?
+
+    {
+        for(Simbolo sim : ls2){
+            ls.add(sim);
+        }
+        return ls;
+    }
 }
 
-void SENTENCIA():
-{}
+ArrayList<Simbolo> SENTENCIA():
+{Simbolo s;}
 {
-    SSL()
-    |DML()
-    |DCL()
+    (s=SSL()
+    |s=DML()
+    |s=DCL()){ArrayList<Simbolo> l = new ArrayList<Simbolo>(); l.add(s); return l;}
 }
 
 
 
-void DECLARACION():
-{}
+ArrayList<Simbolo> DECLARACION():
+{ArrayList<FDeclaracion> lv = new ArrayList<FDeclaracion>(); Token t,t2; String td; FNodoExpresion val = null;}
 {
-    <T_DECLARAR> L_VARIABLE() ((TIPO_DATO_ATRIBUTO() (<IGUAL> LOGICA_OR())?)
-                    | <ID> ) <PCOMA>
+    t2=<T_DECLARAR> lv= L_VARIABLE() ((td=TIPO_DATO_ATRIBUTO() (<IGUAL> val = LOGICA_OR())?)
+                    | t=<ID> {td = t.image;}) <PCOMA> {
+                                                        ArrayList<Simbolo> lista = new ArrayList<Simbolo>();
+                                                        for(FDeclaracion d : lv){
+                                                            d.Tipo = td;
+                                                            Simbolo s = new Simbolo(Constante.TDeclaracion, Constante.TDeclaracion, Constante.TVariable, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), d, t2.beginLine, t2.beginColumn);
+                                                            lista.add(s);                                                            
+                                                        }
+                                                        return lista;
+                                                      }
 }
 
-void L_VARIABLE():
-{}
+ArrayList<FDeclaracion> L_VARIABLE():
+{ArrayList<FDeclaracion> lv = new ArrayList<FDeclaracion>(); ArrayList<FDeclaracion> lv2 = new ArrayList<FDeclaracion>(); Token t;}
 {
-    <ARROBA> (<COMA> L_VARIABLE())?
+    t=<ARROBA> {lv.add(new FDeclaracion("", t.image.substring(1, t.image.length()), new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn));} (<COMA> lv2=L_VARIABLE()
+                                                                                    {
+                                                                                        for(FDeclaracion s : lv2){
+                                                                                            lv.add(s);
+                                                                                        }
+                                                                                    }
+                                                                                    )? {return lv;} 
 }
 
-void ASIGNACION():
-{}
+Simbolo ASIGNACION():
+{Token t; Token t2 = null; FNodoExpresion e;}
 {
-    <ARROBA> (<PUNTO> <ID>)? <IGUAL> LOGICA_OR() <PCOMA>
+    t=<ARROBA> (<PUNTO> t2=<ID>)? <IGUAL> e=LOGICA_OR() <PCOMA> {
+                                                                    FLlamadaVariable fv;
+                                                                    if(t2 != null){
+                                                                        fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), t2.image, t.beginLine, t.beginColumn);
+                                                                    }else{
+                                                                        fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), "", t.beginLine, t.beginColumn);
+                                                                    }
+
+                                                                    FAsignacion as = new FAsignacion(fv, new Ambito(Constante.TAsignacion, new ArrayList<Simbolo>()), e);
+                                                                    return new Simbolo(Constante.TAsignacion, Constante.TAsignacion, Constante.TAsignacion, as.Ambito, as, t.beginLine, t.beginColumn);
+                                                                }
 }
 
-void SI():
-{}
+Simbolo SI():
+{Token t; FNodoExpresion condicion; ArrayList<Simbolo> asi = new ArrayList<Simbolo>(); ArrayList<Simbolo> asino = new ArrayList<Simbolo>();}
 {
-    <T_SI> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS()  <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>)?
+    t=<T_SI> <PAR_IZQ> condicion=LOGICA_OR() <PAR_DER> <LLAVE_IZQ> asi=L_SENTENCIAS()  <LLAVE_DER> (<T_SINO> <LLAVE_IZQ> asino=L_SENTENCIAS() <LLAVE_DER>)?
+    {
+        Ambito ambitosi = new Ambito(Constante.TSi, asi);
+        Ambito ambitosino = new Ambito(Constante.TSi, asino);
+        Ambito ambito = new Ambito(Constante.TSi, new ArrayList<Simbolo>());
+        
+        for(Simbolo sim: ambitosi.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+
+        for(Simbolo sim: ambitosino.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        } 
+
+        FSi fs = new FSi(condicion, ambitosi, ambitosino, ambito);
+        Simbolo s = new Simbolo(Constante.TSi, Constante.TSi, Constante.TSi, fs.Ambito, fs, t.beginLine, t.beginColumn);
+        return s;
+    }
 }
 
 void SELECCIONA():
@@ -500,16 +550,30 @@ void DEFECTO():
     <T_DEFECTO> <DOSP> L_SENTENCIAS() 
 }
 
-void PARA():
-{}
+Simbolo PARA():
+{Token t,t2;; Simbolo dp; FNodoExpresion exp; String c=Constante.TAumento; ArrayList<Simbolo> ls;}
 {
-    <T_PARA> <PAR_IZQ> DECLARACION_PARA() <PCOMA> LOGICA_OR() <PCOMA> (<AUMENTO>|<DECREMENTO>) <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>
+    t=<T_PARA> <PAR_IZQ> dp=DECLARACION_PARA() <PCOMA> exp=LOGICA_OR() <PCOMA> (t2=<AUMENTO>|t2=<DECREMENTO>{c=Constante.TDecremento;}) <PAR_DER> <LLAVE_IZQ> ls=L_SENTENCIAS() <LLAVE_DER>
+    {
+        Ambito ambito = new Ambito(Constante.TPara, ls);
+        for(Simbolo sim: ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FPara fp = new FPara(dp,exp, c, ambito);
+        Simbolo s = new Simbolo(Constante.TPara, Constante.TPara, Constante.TPara, fp.Ambito, fp, t.beginLine, t.beginColumn);
+        return s;
+    }
 }
 
-void DECLARACION_PARA():
-{}
+Simbolo DECLARACION_PARA():
+{Token t,t2; FNodoExpresion exp;}
 {
-    <T_DECLARAR> <ARROBA>  <T_INTEGER> <IGUAL> LOGICA_OR()
+    t2=<T_DECLARAR> t=<ARROBA> <T_INTEGER> <IGUAL> exp=LOGICA_OR()
+    {   
+        FDeclaracion fd = new FDeclaracion(Constante.TEntero, t.image.substring(1,t.image.length()), new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn); 
+        Simbolo s = new Simbolo(Constante.TDeclaracion, Constante.TDeclaracion, Constante.TDeclaracion, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), fd, t2.beginLine, t2.beginColumn);
+        return s;
+    }
 }
 
 void MIENTRAS():
@@ -538,11 +602,26 @@ void FUNCINES_NATIVAS_VALOR():
     |<T_CONTAR> <PAR_IZQ> <FLECHA_IZQ> SELECCIONAR() <FLECHA_DER> <PAR_DER>
 }
 
-void LLAMADA_OBJETO():
-{}
+FNodoExpresion LLAMADA_OBJETO():
+{Token t = null; Token t2 = null; Token t3 = null; ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>();}
 {
     //LLAMADA A COLUMNA, TABLA.COLUMNA O FUNCION
-    <ID> ((<PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>) | (<PUNTO> <ID>(<PUNTO> <ID>)?))?
+    t=<ID> ((<PAR_IZQ> (le=L_EXPRESIONES())? <PAR_DER>)     {
+                                                              FLlamadaMetodo lm = new FLlamadaMetodo(t.image, le, t.beginLine, t.beginColumn);
+                                                              return new FNodoExpresion(null, null, Constante.TMetodo, Constante.TMetodo, t.beginLine, t.beginColumn, lm);
+                                                            }
+                                                                    
+            | (<PUNTO> t2=<ID>(<PUNTO> t3=<ID>)?))? {
+                                                        FLlamadaTabla lt;
+                                                        if(t3 != null){
+                                                            lt = new FLlamadaTabla(t.image, t2.image, t3.image, t.beginLine, t.beginColumn);
+                                                        }else if(t2 != null){
+                                                            lt = new FLlamadaTabla(t.image, "", t2.image, t.beginLine, t.beginColumn);
+                                                        }else{
+                                                            lt = new FLlamadaTabla("", "", t.image, t.beginLine, t.beginColumn);
+                                                        }
+                                                        return new FNodoExpresion(null, null, Constante.TTabla, Constante.TTabla, t.beginLine, t.beginColumn, lt);
+                                                    }
 }
 
 ArrayList<FNodoExpresion> L_EXPRESIONES():
@@ -625,7 +704,7 @@ FNodoExpresion H():
 }
 
 FNodoExpresion I():
-{Token t, t2; String c="";}
+{Token t; Token t2 = null; String c=""; String c2 = ""; FNodoExpresion n;}
 {
     t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
     | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
@@ -637,7 +716,15 @@ FNodoExpresion I():
                                                         }  
     | t=<FALSO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
     | t=<VERDADERO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
-    | <ARROBA> (<PUNTO> <ID>)?
-    | LLAMADA_OBJETO()
+    | t=<ARROBA> (<PUNTO> t2=<ID>)? {
+                                        FLlamadaVariable fv;
+                                        if(t2 != null){
+                                            fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), t2.image, t.beginLine, t.beginColumn);
+                                        }else{
+                                            fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), "", t.beginLine, t.beginColumn);
+                                        }
+                                        return new FNodoExpresion(null, null, Constante.TVariable, Constante.TVariable, t.beginLine, t.beginColumn, fv);
+                                    }
+    | n=LLAMADA_OBJETO() {return n;}
     | FUNCINES_NATIVAS_VALOR()
 }

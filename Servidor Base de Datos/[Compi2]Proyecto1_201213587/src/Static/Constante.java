@@ -12,6 +12,7 @@ package Static;
 public class Constante {
     public static final String TDeclaracion = "Declaracion";
     public static final String TAsignacion = "Asignacion";
+    public static final String TTabla = "Tabla";
     public static final String TMetodo = "Metodo";
     public static final String TVariable = "Variable"; 
     public static final String TError = "Error";
@@ -26,7 +27,6 @@ public class Constante {
     public static final String TDecimal = "decimal";
     public static final String TCadena = "cadena";    
     public static final String TText = "cadena";
-    public static final String TCaracter = "caracter";
     public static final String TDate = "date";
     public static final String TDateTime = "datetime";
     public static final String TBool = "bool";
@@ -61,4 +61,17 @@ public class Constante {
     public static final String TDecremento = "--";
     public static final String TDisminucion = "--";
     public static final String TIndiceLista  = "!!";
+    
+     public static final String TSi = "si";
+    public static final String TSiNo = "sino";
+    public static final String TSeleccion = "seleccion";
+    public static final String TCaso = "caso";
+    public static final String TDefecto = "defecto";
+    
+    public static final String TPara = "para";
+    public static final String THacer = "hacer";
+    
+    public static final String TContinuar = "continuar";
+    public static final String TTerminar = "terminar";
+    
 }
