@@ -1469,18 +1469,21 @@ System.out.println("etntro llamada imprimr");
     H();
   }
 
-  final public void H() throws ParseException {
-    I();
+  final public FNodoExpresion H() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = I();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case POTENCIA:{
-      jj_consume_token(POTENCIA);
-      H();
+      t = jj_consume_token(POTENCIA);
+      der = H();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TPotencia, Constante.TPotencia, t.beginLine, t.beginColumn, null);}
       break;
       }
     default:
       jj_la1[64] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
   final public FNodoExpresion I() throws ParseException {Token t, t2; String c="";
@@ -1510,6 +1513,16 @@ if(!c.equals("")){ {if ("" != null) return new FNodoExpresion(null, null, Consta
                                                         }
       break;
       }
+    case FALSO:{
+      t = jj_consume_token(FALSO);
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
+      break;
+      }
+    case VERDADERO:{
+      t = jj_consume_token(VERDADERO);
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
+      break;
+      }
     case ARROBA:{
       jj_consume_token(ARROBA);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -1522,16 +1535,6 @@ if(!c.equals("")){ {if ("" != null) return new FNodoExpresion(null, null, Consta
         jj_la1[65] = jj_gen;
         ;
       }
-      break;
-      }
-    case FALSO:{
-      t = jj_consume_token(FALSO);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
-      break;
-      }
-    case VERDADERO:{
-      t = jj_consume_token(VERDADERO);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
       break;
       }
     case ID:{

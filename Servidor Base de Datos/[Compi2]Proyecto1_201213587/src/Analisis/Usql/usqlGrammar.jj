@@ -593,10 +593,10 @@ void G():
     (<MENOS>)? H() 
 }
 
-void H():
-{}
+FNodoExpresion H():
+{FNodoExpresion izq, der; Token t;}
 {
-    I() (<POTENCIA> H())?
+    izq = I() (t=<POTENCIA> der=H(){return new FNodoExpresion(izq, der, Constante.TPotencia, Constante.TPotencia, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
 FNodoExpresion I():
@@ -610,9 +610,9 @@ FNodoExpresion I():
                                                             return new FNodoExpresion(null, null, Constante.TDate, Constante.TDateTime, t.beginLine, t.beginColumn, t.image);
                                                         }
                                                         }  
-    | <ARROBA> (<PUNTO> <ID>)?
     | t=<FALSO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
     | t=<VERDADERO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
+    | <ARROBA> (<PUNTO> <ID>)?
     | LLAMADA_OBJETO()
     | FUNCINES_NATIVAS_VALOR()
 }
