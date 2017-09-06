@@ -9,6 +9,8 @@ package Analisis.Usql;
 
 import Funciones.Usql.*;
 import Static.*;
+import java.util.ArrayList;
+import EjecucionUsql.*;
 
 public class usqlGrammar {
   public static void main(String args[]) throws ParseException {
@@ -543,54 +545,77 @@ void LLAMADA_OBJETO():
     <ID> ((<PAR_IZQ> (L_EXPRESIONES())? <PAR_DER>) | (<PUNTO> <ID>(<PUNTO> <ID>)?))?
 }
 
-void L_EXPRESIONES():
-{}
+ArrayList<FNodoExpresion> L_EXPRESIONES():
+{FNodoExpresion exp; ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>(); ArrayList<FNodoExpresion> le2 = new ArrayList<FNodoExpresion>();}
 {
-    LOGICA_OR() (<COMA> L_EXPRESIONES())?
+    exp = LOGICA_OR() (<COMA> le2=L_EXPRESIONES())? {
+                                                        le.add(exp);
+                                                        for(FNodoExpresion n : le2){
+                                                            le.add(n);
+                                                        }
+                                                        return le;
+                                                    }
 }
 
-void LOGICA_OR():
-{}
+FNodoExpresion LOGICA_OR():
+{FNodoExpresion izq, der; Token t;}
 {
-    LOGICA_AND() (<OR> LOGICA_OR())?
+    izq = LOGICA_AND() (t = <OR> der = LOGICA_OR() {return new FNodoExpresion(izq, der, Constante.TOr, Constante.TOr, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
-void LOGICA_AND():
-{}
+FNodoExpresion LOGICA_AND():
+{FNodoExpresion izq, der; Token t;}
 {
-    LOGICA_NOT() (<AND> LOGICA_AND())?
+    izq = LOGICA_NOT() (t=<AND> der = LOGICA_AND(){return new FNodoExpresion(izq, der, Constante.TAnd, Constante.TAnd, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
-void LOGICA_NOT():
-{}
+FNodoExpresion LOGICA_NOT():
+{FNodoExpresion der; Token t = null;}
 {
-    (<NOT>)? RELACIONAL()
+    (t=<NOT>)? der = RELACIONAL() {
+                                if(t != null){
+                                    return new FNodoExpresion(null, der, Constante.TNot, Constante.TNot, t.beginLine, t.beginColumn, null);
+                                }else{
+                                    return der;
+                                }
+                            } 
 }
 
-void RELACIONAL():
-{}
+FNodoExpresion RELACIONAL():
+{FNodoExpresion izq, der; Token t;}
 {
-    E() ((<IGUALACION> | <DIFERENCIACION> | <MAYOR> | <MENOR> | <MAYORIGUAL> | <MENORIGUAL> ) RELACIONAL())?
+    izq = E() (t = <IGUALACION> der = RELACIONAL()      {return new FNodoExpresion(izq, der, Constante.TIgualacion, Constante.TIgualacion, t.beginLine, t.beginColumn, null);}
+        | t = <DIFERENCIACION> der = RELACIONAL() {return new FNodoExpresion(izq, der, Constante.TDiferenciacion, Constante.TDiferenciacion, t.beginLine, t.beginColumn, null);}
+        | t = <MAYOR> der = RELACIONAL()          {return new FNodoExpresion(izq, der, Constante.TMayor, Constante.TMayor, t.beginLine, t.beginColumn, null);}
+        | t = <MENOR> der = RELACIONAL()          {return new FNodoExpresion(izq, der, Constante.TMenor, Constante.TMenor, t.beginLine, t.beginColumn, null);}
+        | t = <MAYORIGUAL> der = RELACIONAL()     {return new FNodoExpresion(izq, der, Constante.TMayorIgual, Constante.TMayorIgual, t.beginLine, t.beginColumn, null);}
+        | t = <MENORIGUAL> der = RELACIONAL()     {return new FNodoExpresion(izq, der, Constante.TMenorIgual, Constante.TMenorIgual, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
-void E():
-{}
+FNodoExpresion E():
+{FNodoExpresion izq, der; Token t;}
 {
-    T() (<MAS> E()
-         | <MENOS> E())?
+    izq=T() (t=<MAS> der=E()    {return new FNodoExpresion(izq, der, Constante.TMas, Constante.TMas, t.beginLine, t.beginColumn, null);}
+         | t=<MENOS> der=E(){return new FNodoExpresion(izq, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
-void T():
-{}
+FNodoExpresion T():
+{FNodoExpresion izq, der; Token t;}
 {
-    G() (<POR> T() 
-         | <DIVISION> T())?
+    izq=G() (t=<POR> der=T() {return new FNodoExpresion(izq, der, Constante.TPor, Constante.TPor, t.beginLine, t.beginColumn, null);}
+         | t=<DIVISION> der=T(){return new FNodoExpresion(izq, der, Constante.TDivision, Constante.TDivision, t.beginLine, t.beginColumn, null);})? {return izq;}
 }
 
-void G():
-{}
+FNodoExpresion G():
+{FNodoExpresion der; Token t = null;}
 {
-    (<MENOS>)? H() 
+    (t=<MENOS>)? der = H() {
+                                if(t != null){
+                                    return new FNodoExpresion(null, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);
+                                }else{
+                                    return der;
+                                }
+                            } 
 }
 
 FNodoExpresion H():

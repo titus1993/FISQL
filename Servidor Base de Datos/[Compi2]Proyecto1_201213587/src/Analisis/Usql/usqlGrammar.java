@@ -4,6 +4,7 @@ package Analisis.Usql;
 
 import Funciones.Usql.*;
 import Static.*;
+import java.util.ArrayList;
 
 public class usqlGrammar implements usqlGrammarConstants {
   public static void main(String args[]) throws ParseException {
@@ -1295,63 +1296,81 @@ System.out.println("etntro llamada imprimr");
     }
   }
 
-  final public void L_EXPRESIONES() throws ParseException {
-    LOGICA_OR();
+  final public ArrayList<FNodoExpresion> L_EXPRESIONES() throws ParseException {FNodoExpresion exp; ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>(); ArrayList<FNodoExpresion> le2 = new ArrayList<FNodoExpresion>();
+    exp = LOGICA_OR();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case COMA:{
       jj_consume_token(COMA);
-      L_EXPRESIONES();
+      le2 = L_EXPRESIONES();
       break;
       }
     default:
       jj_la1[53] = jj_gen;
       ;
     }
+le.add(exp);
+                                                        for(FNodoExpresion n : le2){
+                                                            le.add(n);
+                                                        }
+                                                        {if ("" != null) return le;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void LOGICA_OR() throws ParseException {
-    LOGICA_AND();
+  final public FNodoExpresion LOGICA_OR() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = LOGICA_AND();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case OR:{
-      jj_consume_token(OR);
-      LOGICA_OR();
+      t = jj_consume_token(OR);
+      der = LOGICA_OR();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TOr, Constante.TOr, t.beginLine, t.beginColumn, null);}
       break;
       }
     default:
       jj_la1[54] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void LOGICA_AND() throws ParseException {
-    LOGICA_NOT();
+  final public FNodoExpresion LOGICA_AND() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = LOGICA_NOT();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case AND:{
-      jj_consume_token(AND);
-      LOGICA_AND();
+      t = jj_consume_token(AND);
+      der = LOGICA_AND();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TAnd, Constante.TAnd, t.beginLine, t.beginColumn, null);}
       break;
       }
     default:
       jj_la1[55] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void LOGICA_NOT() throws ParseException {
+  final public FNodoExpresion LOGICA_NOT() throws ParseException {FNodoExpresion der; Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case NOT:{
-      jj_consume_token(NOT);
+      t = jj_consume_token(NOT);
       break;
       }
     default:
       jj_la1[56] = jj_gen;
       ;
     }
-    RELACIONAL();
+    der = RELACIONAL();
+if(t != null){
+                                    {if ("" != null) return new FNodoExpresion(null, der, Constante.TNot, Constante.TNot, t.beginLine, t.beginColumn, null);}
+                                }else{
+                                    {if ("" != null) return der;}
+                                }
+    throw new Error("Missing return statement in function");
   }
 
-  final public void RELACIONAL() throws ParseException {
-    E();
+  final public FNodoExpresion RELACIONAL() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = E();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case IGUALACION:
     case DIFERENCIACION:
@@ -1361,27 +1380,39 @@ System.out.println("etntro llamada imprimr");
     case MAYORIGUAL:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case IGUALACION:{
-        jj_consume_token(IGUALACION);
+        t = jj_consume_token(IGUALACION);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TIgualacion, Constante.TIgualacion, t.beginLine, t.beginColumn, null);}
         break;
         }
       case DIFERENCIACION:{
-        jj_consume_token(DIFERENCIACION);
+        t = jj_consume_token(DIFERENCIACION);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TDiferenciacion, Constante.TDiferenciacion, t.beginLine, t.beginColumn, null);}
         break;
         }
       case MAYOR:{
-        jj_consume_token(MAYOR);
+        t = jj_consume_token(MAYOR);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMayor, Constante.TMayor, t.beginLine, t.beginColumn, null);}
         break;
         }
       case MENOR:{
-        jj_consume_token(MENOR);
+        t = jj_consume_token(MENOR);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMenor, Constante.TMenor, t.beginLine, t.beginColumn, null);}
         break;
         }
       case MAYORIGUAL:{
-        jj_consume_token(MAYORIGUAL);
+        t = jj_consume_token(MAYORIGUAL);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMayorIgual, Constante.TMayorIgual, t.beginLine, t.beginColumn, null);}
         break;
         }
       case MENORIGUAL:{
-        jj_consume_token(MENORIGUAL);
+        t = jj_consume_token(MENORIGUAL);
+        der = RELACIONAL();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMenorIgual, Constante.TMenorIgual, t.beginLine, t.beginColumn, null);}
         break;
         }
       default:
@@ -1389,29 +1420,32 @@ System.out.println("etntro llamada imprimr");
         jj_consume_token(-1);
         throw new ParseException();
       }
-      RELACIONAL();
       break;
       }
     default:
       jj_la1[58] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void E() throws ParseException {
-    T();
+  final public FNodoExpresion E() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = T();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MAS:
     case MENOS:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case MAS:{
-        jj_consume_token(MAS);
-        E();
+        t = jj_consume_token(MAS);
+        der = E();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMas, Constante.TMas, t.beginLine, t.beginColumn, null);}
         break;
         }
       case MENOS:{
-        jj_consume_token(MENOS);
-        E();
+        t = jj_consume_token(MENOS);
+        der = E();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);}
         break;
         }
       default:
@@ -1425,22 +1459,26 @@ System.out.println("etntro llamada imprimr");
       jj_la1[60] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void T() throws ParseException {
-    G();
+  final public FNodoExpresion T() throws ParseException {FNodoExpresion izq, der; Token t;
+    izq = G();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case POR:
     case DIVISION:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case POR:{
-        jj_consume_token(POR);
-        T();
+        t = jj_consume_token(POR);
+        der = T();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TPor, Constante.TPor, t.beginLine, t.beginColumn, null);}
         break;
         }
       case DIVISION:{
-        jj_consume_token(DIVISION);
-        T();
+        t = jj_consume_token(DIVISION);
+        der = T();
+{if ("" != null) return new FNodoExpresion(izq, der, Constante.TDivision, Constante.TDivision, t.beginLine, t.beginColumn, null);}
         break;
         }
       default:
@@ -1454,19 +1492,27 @@ System.out.println("etntro llamada imprimr");
       jj_la1[62] = jj_gen;
       ;
     }
+{if ("" != null) return izq;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void G() throws ParseException {
+  final public FNodoExpresion G() throws ParseException {FNodoExpresion der; Token t = null;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MENOS:{
-      jj_consume_token(MENOS);
+      t = jj_consume_token(MENOS);
       break;
       }
     default:
       jj_la1[63] = jj_gen;
       ;
     }
-    H();
+    der = H();
+if(t != null){
+                                    {if ("" != null) return new FNodoExpresion(null, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);}
+                                }else{
+                                    {if ("" != null) return der;}
+                                }
+    throw new Error("Missing return statement in function");
   }
 
   final public FNodoExpresion H() throws ParseException {FNodoExpresion izq, der; Token t;
