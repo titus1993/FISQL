@@ -524,30 +524,68 @@ Simbolo SI():
     }
 }
 
-void SELECCIONA():
-{}
+Simbolo SELECCIONA():
+{Token t; FNodoExpresion exp; ArrayList<FCaso> lc = new ArrayList<FCaso>(); FCaso defecto= null;}
 {
-    <T_SELECCIONA> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_CASOS() <LLAVE_DER>
+    t=<T_SELECCIONA> <PAR_IZQ> exp=LOGICA_OR() <PAR_DER> <LLAVE_IZQ> lc=L_CASOS() (defecto=DEFECTO())? <LLAVE_DER>
+    {
+        Ambito ambito = new Ambito(Constante.TSeleccion, new ArrayList<Simbolo>());
+        for(FCaso caso: lc){
+            for(Simbolo sim: caso.Ambito.TablaSimbolo){
+                sim.Ambito.Padre = ambito;
+            }
+        }
+        for(Simbolo sim: defecto.Ambito.TablaSimbolo){
+                sim.Ambito.Padre = ambito;
+        }
+        FSelecciona fs = new FSelecciona(exp,lc,defecto,ambito);
+        Simbolo s = new Simbolo(Constante.TSeleccion, Constante.TSeleccion, Constante.TSeleccion, fs.Ambito, fs, t.beginLine, t.beginColumn);
+        return s;
+    }
 }
 
-void L_CASOS():
-{}
+ArrayList<FCaso> L_CASOS():
+{Token t; FNodoExpresion p; ArrayList<Simbolo> ls; ArrayList<FCaso> lc2 = new ArrayList<FCaso>();}
 {
-    <T_CASO> VALOR_CASO() <DOSP> L_SENTENCIAS() (L_CASOS())? (DEFECTO())?
+    t=<T_CASO> p=VALOR_CASO() <DOSP> ls=L_SENTENCIAS() (lc2=L_CASOS())?
+    {
+        Ambito ambito = new Ambito(Constante.TCaso, ls);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FCaso caso = new FCaso(p, ambito);
+        ArrayList<FCaso> lc = new ArrayList<FCaso>();
+        lc.add(caso);
+
+        for(FCaso ca : lc2){
+            lc.add(ca);
+        }
+
+        return lc;        
+    }
 }
 
-void VALOR_CASO():
-{}
+FNodoExpresion VALOR_CASO():
+{Token t;}
 {
-    <CADENA>
-    |<ENTERO>
-    |<DECIMAL>
+    t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    
 }
 
-void DEFECTO():
-{}
+FCaso DEFECTO():
+{ArrayList<Simbolo> c;}
 {
-    <T_DEFECTO> <DOSP> L_SENTENCIAS() 
+    <T_DEFECTO> <DOSP> c=L_SENTENCIAS() 
+    {
+        Ambito ambito = new Ambito(Constante.TCaso, c);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FCaso caso = new FCaso(null, ambito);
+        return caso;
+    }
 }
 
 Simbolo PARA():

@@ -1126,53 +1126,83 @@ Ambito ambitosi = new Ambito(Constante.TSi, asi);
     throw new Error("Missing return statement in function");
   }
 
-  final public void SELECCIONA() throws ParseException {
-    jj_consume_token(T_SELECCIONA);
+  final public Simbolo SELECCIONA() throws ParseException {Token t; FNodoExpresion exp; ArrayList<FCaso> lc = new ArrayList<FCaso>(); FCaso defecto= null;
+    t = jj_consume_token(T_SELECCIONA);
     jj_consume_token(PAR_IZQ);
-    LOGICA_OR();
+    exp = LOGICA_OR();
     jj_consume_token(PAR_DER);
     jj_consume_token(LLAVE_IZQ);
-    L_CASOS();
-    jj_consume_token(LLAVE_DER);
-  }
-
-  final public void L_CASOS() throws ParseException {
-    jj_consume_token(T_CASO);
-    VALOR_CASO();
-    jj_consume_token(DOSP);
-    L_SENTENCIAS();
+    lc = L_CASOS();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case T_CASO:{
-      L_CASOS();
+    case T_DEFECTO:{
+      defecto = DEFECTO();
       break;
       }
     default:
       jj_la1[42] = jj_gen;
       ;
     }
+    jj_consume_token(LLAVE_DER);
+Ambito ambito = new Ambito(Constante.TSeleccion, new ArrayList<Simbolo>());
+        for(FCaso caso: lc){
+            for(Simbolo sim: caso.Ambito.TablaSimbolo){
+                sim.Ambito.Padre = ambito;
+            }
+        }
+        for(Simbolo sim: defecto.Ambito.TablaSimbolo){
+                sim.Ambito.Padre = ambito;
+        }
+        FSelecciona fs = new FSelecciona(exp,lc,defecto,ambito);
+        Simbolo s = new Simbolo(Constante.TSeleccion, Constante.TSeleccion, Constante.TSeleccion, fs.Ambito, fs, t.beginLine, t.beginColumn);
+        {if ("" != null) return s;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ArrayList<FCaso> L_CASOS() throws ParseException {Token t; FNodoExpresion p; ArrayList<Simbolo> ls; ArrayList<FCaso> lc2 = new ArrayList<FCaso>();
+    t = jj_consume_token(T_CASO);
+    p = VALOR_CASO();
+    jj_consume_token(DOSP);
+    ls = L_SENTENCIAS();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case T_DEFECTO:{
-      DEFECTO();
+    case T_CASO:{
+      lc2 = L_CASOS();
       break;
       }
     default:
       jj_la1[43] = jj_gen;
       ;
     }
+Ambito ambito = new Ambito(Constante.TCaso, ls);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FCaso caso = new FCaso(p, ambito);
+        ArrayList<FCaso> lc = new ArrayList<FCaso>();
+        lc.add(caso);
+
+        for(FCaso ca : lc2){
+            lc.add(ca);
+        }
+
+        {if ("" != null) return lc;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void VALOR_CASO() throws ParseException {
+  final public FNodoExpresion VALOR_CASO() throws ParseException {Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case CADENA:{
-      jj_consume_token(CADENA);
+      t = jj_consume_token(CADENA);
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
       break;
       }
     case ENTERO:{
-      jj_consume_token(ENTERO);
+      t = jj_consume_token(ENTERO);
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
       break;
       }
     case DECIMAL:{
-      jj_consume_token(DECIMAL);
+      t = jj_consume_token(DECIMAL);
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
       break;
       }
     default:
@@ -1180,12 +1210,20 @@ Ambito ambitosi = new Ambito(Constante.TSi, asi);
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
-  final public void DEFECTO() throws ParseException {
+  final public FCaso DEFECTO() throws ParseException {ArrayList<Simbolo> c;
     jj_consume_token(T_DEFECTO);
     jj_consume_token(DOSP);
-    L_SENTENCIAS();
+    c = L_SENTENCIAS();
+Ambito ambito = new Ambito(Constante.TCaso, c);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FCaso caso = new FCaso(null, ambito);
+        {if ("" != null) return caso;}
+    throw new Error("Missing return statement in function");
   }
 
   final public Simbolo PARA() throws ParseException {Token t,t2;; Simbolo dp; FNodoExpresion exp; String c=Constante.TAumento; ArrayList<Simbolo> ls;
@@ -1736,7 +1774,7 @@ FLlamadaVariable fv;
       jj_la1_1 = new int[] {0x6b180010,0x6b180010,0x6b180010,0x1180010,0x6a000000,0x0,0x0,0x0,0x8000,0x0,0x11060,0x17060,0x0,0xf80,0xf,0xf80,0xf80,0x0,0xf,0xf,0x0,0xf,0x11040,0x600000,0x0,0x600000,0x11060,0x0,0x10000000,0x10000000,0x0,0x10000000,0x0,0x0,0x6a008000,0x6a008000,0x6a008000,0x0,0xf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x103c4038,0x103c4038,0x103c4038,0x3c0000,0x0,0x10000000,0x10000000,0x18,0x30007960,0x7bc38000,0x0,0x0,0x0,0x0,0x10000000,0x0,0x0,0x0,0x0,0x10000000,0x0,0x10000000,0x0,0x0,0x0,0x0,0x0,0x10000000,0x0,0x0,0x10000000,0x0,0x6,0x1,0x30007978,0x30007978,0x30007978,0x0,0x10000000,0x0,0x0,0x80,0x200,0x400,0x8c00000,0x0,0xc0000,0x300000,0x38000,0x7bc38000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7bc38000,};
+      jj_la1_2 = new int[] {0x103c4038,0x103c4038,0x103c4038,0x3c0000,0x0,0x10000000,0x10000000,0x18,0x30007960,0x7bc38000,0x0,0x0,0x0,0x0,0x10000000,0x0,0x0,0x0,0x0,0x10000000,0x0,0x10000000,0x0,0x0,0x0,0x0,0x0,0x10000000,0x0,0x0,0x10000000,0x0,0x6,0x1,0x30007978,0x30007978,0x30007978,0x0,0x10000000,0x0,0x0,0x80,0x400,0x200,0x8c00000,0x0,0xc0000,0x300000,0x38000,0x7bc38000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7bc38000,};
    }
    private static void jj_la1_init_3() {
       jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
