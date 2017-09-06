@@ -1236,14 +1236,22 @@ FDeclaracion fd = new FDeclaracion(Constante.TEntero, t.image.substring(1,t.imag
     throw new Error("Missing return statement in function");
   }
 
-  final public void MIENTRAS() throws ParseException {
-    jj_consume_token(T_MIENTRAS);
+  final public Simbolo MIENTRAS() throws ParseException {ArrayList<Simbolo> c; FNodoExpresion exp; Token t;
+    t = jj_consume_token(T_MIENTRAS);
     jj_consume_token(PAR_IZQ);
-    LOGICA_OR();
+    exp = LOGICA_OR();
     jj_consume_token(PAR_DER);
     jj_consume_token(LLAVE_IZQ);
-    L_SENTENCIAS();
+    c = L_SENTENCIAS();
     jj_consume_token(LLAVE_DER);
+Ambito ambito = new Ambito(Constante.TMientras, c);
+        for(Simbolo sim: ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FMientras m = new FMientras(exp, ambito);
+        Simbolo s = new Simbolo(Constante.TMientras, Constante.TMientras, Constante.TMientras, m.Ambito, m, t.beginLine, t.beginColumn);
+        {if ("" != null) return s;}
+    throw new Error("Missing return statement in function");
   }
 
   final public void BACKUP() throws ParseException {

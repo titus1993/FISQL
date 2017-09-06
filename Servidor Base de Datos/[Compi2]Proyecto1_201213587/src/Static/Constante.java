@@ -69,7 +69,7 @@ public class Constante {
     public static final String TDefecto = "defecto";
     
     public static final String TPara = "para";
-    public static final String THacer = "hacer";
+    public static final String TMientras = "mientras";
     
     public static final String TContinuar = "continuar";
     public static final String TTerminar = "terminar";

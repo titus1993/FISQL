@@ -576,10 +576,19 @@ Simbolo DECLARACION_PARA():
     }
 }
 
-void MIENTRAS():
-{}
+Simbolo MIENTRAS():
+{ArrayList<Simbolo> c; FNodoExpresion exp; Token t;}
 {
-    <T_MIENTRAS> <PAR_IZQ> LOGICA_OR() <PAR_DER> <LLAVE_IZQ> L_SENTENCIAS() <LLAVE_DER>
+    t=<T_MIENTRAS> <PAR_IZQ> exp=LOGICA_OR() <PAR_DER> <LLAVE_IZQ> c=L_SENTENCIAS() <LLAVE_DER>
+    {
+        Ambito ambito = new Ambito(Constante.TMientras, c);
+        for(Simbolo sim: ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        FMientras m = new FMientras(exp, ambito);
+        Simbolo s = new Simbolo(Constante.TMientras, Constante.TMientras, Constante.TMientras, m.Ambito, m, t.beginLine, t.beginColumn);
+        return s;
+    }
 }
 
 void BACKUP():
