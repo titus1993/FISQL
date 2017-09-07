@@ -161,33 +161,53 @@ SPECIAL_TOKEN:
     |<COMENTARIO_MULTI: "#*" (~["*"])* "*#">{System.out.println(image);}
 }
 
-void S():
-{}
+EjecucionUsql S():
+{ArrayList<Simbolo> s = new ArrayList<Simbolo>();}
 {   {System.out.println("Comienza!!");}
-    (L_INSTRUCCION()) ?
+    (s=L_INSTRUCCION()) ?
+    
     {System.out.println("Exito!!");}
+    {return new EjecucionUsql(s);}
 }
 
-void L_INSTRUCCION():
-{}
+ArrayList<Simbolo> L_INSTRUCCION():
+{ArrayList<Simbolo> l = new ArrayList<Simbolo>(); ArrayList<Simbolo> l2 = new ArrayList<Simbolo>();}
 {
-    INSTRUCCION() (L_INSTRUCCION())?
+    l=INSTRUCCION() (l2=L_INSTRUCCION())? 
+    {
+        for(Simbolo sim : l2){
+            l.add(sim);
+        }
+        return l;
+    }
 }
 
-void INSTRUCCION() :
-{}
+ArrayList<Simbolo> INSTRUCCION() :
+{ArrayList<Simbolo> l = new ArrayList<Simbolo>(); Simbolo s;}
 {    
-    {System.out.println("etntro llamada ddl");}DDL() 
-    | {System.out.println("etntro llamada d,ml");}DML()
-    | {System.out.println("etntro llamada dcl");}DCL()
-    | {System.out.println("etntro llamada decla");}DECLARACION()    
-    |{System.out.println("etntro llamada metodo");} LLAMADA_METODO()
-    |{System.out.println("etntro llamada imprimr");}<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER> <PCOMA> 
+    l=DDL() {return l;}
+    | l=DML() {return l;}
+    | l=DCL() {return l;}
+    | l=DECLARACION() {return l;}    
+    | LLAMADA_METODO() {return l;}
+    | s=IMPRIMIR() {l.add(s); return l;}
+}
+
+
+Simbolo IMPRIMIR():
+{Token t; FNodoExpresion exp;}
+{
+    t=<T_IMPRIMIR> <PAR_IZQ> exp=LOGICA_OR() <PAR_DER> <PCOMA> 
+    {
+        FImprimir f = new FImprimir(exp);
+        Simbolo s = new Simbolo(Constante.TImprimir, Constante.TImprimir, Constante.TImprimir, f.Ambito, null, t.beginLine, t.beginColumn);
+        return s;
+    }
 }
 
 
 
-Simbolo DDL():
+ArrayList<Simbolo> DDL():
 {}
 {
     <T_USAR> <ID> <PCOMA>
@@ -200,7 +220,7 @@ Simbolo DDL():
     {return null;}
 }
 
-Simbolo DML():
+ArrayList<Simbolo> DML():
 {}
 {
     INSERTAR()
@@ -209,32 +229,36 @@ Simbolo DML():
     |SELECCIONAR() <PCOMA> {return null;}
 }
 
-Simbolo DCL():
+ArrayList<Simbolo> DCL():
 {}
 {
     <T_OTORGAR> <ID> <COMA> <ID> <PUNTO> (<POR> | <ID>) <PCOMA>
     |<T_DENEGAR> <ID> <COMA> <ID> <PUNTO> (<POR> | <ID>) <PCOMA> {return null;}
 }
 
-Simbolo SSL():
-{}
+ArrayList<Simbolo> SSL():
+{ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s; Token t;}
 {
-    DECLARACION()
-    |ASIGNACION()
-    |SI()
-    |SELECCIONA()
-    |PARA()
-    |MIENTRAS()
-    |<T_DETENER> <PCOMA>
-    |<T_IMPRIMIR> <PAR_IZQ> LOGICA_OR() <PAR_DER> <PCOMA> 
-    |RETORNO() <PCOMA>
-    |LLAMADA_METODO() {return null;}
+    ls=DECLARACION(){return ls;}
+    |s=ASIGNACION() {ls.add(s); return ls;}
+    |s=SI()   {ls.add(s); return ls;}
+    |s=SELECCIONA()   {ls.add(s); return ls;}
+    |s=PARA() {ls.add(s); return ls;}
+    |s=MIENTRAS() {ls.add(s); return ls;}
+    |t=<T_DETENER> <PCOMA>    {ls.add(new Simbolo(Constante.TDetener,Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn)); return ls;}
+    |s=IMPRIMIR() {ls.add(s); return ls;}
+    |s=RETORNO() <PCOMA>  {ls.add(s); return ls;}
+    |s=LLAMADA_METODO() {ls.add(s); return ls;}
 }
 
-void LLAMADA_METODO():
-{}
+Simbolo LLAMADA_METODO():
+{Token t; ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>();}
 {
-    <ID> <PAR_IZQ> (L_EXPRESIONES())? <PAR_DER> <PCOMA>
+    t=<ID> <PAR_IZQ> (le=L_EXPRESIONES())? <PAR_DER> <PCOMA>
+      {
+        FLlamadaMetodo lm = new FLlamadaMetodo(t.image, le, t.beginLine, t.beginColumn);
+        return new Simbolo(Constante.TLlamadaMetodo, Constante.TLlamadaMetodo, Constante.TLlamadaMetodo, new Ambito(Constante.TLlamadaMetodo, new ArrayList<Simbolo>()), lm, t.beginLine, t.beginColumn);
+      }
 }
 
 void CREATE():
@@ -270,16 +294,16 @@ void CAMPO():
     TIPO_DATO() <ID> (L_COMPLEMENTO())?
 }
 
-void TIPO_DATO():
-{}
+String TIPO_DATO():
+{Token t;}
 {
-    <T_TEXT>
-    |<T_INTEGER>
-    |<T_DOUBLE>
-    |<T_BOOL>
-    |<T_DATE>
-    |<T_DATETIME>
-    |<ID>
+    t=<T_TEXT>    {return Tools.ttext;}
+    |t=<T_INTEGER> {return Tools.tinteger;}
+    |t=<T_DOUBLE>   {return Tools.tdouble;}
+    |t=<T_BOOL> {return Tools.tbool;}
+    |t=<T_DATE> {return Tools.tdate;}
+    |t=<T_DATETIME> {return Tools.tdatetime;}
+    |t=<ID> {return t.image;}
 }
 
 void L_COMPLEMENTO():
@@ -357,10 +381,10 @@ void CREATE_USUARIO():
     <T_USUARIO> <ID> <T_COLOCAR> <T_PASSWORD> <IGUAL> <CADENA>
 }
 
-void RETORNO():
-{}
+Simbolo RETORNO():
+{FNodoExpresion exp; Token t;}
 {
-    <T_RETORNO> LOGICA_OR()
+    t=<T_RETORNO> exp=LOGICA_OR() {return new Simbolo(Constante.TDetener, Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn);}
 }
 
 void ALTER():
@@ -449,11 +473,11 @@ ArrayList<Simbolo> L_SENTENCIA():
 }
 
 ArrayList<Simbolo> SENTENCIA():
-{Simbolo s;}
+{ArrayList<Simbolo> l = new ArrayList<Simbolo>();}
 {
-    (s=SSL()
-    |s=DML()
-    |s=DCL()){ArrayList<Simbolo> l = new ArrayList<Simbolo>(); l.add(s); return l;}
+    (l=SSL() {return l;}
+    |l=DML() {return l;}
+    |l=DCL()){return l;}
 }
 
 
@@ -569,9 +593,8 @@ FNodoExpresion VALOR_CASO():
 {Token t;}
 {
     t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
-    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
-    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
-    
+    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image);}
+    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image);}
 }
 
 FCaso DEFECTO():
@@ -754,8 +777,8 @@ FNodoExpresion I():
 {Token t; Token t2 = null; String c=""; String c2 = ""; FNodoExpresion n;}
 {
     t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
-    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
-    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+    | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image);}
+    | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image);}
     | t=<DATE> t2=<TIME>{c=t.image + " " + t2.image;} { if(!c.equals("")){ return new FNodoExpresion(null, null, Constante.TDateTime, Constante.TDateTime, t.beginLine, t.beginColumn, c);}
                                                         else{
                                                             return new FNodoExpresion(null, null, Constante.TDate, Constante.TDateTime, t.beginLine, t.beginColumn, t.image);

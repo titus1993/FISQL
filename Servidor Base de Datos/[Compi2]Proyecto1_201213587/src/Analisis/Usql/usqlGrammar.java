@@ -13,7 +13,7 @@ public class usqlGrammar implements usqlGrammarConstants {
     parser.S();
   }
 
-  final public void S() throws ParseException {
+  final public EjecucionUsql S() throws ParseException {ArrayList<Simbolo> s = new ArrayList<Simbolo>();
 System.out.println("Comienza!!");
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_CREAR:
@@ -33,7 +33,7 @@ System.out.println("Comienza!!");
     case T_RESTAURAR_USQL:
     case T_RESTAURAR_COMPLETO:
     case ID:{
-      L_INSTRUCCION();
+      s = L_INSTRUCCION();
       break;
       }
     default:
@@ -41,10 +41,12 @@ System.out.println("Comienza!!");
       ;
     }
 System.out.println("Exito!!");
+{if ("" != null) return new EjecucionUsql(s);}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void L_INSTRUCCION() throws ParseException {
-    INSTRUCCION();
+  final public ArrayList<Simbolo> L_INSTRUCCION() throws ParseException {ArrayList<Simbolo> l = new ArrayList<Simbolo>(); ArrayList<Simbolo> l2 = new ArrayList<Simbolo>();
+    l = INSTRUCCION();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_CREAR:
     case T_USAR:
@@ -63,16 +65,21 @@ System.out.println("Exito!!");
     case T_RESTAURAR_USQL:
     case T_RESTAURAR_COMPLETO:
     case ID:{
-      L_INSTRUCCION();
+      l2 = L_INSTRUCCION();
       break;
       }
     default:
       jj_la1[1] = jj_gen;
       ;
     }
+for(Simbolo sim : l2){
+            l.add(sim);
+        }
+        {if ("" != null) return l;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void INSTRUCCION() throws ParseException {
+  final public ArrayList<Simbolo> INSTRUCCION() throws ParseException {ArrayList<Simbolo> l = new ArrayList<Simbolo>(); Simbolo s;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_CREAR:
     case T_USAR:
@@ -82,41 +89,37 @@ System.out.println("Exito!!");
     case T_BACKUP_COMPLETO:
     case T_RESTAURAR_USQL:
     case T_RESTAURAR_COMPLETO:{
-System.out.println("etntro llamada ddl");
-      DDL();
+      l = DDL();
+{if ("" != null) return l;}
       break;
       }
     case T_INSERTAR:
     case T_ACTUALIZAR:
     case T_BORRAR:
     case T_SELECCIONAR:{
-System.out.println("etntro llamada d,ml");
-      DML();
+      l = DML();
+{if ("" != null) return l;}
       break;
       }
     case T_OTORGAR:
     case T_DENEGAR:{
-System.out.println("etntro llamada dcl");
-      DCL();
+      l = DCL();
+{if ("" != null) return l;}
       break;
       }
     case T_DECLARAR:{
-System.out.println("etntro llamada decla");
-      DECLARACION();
+      l = DECLARACION();
+{if ("" != null) return l;}
       break;
       }
     case ID:{
-System.out.println("etntro llamada metodo");
       LLAMADA_METODO();
+{if ("" != null) return l;}
       break;
       }
     case T_IMPRIMIR:{
-System.out.println("etntro llamada imprimr");
-      jj_consume_token(T_IMPRIMIR);
-      jj_consume_token(PAR_IZQ);
-      LOGICA_OR();
-      jj_consume_token(PAR_DER);
-      jj_consume_token(PCOMA);
+      s = IMPRIMIR();
+l.add(s); {if ("" != null) return l;}
       break;
       }
     default:
@@ -124,9 +127,22 @@ System.out.println("etntro llamada imprimr");
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
-  final public Simbolo DDL() throws ParseException {
+  final public Simbolo IMPRIMIR() throws ParseException {Token t; FNodoExpresion exp;
+    t = jj_consume_token(T_IMPRIMIR);
+    jj_consume_token(PAR_IZQ);
+    exp = LOGICA_OR();
+    jj_consume_token(PAR_DER);
+    jj_consume_token(PCOMA);
+FImprimir f = new FImprimir(exp);
+        Simbolo s = new Simbolo(Constante.TImprimir, Constante.TImprimir, Constante.TImprimir, f.Ambito, null, t.beginLine, t.beginColumn);
+        {if ("" != null) return s;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ArrayList<Simbolo> DDL() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_USAR:{
       jj_consume_token(T_USAR);
@@ -165,7 +181,7 @@ System.out.println("etntro llamada imprimr");
     throw new Error("Missing return statement in function");
   }
 
-  final public Simbolo DML() throws ParseException {
+  final public ArrayList<Simbolo> DML() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_INSERTAR:{
       INSERTAR();
@@ -193,7 +209,7 @@ System.out.println("etntro llamada imprimr");
     throw new Error("Missing return statement in function");
   }
 
-  final public Simbolo DCL() throws ParseException {
+  final public ArrayList<Simbolo> DCL() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_OTORGAR:{
       jj_consume_token(T_OTORGAR);
@@ -250,53 +266,58 @@ System.out.println("etntro llamada imprimr");
     throw new Error("Missing return statement in function");
   }
 
-  final public Simbolo SSL() throws ParseException {
+  final public ArrayList<Simbolo> SSL() throws ParseException {ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s; Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_DECLARAR:{
-      DECLARACION();
+      ls = DECLARACION();
+{if ("" != null) return ls;}
       break;
       }
     case ARROBA:{
-      ASIGNACION();
+      s = ASIGNACION();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_SI:{
-      SI();
+      s = SI();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_SELECCIONA:{
-      SELECCIONA();
+      s = SELECCIONA();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_PARA:{
-      PARA();
+      s = PARA();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_MIENTRAS:{
-      MIENTRAS();
+      s = MIENTRAS();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_DETENER:{
-      jj_consume_token(T_DETENER);
+      t = jj_consume_token(T_DETENER);
       jj_consume_token(PCOMA);
+ls.add(new Simbolo(Constante.TDetener,Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn)); {if ("" != null) return ls;}
       break;
       }
     case T_IMPRIMIR:{
-      jj_consume_token(T_IMPRIMIR);
-      jj_consume_token(PAR_IZQ);
-      LOGICA_OR();
-      jj_consume_token(PAR_DER);
-      jj_consume_token(PCOMA);
+      s = IMPRIMIR();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case T_RETORNO:{
-      RETORNO();
+      s = RETORNO();
       jj_consume_token(PCOMA);
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     case ID:{
-      LLAMADA_METODO();
-{if ("" != null) return null;}
+      s = LLAMADA_METODO();
+ls.add(s); {if ("" != null) return ls;}
       break;
       }
     default:
@@ -307,8 +328,8 @@ System.out.println("etntro llamada imprimr");
     throw new Error("Missing return statement in function");
   }
 
-  final public void LLAMADA_METODO() throws ParseException {
-    jj_consume_token(ID);
+  final public Simbolo LLAMADA_METODO() throws ParseException {Token t; ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>();
+    t = jj_consume_token(ID);
     jj_consume_token(PAR_IZQ);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MENOS:
@@ -324,7 +345,7 @@ System.out.println("etntro llamada imprimr");
     case ID:
     case ARROBA:
     case DATE:{
-      L_EXPRESIONES();
+      le = L_EXPRESIONES();
       break;
       }
     default:
@@ -333,6 +354,9 @@ System.out.println("etntro llamada imprimr");
     }
     jj_consume_token(PAR_DER);
     jj_consume_token(PCOMA);
+FLlamadaMetodo lm = new FLlamadaMetodo(t.image, le, t.beginLine, t.beginColumn);
+        {if ("" != null) return new Simbolo(Constante.TLlamadaMetodo, Constante.TLlamadaMetodo, Constante.TLlamadaMetodo, new Ambito(Constante.TLlamadaMetodo, new ArrayList<Simbolo>()), lm, t.beginLine, t.beginColumn);}
+    throw new Error("Missing return statement in function");
   }
 
   final public void CREATE() throws ParseException {
@@ -427,34 +451,41 @@ System.out.println("etntro llamada imprimr");
     }
   }
 
-  final public void TIPO_DATO() throws ParseException {
+  final public String TIPO_DATO() throws ParseException {Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_TEXT:{
-      jj_consume_token(T_TEXT);
+      t = jj_consume_token(T_TEXT);
+{if ("" != null) return Tools.ttext;}
       break;
       }
     case T_INTEGER:{
-      jj_consume_token(T_INTEGER);
+      t = jj_consume_token(T_INTEGER);
+{if ("" != null) return Tools.tinteger;}
       break;
       }
     case T_DOUBLE:{
-      jj_consume_token(T_DOUBLE);
+      t = jj_consume_token(T_DOUBLE);
+{if ("" != null) return Tools.tdouble;}
       break;
       }
     case T_BOOL:{
-      jj_consume_token(T_BOOL);
+      t = jj_consume_token(T_BOOL);
+{if ("" != null) return Tools.tbool;}
       break;
       }
     case T_DATE:{
-      jj_consume_token(T_DATE);
+      t = jj_consume_token(T_DATE);
+{if ("" != null) return Tools.tdate;}
       break;
       }
     case T_DATETIME:{
-      jj_consume_token(T_DATETIME);
+      t = jj_consume_token(T_DATETIME);
+{if ("" != null) return Tools.tdatetime;}
       break;
       }
     case ID:{
-      jj_consume_token(ID);
+      t = jj_consume_token(ID);
+{if ("" != null) return t.image;}
       break;
       }
     default:
@@ -462,6 +493,7 @@ System.out.println("etntro llamada imprimr");
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
   final public void L_COMPLEMENTO() throws ParseException {
@@ -657,9 +689,11 @@ System.out.println("etntro llamada imprimr");
     jj_consume_token(CADENA);
   }
 
-  final public void RETORNO() throws ParseException {
-    jj_consume_token(T_RETORNO);
-    LOGICA_OR();
+  final public Simbolo RETORNO() throws ParseException {FNodoExpresion exp; Token t;
+    t = jj_consume_token(T_RETORNO);
+    exp = LOGICA_OR();
+{if ("" != null) return new Simbolo(Constante.TDetener, Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn);}
+    throw new Error("Missing return statement in function");
   }
 
   final public void ALTER() throws ParseException {
@@ -961,7 +995,7 @@ for(Simbolo sim : ls2){
     throw new Error("Missing return statement in function");
   }
 
-  final public ArrayList<Simbolo> SENTENCIA() throws ParseException {Simbolo s;
+  final public ArrayList<Simbolo> SENTENCIA() throws ParseException {ArrayList<Simbolo> l = new ArrayList<Simbolo>();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_RETORNO:
     case T_DECLARAR:
@@ -973,19 +1007,21 @@ for(Simbolo sim : ls2){
     case T_IMPRIMIR:
     case ID:
     case ARROBA:{
-      s = SSL();
+      l = SSL();
+{if ("" != null) return l;}
       break;
       }
     case T_INSERTAR:
     case T_ACTUALIZAR:
     case T_BORRAR:
     case T_SELECCIONAR:{
-      s = DML();
+      l = DML();
+{if ("" != null) return l;}
       break;
       }
     case T_OTORGAR:
     case T_DENEGAR:{
-      s = DCL();
+      l = DCL();
       break;
       }
     default:
@@ -993,7 +1029,7 @@ for(Simbolo sim : ls2){
       jj_consume_token(-1);
       throw new ParseException();
     }
-ArrayList<Simbolo> l = new ArrayList<Simbolo>(); l.add(s); {if ("" != null) return l;}
+{if ("" != null) return l;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1197,12 +1233,12 @@ Ambito ambito = new Ambito(Constante.TCaso, ls);
       }
     case ENTERO:{
       t = jj_consume_token(ENTERO);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image);}
       break;
       }
     case DECIMAL:{
       t = jj_consume_token(DECIMAL);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image);}
       break;
       }
     default:
@@ -1679,12 +1715,12 @@ if(t != null){
       }
     case ENTERO:{
       t = jj_consume_token(ENTERO);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image);}
       break;
       }
     case DECIMAL:{
       t = jj_consume_token(DECIMAL);
-{if ("" != null) return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length()));}
+{if ("" != null) return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image);}
       break;
       }
     case DATE:{

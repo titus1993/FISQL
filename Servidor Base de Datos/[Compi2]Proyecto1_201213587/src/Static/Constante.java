@@ -14,6 +14,7 @@ public class Constante {
     public static final String TAsignacion = "Asignacion";
     public static final String TTabla = "Tabla";
     public static final String TMetodo = "Metodo";
+    public static final String TLlamadaMetodo = "LlamadaMetodo";
     public static final String TVariable = "Variable"; 
     public static final String TError = "Error";
     public static final String TErrorLexico = "Error Lexico";
@@ -72,6 +73,7 @@ public class Constante {
     public static final String TMientras = "mientras";
     
     public static final String TContinuar = "continuar";
-    public static final String TTerminar = "terminar";
+    public static final String TDetener = "detener";
+    public static final String TImprimir = "imprimir";
     
 }
