@@ -5,9 +5,9 @@
  */
 package Funciones.Usql;
 
-import Static.Constante;
+import Static.*;
 import EjecucionUsql.*;
-//import Interface.TitusNotificaciones;
+//import Interface.Tools;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +29,28 @@ public class FSi {
     }
 
     public void EjecutarSi() {
+        FNodoExpresion condicion = this.Condicion.ResolverExpresion();
         
+        if (Tools.ContarErrores()) {
+            if (condicion.Tipo.equals(Constante.TBool)) {
+                if (condicion.Bool) {
+                    FMetodo metodo = new FMetodo();
+                    metodo.EjecutarInstrucciones(Si.TablaSimbolo);
+                    metodo.SacarAmbito(Si.TablaSimbolo);
+                } else {
+                    if (Sino != null) {
+                        FMetodo metodo = new FMetodo();
+                        metodo.EjecutarInstrucciones(Sino.TablaSimbolo);
+                        metodo.SacarAmbito(Sino.TablaSimbolo);
+                    }
+                }
+            } else {
+                if (condicion.Tipo.equals(Constante.TObjeto)) {
+                    Tools.InsertarError(Constante.TErrorSemantico, "Se esperaba un tipo bool no un tipo " + condicion.Nombre, Condicion.Fila, Condicion.Columna);
+                } else {
+                    Tools.InsertarError(Constante.TErrorSemantico, "Se esperaba un tipo bool no un tipo " + condicion.Tipo, Condicion.Fila, Condicion.Columna);
+                }
+            }
+        }
     }
 }

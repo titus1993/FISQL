@@ -5,9 +5,10 @@
  */
 package Funciones.Usql;
 
+import EjecucionUsql.*;
 import java.util.ArrayList;
 
-import Static.Constante;
+import Static.*;
 import java.util.Date;
 
 /**
@@ -28,10 +29,8 @@ public class FNodoExpresion {
     //public Objeto Obj;
     public FLlamadaMetodo Metodo;
     public FLlamadaTabla Tabla;
-    //public FNodoArreglo Arreglo;
-    //public Arreglo ArregloResuelto;
-    //public FNodoExpresion PosArreglo;
-    //public FNodoExpresion Col;
+    public FNodoExpresion PosArreglo;
+    public FNodoExpresion Col;
 
     public FNodoExpresion(FNodoExpresion nodo) {
         this.Izquierda = nodo.Izquierda;
@@ -44,6 +43,8 @@ public class FNodoExpresion {
         this.Fila = nodo.Fila;
         this.Nombre = nodo.Nombre;
         this.Tipo = nodo.Tipo;
+        this.Date = nodo.Date;
+        this.DateTime = nodo.DateTime;
     }
 
     public FNodoExpresion(FNodoExpresion izq, FNodoExpresion der, String tipo, String nombre, int fila, int columna, Object valor) {
@@ -73,10 +74,12 @@ public class FNodoExpresion {
             case Constante.TBool:
 
                 this.Cadena = valor.toString();
-                if (this.Cadena.equals(Constante.TVerdadero)) {
+                if (this.Cadena.equals(Constante.TVerdadero) || this.Cadena.equals("true")) {
+                    this.Bool = true;
                     this.Entero = 1;
                     this.Decimal = 1;
                 } else {
+                    this.Bool = false;
                     this.Entero = 0;
                     this.Decimal = 0;
                 }
@@ -212,6 +215,14 @@ public class FNodoExpresion {
             case Constante.TDateTime:
                 aux = new FNodoExpresion(nodo);
                 break;
+
+            case Constante.TVariable:
+                FLlamadaVariable llamada = (FLlamadaVariable) this.Variable;
+                Variable valor = llamada.Ejecutar();
+                if (valor != null) {
+                    aux = (FNodoExpresion) valor.Valor;                    
+                }
+                break;
         }
         return aux;
     }
@@ -241,7 +252,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -266,7 +277,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -299,7 +310,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -325,7 +336,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -337,7 +348,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -349,7 +360,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede +, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -378,7 +389,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -400,7 +411,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -417,7 +428,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede -, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -444,7 +455,7 @@ public class FNodoExpresion {
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede -, " + der.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede -, " + der.Tipo, Fila, Columna);
                 break;
         }
         return aux;
@@ -471,7 +482,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -493,7 +504,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -515,7 +526,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede *, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -545,7 +556,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -567,7 +578,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -584,7 +595,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede /, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -618,7 +629,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -640,7 +651,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -659,7 +670,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ^, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -681,7 +692,7 @@ public class FNodoExpresion {
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ++, " + izq.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede ++, " + izq.Tipo, Fila, Columna);
                 break;
 
         }
@@ -701,7 +712,7 @@ public class FNodoExpresion {
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ++, " + izq.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede ++, " + izq.Tipo, Fila, Columna);
                 break;
 
         }
@@ -729,7 +740,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -751,7 +762,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -773,7 +784,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -803,7 +814,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -825,7 +836,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -847,7 +858,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -877,7 +888,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -899,7 +910,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -921,7 +932,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -943,7 +954,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -965,7 +976,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -987,7 +998,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ==, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1017,7 +1028,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1039,7 +1050,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1059,7 +1070,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1081,7 +1092,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1101,7 +1112,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1121,7 +1132,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede !=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1144,7 +1155,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede >=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1166,7 +1177,7 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede <=, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -1186,13 +1197,13 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede ||, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                 break;
         }
         return aux;
@@ -1210,13 +1221,13 @@ public class FNodoExpresion {
                         break;
 
                     default:
-                        //TitusNotificaciones.InsertarError(Constante.TError, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        Tools.InsertarError(Constante.TError, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede &&, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                 break;
         }
         return aux;
@@ -1232,7 +1243,7 @@ public class FNodoExpresion {
                 break;
 
             default:
-                //TitusNotificaciones.InsertarError(Constante.TError, "No se puede !, " + der.Tipo, Fila, Columna);
+                Tools.InsertarError(Constante.TError, "No se puede !, " + der.Tipo, Fila, Columna);
                 break;
         }
 

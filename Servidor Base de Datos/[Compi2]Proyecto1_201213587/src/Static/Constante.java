@@ -72,8 +72,8 @@ public class Constante {
     public static final String TPara = "para";
     public static final String TMientras = "mientras";
     
-    public static final String TContinuar = "continuar";
     public static final String TDetener = "detener";
     public static final String TImprimir = "imprimir";
+    public static final String TRetorno = "retorno";
     
 }

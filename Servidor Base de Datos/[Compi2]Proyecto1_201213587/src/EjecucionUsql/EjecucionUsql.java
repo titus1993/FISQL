@@ -32,7 +32,14 @@ public class EjecucionUsql {
     }
 
     public void Ejecutar() {
+        PrimerPasada();
+        FMetodo global = new FMetodo(null, null, 0, 0, Constante.TVacio, "Goblal");
         
+        global.EjecutarInstrucciones(Global);
+    }
+    
+    public void PrimerPasada(){
+        Tools.IniciarErrores();
     }
 
 

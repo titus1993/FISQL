@@ -7,7 +7,7 @@ package Funciones.Usql;
 
 import Static.*;
 import EjecucionUsql.*;
-//import Interface.TitusNotificaciones;
+//import Interface.Tools;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +26,26 @@ public class FImprimir {
     }
 
     public void Imprimir() {
+        FNodoExpresion solucion = Valor.ResolverExpresion();
+
         
+        if (true) {
+            if (solucion.Tipo.equals(Constante.TCadena)) {
+                Tools.ImprimirConsola(solucion.Cadena);
+            } else if (solucion.Tipo.equals(Constante.TEntero)) {
+                Tools.ImprimirConsola(String.valueOf(solucion.Entero));
+            } else if (solucion.Tipo.equals(Constante.TDecimal)) {
+                Tools.ImprimirConsola(String.valueOf(solucion.Decimal));
+            }  else if (solucion.Tipo.equals(Constante.TBool)) {
+                Tools.ImprimirConsola(String.valueOf(solucion.Bool));
+            }else if (solucion.Tipo.equals(Constante.TDate)) {
+                Tools.ImprimirConsola(String.valueOf(solucion.Date));
+            }else if (solucion.Tipo.equals(Constante.TDateTime)) {
+                Tools.ImprimirConsola(String.valueOf(solucion.DateTime));
+            } else {
+                Tools.ImprimirConsola(String.valueOf(solucion.Nombre));
+                //Tools.InsertarError(Constante.TErrorSintactico, "Se esperaba un tipo String", solucion.Fila, solucion.Columna);
+            }
+        }
     }
 }

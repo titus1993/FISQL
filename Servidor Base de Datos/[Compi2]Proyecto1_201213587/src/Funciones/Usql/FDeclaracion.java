@@ -7,6 +7,7 @@ package Funciones.Usql;
 
 import Static.Constante;
 import EjecucionUsql.*;
+import Static.Tools;
 
 /**
  *
@@ -31,6 +32,102 @@ public class FDeclaracion {
     }
 
     public void EjecutarDeclaracion() {
-        
+        Variable nuevavariable;
+        if (Valor != null) {
+            FNodoExpresion exp = (FNodoExpresion) Valor;
+            exp = exp.ResolverExpresion();
+
+            if (Tools.ContarErrores()) {
+                switch (Tipo) {
+                    case Constante.TEntero:
+                        switch (exp.Tipo) {
+                            case Constante.TEntero:
+                                break;
+
+                            case Constante.TBool:
+                                exp.Entero = exp.Entero;
+                                exp.Tipo = Constante.TEntero;
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+                        }
+                        break;
+
+                    case Constante.TDecimal:
+                        switch (exp.Tipo) {
+                            case Constante.TDecimal:
+                                break;
+
+                            case Constante.TEntero:
+                                exp.Decimal = exp.Entero;
+                                exp.Tipo = Constante.TDecimal;
+                                break;
+
+                            case Constante.TBool:
+                                exp.Decimal = exp.Entero;
+                                exp.Tipo = Constante.TDecimal;
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+                        }
+                        break;
+
+                    case Constante.TCadena:
+                        switch (exp.Tipo) {
+                            case Constante.TEntero:
+                                exp.Cadena = String.valueOf(exp.Entero);
+                                exp.Tipo = Constante.TCadena;
+                                break;
+
+                            case Constante.TBool:
+                                exp.Cadena = String.valueOf(exp.Entero);
+                                exp.Tipo = Constante.TCadena;
+                                break;
+
+                            case Constante.TDecimal:
+                                exp.Cadena = String.valueOf(exp.Decimal);
+                                exp.Tipo = Constante.TCadena;
+                                break;
+
+                            case Constante.TCadena:
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+                        }
+                        break;
+
+                    case Constante.TBool:
+                        switch (exp.Tipo) {
+                            case Constante.TBool:
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+
+                        }
+                        break;
+
+                    default:
+
+                        Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+
+                        break;
+
+                }
+
+                nuevavariable = new Variable(Tipo, Nombre, Constante.TVariable, Fila, Columna, Ambito, exp);
+                Tools.Tabla.InsertarVariable(nuevavariable);
+            }
+        } else {
+            nuevavariable = new Variable(Tipo, Nombre, Constante.TVariable, Fila, Columna, Ambito, null);
+            Tools.Tabla.InsertarVariable(nuevavariable);
+        }
     }
 }

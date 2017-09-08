@@ -7,6 +7,7 @@ package Funciones.Usql;
 
 import Static.Constante;
 import EjecucionUsql.*;
+import Static.Tools;
 //import Interface.TitusNotificaciones;
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class FLlamadaVariable {
         this.Objeto = objeto;
     }
 
-    public void Ejecutar() {
-       
+    public Variable Ejecutar() {
+       return Tools.Tabla.BuscarVariable(Nombre);       
     }
 }

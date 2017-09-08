@@ -5,6 +5,8 @@
  */
 package Static;
 
+import EjecucionUsql.TablaUsql;
+import Funciones.XML.DataBase;
 import Funciones.XML.Maestro;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -26,6 +30,9 @@ import javax.swing.JTextArea;
  */
 public class Tools {
 
+    public static JTable TablaErrores;
+    public static DefaultTableModel Error;
+    
     public static JTextArea Consola = new JTextArea();
 
     public static void ImprimirConsola(String texto) {
@@ -55,6 +62,12 @@ public class Tools {
 
     public static Maestro Base_de_datos = new Maestro();
 
+    public static TablaUsql Tabla = new TablaUsql();
+    
+    public static TablaUsql Funciones = new TablaUsql();
+    
+    public static DataBase BaseActual = null;
+    
     public static String LeerArchivo(String ruta) {
         String contenido = "";
         try {
@@ -143,5 +156,26 @@ public class Tools {
         String path = "";
         path = f.getParent();
         return path;
+    }
+    
+    public static void IniciarErrores() {
+        String[] columnas = {"Tipo de error", "Descripcion", "Linea", "Columna"};
+        Error = new DefaultTableModel(columnas, 0);
+        TablaErrores = new JTable(Error);
+    }
+
+    public static void InsertarError(String tipo, String descripcion, int linea, int columna) {
+        String[] error = {tipo, descripcion, String.valueOf(linea + 1), String.valueOf(columna + 1)};
+        Error.addRow(error);
+    }
+
+    public static boolean ContarErrores() {
+        return Error.getRowCount() == 0;
+    }
+
+    public static void LimpiarTabla() {
+        while (Error.getRowCount() > 0) {
+            Error.removeRow(0);
+        }
     }
 }
