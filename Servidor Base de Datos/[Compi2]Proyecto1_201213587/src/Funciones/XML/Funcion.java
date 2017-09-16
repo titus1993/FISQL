@@ -35,7 +35,7 @@ public class Funcion {
         }
         
         cadena += "\t</Params>\n"
-                + "\t<src>§" + src + "§\n\t</src>\n"
+                + "\t<src>§\n" + src + "\n§\n\t</src>\n"
                 + "</Func>\n";
         
         return cadena;

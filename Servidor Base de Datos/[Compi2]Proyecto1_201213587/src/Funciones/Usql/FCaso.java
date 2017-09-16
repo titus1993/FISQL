@@ -18,4 +18,17 @@ public class FCaso {
         this.Valor = valor;
         this.Ambito = ambito;
     }
+    
+    
+    public String getCadena(){
+        String cadena = "";
+        
+        cadena += "CASO " + Valor.getCadena() + ":\n";
+        
+        FMetodo m = new FMetodo();
+        
+        cadena += m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
+        
+        return cadena;
+    }
 }

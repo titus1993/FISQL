@@ -88,15 +88,18 @@ for(int i=0; i < c2.size(); i++){
     throw new Error("Missing return statement in function");
   }
 
-  final public ArrayList<Tabla> TABLA() throws ParseException {String n, p; ArrayList<ColumnaEstructura> ce;
+  final public ArrayList<Tabla> TABLA() throws ParseException {String n, p; ArrayList<ColumnaEstructura> ce; Token to;
     jj_consume_token(T_TABLA_IZQ);
     n = NOMBRE();
     p = PATH();
+    jj_consume_token(T_FA);
+    to = jj_consume_token(ENTERO);
+    jj_consume_token(T_FC);
     ce = ROWS();
     jj_consume_token(T_TABLA_DER);
-Tabla t = new Tabla(n, p, ce);
-        ArrayList<Tabla> l = new ArrayList<Tabla>();
-        l.add(t);
+Tabla t = new Tabla(n, p, to.image, ce);
+            ArrayList<Tabla> l = new ArrayList<Tabla>();
+            l.add(t);
             {if ("" != null) return l;}
     throw new Error("Missing return statement in function");
   }
@@ -215,11 +218,11 @@ ArrayList<ColumnaEstructura> l = new ArrayList<ColumnaEstructura>();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_COMPLEMENTO_IZQ:{
       c2 = L_COMPLEMENTO();
-c.isNulo = c2.isNulo;
-                                        c.isAutoincrementable = c2.isAutoincrementable;
-                                        c.isPrimary = c2.isPrimary;
-                                        c.isForanea = c2.isForanea;
-                                        c.Foranea = c2.Foranea;
+if(c2.isNulo) c.isNulo = true;
+                                        if(c2.isAutoincrementable) c.isAutoincrementable = true;
+                                        if(c2.isPrimary) c.isPrimary = true;
+                                        if(c2.isForanea) c.isForanea = true;
+                                        if(c2.isForanea) c.Foranea = c2.Foranea;
       break;
       }
     default:
@@ -235,12 +238,12 @@ c.isNulo = c2.isNulo;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case T_NULO:{
       jj_consume_token(T_NULO);
-com.isNulo = true;
+com.isNulo = false;
       break;
       }
     case T_NO_NULO:{
       jj_consume_token(T_NO_NULO);
-com.isNulo = false;
+com.isNulo = true;
       break;
       }
     case T_AUTOINCREMETABLE:{
@@ -293,10 +296,10 @@ com.isForanea = true; com.Foranea = c;
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x2,0x2,0x200,0x7e000000,0x100,0x100,0xf80000,};
+      jj_la1_0 = new int[] {0x2,0x2,0x200,0xf8000000,0x100,0x100,0x3e00000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x40,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x101,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -413,7 +416,7 @@ com.isForanea = true; com.Foranea = c;
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[44];
+    boolean[] la1tokens = new boolean[47];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -430,7 +433,7 @@ com.isForanea = true; com.Foranea = c;
         }
       }
     }
-    for (int i = 0; i < 44; i++) {
+    for (int i = 0; i < 47; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

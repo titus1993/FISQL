@@ -5,11 +5,17 @@
  */
 package Funciones.XML;
 
+import Analisis.Usql.usqlGrammar;
 import Analisis.XML.Maestro.*;
 import Static.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Analisis.XML.Usuario.*;
+import EjecucionUsql.EjecucionUsql;
+import EjecucionUsql.Simbolo;
+import EjecucionUsql.TablaUsql;
+import EjecucionUsql.Variable;
+import Funciones.Usql.FNodoExpresion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +26,8 @@ import java.util.Date;
  */
 public class Maestro {
 
-    ArrayList<Usuario> Usuarios = null;
-    ArrayList<DataBase> BaseDatos = null;
+    public ArrayList<Usuario> Usuarios = null;
+    public ArrayList<DataBase> BaseDatos = null;
 
     public Maestro() {
         iniciarDB();
@@ -180,19 +186,62 @@ public class Maestro {
         return null;
     }
 
-    public String DLLCrearUsuario(String nombre, String pass) {
-        if (ExisteUsuario(nombre) == null) {
-            Usuario nuevo = new Usuario(nombre, pass, 1, 0, Tools.formatoFecha.format(new Date()), new ArrayList<PermisosUsr>());
-            Usuarios.add(nuevo);
-            this.Guardar();
+    public int DLLCrearUsuario(String nombre, String pass) {
+        if (Tools.Usuario.type == 0) {
+            if (ExisteUsuario(nombre) == null) {
+                Usuario nuevo = new Usuario(nombre, pass, 1, 0, Tools.formatoFecha.format(new Date()), new ArrayList<PermisosUsr>());
+                Usuarios.add(nuevo);
+                this.Guardar();
+            } else {
+                //error que ya existe
+                return 2;
+            }
         } else {
-            //error que ya existe
+            //error solo admin puede
+            return 1;
         }
-
-        return "";
+        return 0;
     }
 
-    public String DLLCrearBaseDatos(String nombre, String usuario) {
+    public boolean DLLUsarBaseDatos(String base, String usuario) {
+        DataBase db = ExisteBaseDatos(base);
+        if (db != null) {
+            Tools.BaseActual = db;
+            try {
+                //Inicializamos las funciones que existen en la base de datos a la memoria
+                Tools.Funciones = new TablaUsql();
+                //cargamos los procedimientos a memoria
+                for (Procedimiento p : Tools.BaseActual.Procedimientos) {
+
+                    usqlGrammar proc = new usqlGrammar(new java.io.StringReader(p.src));
+                    EjecucionUsql procm = proc.S();
+
+                    for (Simbolo s : procm.Global) {
+                        Tools.Funciones.InsertarVariable(new Variable(s.Tipo, s.Nombre, Constante.TMetodo, s.Fila, s.Columna, s.Ambito, s.Valor));
+                    }
+                }
+
+                //cargamos las funciones a memoria
+                for (Funcion p : Tools.BaseActual.Funciones) {
+
+                    usqlGrammar proc = new usqlGrammar(new java.io.StringReader(p.src));
+                    EjecucionUsql procm = proc.S();
+
+                    for (Simbolo s : procm.Global) {
+                        Tools.Funciones.InsertarVariable(new Variable(s.Tipo, s.Nombre, Constante.TMetodo, s.Fila, s.Columna, s.Ambito, s.Valor));
+                    }
+                }
+
+            } catch (Analisis.Usql.ParseException ex) {
+                Logger.getLogger(Maestro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean DLLCrearBaseDatos(String nombre, String usuario) {
         if (ExisteBaseDatos(nombre) == null) {
             //primero creamos la carpeta de la base de datos
             String carpetaDB = Tools.localDb + "\\" + nombre;
@@ -218,191 +267,264 @@ public class Maestro {
 
             this.Guardar();
         } else {
-            //retornar error que ya existe
+            return false;
         }
-        return "";
+        return true;
     }
 
-    public boolean DLLCrearFuncion(String base, String usuario, Funcion funcion) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Procedimiento p = db.ExisteProcedimiento(funcion.nombre);
+    public int DLLCrearFuncion(Funcion funcion) {
+        if (Tools.BaseActual != null) {
+            Procedimiento p = Tools.BaseActual.ExisteProcedimiento(funcion.nombre);
             if (p == null) {
-                Funcion f = db.ExisteFuncion(funcion.nombre);
+                Funcion f = Tools.BaseActual.ExisteFuncion(funcion.nombre);
                 if (f == null) {
-                    Usuario usr = ExisteUsuario(usuario);
-                    if (usr != null) {
-                        if (usr.ExisteBaseDatos(base)) {
-                            db.Funciones.add(funcion);
-                            DSLOtorgarPermisosFuncion(base, usuario, funcion.nombre);
-                        } else {
-                            //no tiene permisos sobre la base de datos
-                        }
-                    } else {
-                        //no existe usuario
-                    }
+
+                    Tools.BaseActual.Funciones.add(funcion);
+                    DSLOtorgarPermisosBaseDatos(Tools.BaseActual.Nombre, Tools.Usuario.name);
+                    DSLOtorgarPermisosFuncion(Tools.BaseActual.Nombre, Tools.Usuario.name, funcion.nombre);
+
                 } else {
                     //ya existe una funcion
+                    return 3;
                 }
             } else {
                 //ya existe un procedimiento con ese nombre
+                return 2;
             }
+        } else {
+            return 1;
         }
-        return true;
+        return 0;
     }
 
-    public boolean DLLCrearProcedimiento(String base, String usuario, Procedimiento proc) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Funcion f = db.ExisteFuncion(proc.nombre);
+    public int DLLCrearProcedimiento(Procedimiento proc) {
+
+        if (Tools.BaseActual != null) {
+            Funcion f = Tools.BaseActual.ExisteFuncion(proc.nombre);
             if (f == null) {
-                Procedimiento p = db.ExisteProcedimiento(proc.nombre);
+                Procedimiento p = Tools.BaseActual.ExisteProcedimiento(proc.nombre);
                 if (p == null) {
-                    Usuario usr = ExisteUsuario(usuario);
-                    if (usr != null) {
-                        if (usr.ExisteBaseDatos(base)) {
-                            db.Procedimientos.add(proc);
-                            DSLOtorgarPermisosProcedimiento(base, usuario, proc.nombre);
-                        } else {
-                            //no tiene permisos sobre la base de datos
-                        }
-                    } else {
-                        //no existe usuario
-                    }
+                    Tools.BaseActual.Procedimientos.add(proc);
+                    DSLOtorgarPermisosBaseDatos(Tools.BaseActual.Nombre, Tools.Usuario.name);
+                    DSLOtorgarPermisosProcedimiento(Tools.BaseActual.Nombre, Tools.Usuario.name, proc.nombre);
                 } else {
                     //ya existe una funcion
+                    return 3;
                 }
             } else {
                 //ya existe un procedimiento con ese nombre
+                return 2;
             }
+        } else {
+            return 1;
         }
-        return true;
+        return 0;
     }
 
-    public boolean DLLCrearObjeto(String base, String usuario, Objeto obj) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Objeto o = db.ExisteObjeto(obj.nombre);
+    public int DLLCrearObjeto(Objeto obj) {
+        if (Tools.BaseActual != null) {
+            Objeto o = Tools.BaseActual.ExisteObjeto(obj.nombre);
             if (o == null) {
-                Usuario usr = ExisteUsuario(usuario);
-                if (usr != null) {
-                    if (usr.ExisteBaseDatos(base)) {
-                        db.Objetos.add(obj);
-                        DSLOtorgarPermisosObjeto(base, usuario, obj.nombre);
-                    } else {
-                        //no tiene permisos sobre la base de datos
-                    }
-                } else {
-                    //no existe usuario
-                }
+                Tools.BaseActual.Objetos.add(obj);
+                DSLOtorgarPermisosBaseDatos(Tools.BaseActual.Nombre, Tools.Usuario.name);
+                DSLOtorgarPermisosObjeto(Tools.BaseActual.Nombre, Tools.Usuario.name, obj.nombre);
             } else {
-                //ya existe un procedimiento con ese nombre
+                //ya existe un objeto con ese nombre
+                return 2;
             }
+        } else {
+            return 1;
         }
-        return true;
+        return 0;
     }
 
-    public boolean DLLCrearTabla(String base, String usuario, Tabla tabla) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Tabla t = db.ExisteTabla(tabla.Nombre);
+    public int DLLCrearTabla(Tabla tabla) {
+        if (Tools.BaseActual != null) {
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla.Nombre);
             if (t == null) {
-                Usuario usr = ExisteUsuario(usuario);
-                if (usr != null) {
-                    if (usr.ExisteBaseDatos(base)) {
-                        tabla.Path = Tools.getAbolutePath(db.Path) + "\\" + tabla.Nombre + ".xml";
-                        Tools.crearArchivo(tabla.Path, "");
-                        db.Tablas.add(tabla);
-                        DSLOtorgarPermisosTabla(base, usuario, tabla.Nombre);
-                    } else {
-                        //no tiene permisos sobre la base de datos
-                    }
-                } else {
-                    //no existe usuario
-                }
+                tabla.Path = Tools.getAbolutePath(Tools.BaseActual.Path) + "\\" + tabla.Nombre + ".xml";
+                Tools.crearArchivo(tabla.Path, "");
+                Tools.BaseActual.Tablas.add(tabla);
+                DSLOtorgarPermisosBaseDatos(Tools.BaseActual.Nombre, Tools.Usuario.name);
+                DSLOtorgarPermisosTabla(Tools.BaseActual.Nombre, Tools.Usuario.name, tabla.Nombre);
             } else {
-                //ya existe un procedimiento con ese nombre
+                //error ya existe una tabla con el mismo nombre
+                return 2;
             }
+        } else {
+            return 1;
         }
-        return true;
-    }
-
-    public boolean DLLAlterTableAgregar(String base, String usuario, String tabla, ArrayList<ColumnaEstructura> columnas) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Tabla t = db.ExisteTabla(tabla);
-            if (t != null) {
-                Usuario usr = ExisteUsuario(usuario);
-                if (usr != null) {
-                    if (usr.ExisteBaseDatos(base) && usr.ExisteTabla(base, tabla)) {
-                        if (db.PruebaAlterTablaAgregar(t.Nombre, columnas)) {
-                            for (ColumnaEstructura nuevacol : columnas) {
-                                t.Columnas.add(nuevacol);
-
-                                Columna c;
-
-                                if (nuevacol.Tipo == 0) {
-                                    c = new Columna(nuevacol.TipoCampo, "");
-
-                                } else {
-                                    columnaObjeto co = new columnaObjeto(new ArrayList<>());
-                                    Objeto obj = db.ExisteObjeto(nuevacol.TipoCampo);
-
-                                    for (Parametro p : obj.parametros) {
-                                        co.Filas.add(new Columna(p.tipo, ""));
-                                    }
-
-                                    c = new Columna(nuevacol.NombreCampo, co);
-
-                                }
-
-                                for (ArrayList<Columna> ac : t.Filas) {
-                                    ac.add(c);
-                                }
-                            }
-                            this.Guardar();
-                        }
-                    } else {
-                        //no tiene permisos sobre la tabla
-                    }
-                } else {
-                    //no existe usuario
-                }
-            } else {
-                //ya existe un procedimiento con ese nombre
-            }
-        }
-        return true;
-    }
-
-        //Titus aqui te quedaste ahi te acuerdas pilas con el USQL :P
-    public boolean DLLAlterTableQuitar(String base, String usuario, String tabla, ArrayList<ColumnaEstructura> columnas) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Tabla t = db.ExisteTabla(tabla);
-            if (t != null) {
-                Usuario usr = ExisteUsuario(usuario);
-                if (usr != null) {
-                    if (usr.ExisteBaseDatos(base) && usr.ExisteTabla(base, tabla)) {
-                        if (db.PruebaAlterTablaQuitar(t.Nombre, columnas)) {
-                            for (ColumnaEstructura nuevacol : columnas) {
-                                
-                            }
-                            this.Guardar();
-                        }
-                    } else {
-                        //no tiene permisos sobre la tabla
-                    }
-                } else {
-                    //no existe usuario
-                }
-            } else {
-                //ya existe un procedimiento con ese nombre
-            }
-        }
-        return true;
+        return 0;
     }
     
+    public int DMLInsertarTablaEspecial(String tabla, ArrayList<ColumnaEstructura> Columnas, ArrayList<FNodoExpresion> Fila){
+        
+        if(Tools.BaseActual != null){
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
+            if(t != null){
+                int resultado = Tools.BaseActual.PruebaInsertarTablaEspecial(tabla, Columnas, Fila); 
+                if(resultado == 0){
+                    t.InsertarEspecial(Columnas, Fila);
+                    this.Guardar();
+                }else{
+                    return resultado;
+                }
+            }else{
+                //no existe tabla
+                return 2;
+            }
+        }else{
+            //no ha seleccionado base de datos
+            return 1;
+        }
+        
+        return 0;
+    }
+    
+    public int DMLInsertarTablaNormal(String tabla, ArrayList<FNodoExpresion> Fila){
+        
+        if(Tools.BaseActual != null){
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
+            if(t != null){
+                int resultado = Tools.BaseActual.PruebaInsertarTablaNormal(tabla, Fila); 
+                if(resultado == 0){
+                    t.InsertarNormal(Fila);
+                    this.Guardar();
+                }else{
+                    return resultado;
+                }
+            }else{
+                //no existe tabla
+                return 2;
+            }
+        }else{
+            //no ha seleccionado base de datos
+            return 1;
+        }
+        
+        return 0;
+    }
+
+    public int DLLEliminarUsuario(String usuario) {
+        Usuario usr = Tools.Base_de_datos.ExisteUsuario(usuario);
+        if (usr != null) {
+            if (Tools.Usuario.type == 0) {
+                if (usr.type != 0) {
+                    this.Usuarios.remove(usr);
+                    this.Guardar();
+                }else{
+                    //no se puede eliminar al admin
+                    return 3;
+                }
+            } else {
+                //no tiene permisos para editar usuario
+                return 2;
+            }
+        } else {
+            //No existe usuario
+            return 1;
+        }
+        return 0;
+    }
+
+    public int DLLAlterUsuario(String usuario, String pass) {
+
+        Usuario usr = Tools.Base_de_datos.ExisteUsuario(usuario);
+        if (usr != null) {
+            if (Tools.Usuario.type == 0) {
+                usr.pass = pass;
+                this.Guardar();
+            } else {
+                //no tiene permisos para editar usuario
+                return 2;
+            }
+        } else {
+            //No existe usuario
+            return 1;
+        }
+        return 0;
+    }
+
+    public int DLLAlterTableAgregar(String tabla, ArrayList<ColumnaEstructura> columnas) {
+
+        if (Tools.BaseActual != null) {
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
+            if (t != null) {
+                if (Tools.Usuario.ExisteBaseDatos(Tools.BaseActual.Nombre) && Tools.Usuario.ExisteTabla(Tools.BaseActual.Nombre, tabla) || Tools.Usuario.type == 0) {
+                    int resultado = Tools.BaseActual.PruebaAlterTablaAgregar(t.Nombre, columnas);
+                    if (resultado == 0) {
+                        for (ColumnaEstructura nuevacol : columnas) {
+                            t.Columnas.add(nuevacol);
+
+                            Columna c;
+
+                            if (nuevacol.Tipo == 0) {
+                                c = new Columna(nuevacol.TipoCampo, "");
+
+                            } else {
+                                columnaObjeto co = new columnaObjeto(new ArrayList<>());
+                                Objeto obj = Tools.BaseActual.ExisteObjeto(nuevacol.TipoCampo);
+
+                                for (Parametro p : obj.parametros) {
+                                    co.Filas.add(new Columna(p.tipo, ""));
+                                }
+
+                                c = new Columna(nuevacol.NombreCampo, co);
+
+                            }
+
+                            for (ArrayList<Columna> ac : t.Filas) {
+                                ac.add(c);
+                            }
+                        }
+                        this.Guardar();
+                    } else {
+                        return resultado;
+                    }
+                } else {
+                    //no tiene permisos sobre la tabla
+                    return 3;
+                }
+            } else {
+                //No existe tabla
+                return 2;
+            }
+        } else {
+            return 1;
+        }
+        return 0;
+    }
+
+    //Titus aqui te quedaste ahi te acuerdas pilas con el USQL :P
+    public int DLLAlterTableQuitar(String tabla, ArrayList<ColumnaEstructura> columnas) {
+        if (Tools.BaseActual != null) {
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
+            if (t != null) {
+                if (Tools.Usuario.ExisteBaseDatos(Tools.BaseActual.Nombre) && Tools.Usuario.ExisteTabla(Tools.BaseActual.Nombre, tabla) || Tools.Usuario.type == 0) {
+                    int resultado = Tools.BaseActual.PruebaAlterTablaQuitar(t.Nombre, columnas);
+
+                    if (resultado == 0) {
+                        for (ColumnaEstructura nuevacol : columnas) {
+                            t.QuitarCampo(nuevacol.NombreCampo);
+                        }
+                        this.Guardar();
+                    } else {
+                        return resultado;
+                    }
+                } else {
+                    //no tiene permisos sobre la tabla
+                    return 3;
+                }
+            } else {
+                //no existe la tabla
+                return 2;
+            }
+        } else {
+            return 1;
+        }
+        return 0;
+    }
+
     public boolean DLLAlterObjetoAgregar(String base, String usuario, String objeto, ArrayList<Parametro> columnas) {
         DataBase db = ExisteBaseDatos(base);
         if (db != null) {
@@ -419,7 +541,7 @@ public class Maestro {
                                     for (ArrayList<Columna> ce : tab.Filas) {
                                         for (Columna col : ce) {
                                             if (col.Tipo == 1) {
-                                                if(col.Campo.equals(objeto)){
+                                                if (col.Campo.equals(objeto)) {
                                                     col.campoObjeto.Filas.add(new Columna(nuevapar.tipo, ""));
                                                 }
                                             }
@@ -428,7 +550,7 @@ public class Maestro {
                                 }
                             }
                             this.Guardar();
-                        }else{
+                        } else {
                             //error 
                         }
                     } else {

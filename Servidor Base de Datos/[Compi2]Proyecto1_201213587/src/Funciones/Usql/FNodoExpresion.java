@@ -9,7 +9,10 @@ import EjecucionUsql.*;
 import java.util.ArrayList;
 
 import Static.*;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,17 +22,16 @@ public class FNodoExpresion {
 
     public FNodoExpresion Izquierda, Derecha;
     public String Tipo, Nombre;
-    public int Fila, Columna;
+    public int Fila, Columna, Precedencia;
     public int Entero;
     public double Decimal;
     public String Cadena;
     public boolean Bool;
     public String Date, DateTime;
     public FLlamadaVariable Variable;
-    //public Objeto Obj;
+    public FObjeto Objeto;
     public FLlamadaMetodo Metodo;
     public FLlamadaTabla Tabla;
-    public FNodoExpresion PosArreglo;
     public FNodoExpresion Col;
 
     public FNodoExpresion(FNodoExpresion nodo) {
@@ -45,6 +47,8 @@ public class FNodoExpresion {
         this.Tipo = nodo.Tipo;
         this.Date = nodo.Date;
         this.DateTime = nodo.DateTime;
+        this.Precedencia = nodo.Precedencia;
+        this.Objeto = nodo.Objeto;
     }
 
     public FNodoExpresion(FNodoExpresion izq, FNodoExpresion der, String tipo, String nombre, int fila, int columna, Object valor) {
@@ -59,16 +63,18 @@ public class FNodoExpresion {
             case Constante.TEntero:
                 this.Entero = Integer.parseInt(valor.toString());
                 this.Cadena = valor.toString();
+                this.Precedencia = 1;
                 break;
 
             case Constante.TDecimal:
                 this.Decimal = Double.parseDouble(valor.toString());
                 this.Cadena = valor.toString();
-
+                this.Precedencia = 1;
                 break;
 
             case Constante.TCadena:
                 this.Cadena = (String) valor;
+                this.Precedencia = 1;
                 break;
 
             case Constante.TBool:
@@ -83,29 +89,174 @@ public class FNodoExpresion {
                     this.Entero = 0;
                     this.Decimal = 0;
                 }
+                this.Precedencia = 1;
                 break;
 
             case Constante.TDate:
                 this.Date = valor.toString();
+                this.Cadena = this.Date;
+                this.Precedencia = 1;
                 break;
 
             case Constante.TDateTime:
                 this.DateTime = valor.toString();
+                this.Cadena = this.DateTime;
+                this.Precedencia = 1;
                 break;
 
+            case Constante.TObjeto:
+                this.Objeto = (FObjeto)valor;
+                this.Cadena = this.Objeto.Nombre;
+                this.Precedencia = 1;
+                break;
+                
             case Constante.TMetodo:
                 this.Metodo = (FLlamadaMetodo) valor;
+                this.Precedencia = 1;
                 break;
 
             case Constante.TVariable:
                 this.Variable = (FLlamadaVariable) valor;
+                this.Precedencia = 1;
                 break;
 
             case Constante.TTabla:
                 this.Tabla = (FLlamadaTabla) valor;
+                this.Precedencia = 1;
+                break;
+
+            case Constante.TPotencia:
+                this.Precedencia = 2;
+                break;
+
+            case Constante.TMenos:
+                if (izq == null) {
+                    this.Precedencia = 3;
+                } else {
+                    this.Precedencia = 5;
+                }
+                break;
+
+            case Constante.TPor:
+                this.Precedencia = 4;
+                break;
+
+            case Constante.TDivision:
+                this.Precedencia = 4;
+                break;
+
+            case Constante.TMas:
+                this.Precedencia = 5;
+                break;
+
+            case Constante.TMayor:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TMenor:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TMayorIgual:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TMenorIgual:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TIgualacion:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TDiferenciacion:
+                this.Precedencia = 6;
+                break;
+
+            case Constante.TNot:
+                this.Precedencia = 7;
+                break;
+
+            case Constante.TAnd:
+                this.Precedencia = 8;
+                break;
+
+            case Constante.TOr:
+                this.Precedencia = 9;
                 break;
 
         }
+    }
+
+    public String getCadena() {
+        String cadena = "";
+        cadena += getCadena(this);
+        return cadena;
+    }
+
+    public String getCadena(FNodoExpresion nodo) {
+        String cadena = "";
+        String cadizq = "";
+        String cadder = "";
+
+        if (nodo.Izquierda != null) {
+            cadizq = nodo.Izquierda.getCadena();
+            if (nodo.Izquierda.Precedencia > nodo.Precedencia) {
+                cadizq = "(" + cadizq + ")";
+            }
+        }
+
+        if (nodo.Derecha != null) {
+            cadder = nodo.Derecha.getCadena();
+            if (nodo.Derecha.Precedencia > nodo.Precedencia) {
+                cadder = "(" + cadder + ")";
+            }
+        }
+
+        cadena = nodo.Tipo;
+        switch (nodo.Tipo) {
+            case Constante.TEntero:
+                cadena = String.valueOf(nodo.Entero);
+                break;
+
+            case Constante.TDecimal:
+                cadena = String.valueOf(nodo.Decimal);
+                break;
+
+            case Constante.TCadena:
+                cadena = String.valueOf("\"" + nodo.Cadena + "\"");
+                break;
+
+            case Constante.TBool:
+                if (this.Cadena.equals(Constante.TVerdadero) || this.Cadena.equals("true")) {
+                    cadena = Constante.TVerdadero;
+                } else {
+                    cadena = Constante.TFalso;
+                }
+                break;
+
+            case Constante.TDate:
+                cadena = "'" + nodo.Date + "'";
+                break;
+
+            case Constante.TDateTime:
+                cadena = "'" + nodo.DateTime + "'";
+                break;
+
+            case Constante.TMetodo:
+                cadena = this.Metodo.getCadena();
+                break;
+
+            case Constante.TVariable:
+                cadena = this.Variable.getCadena();
+                break;
+
+            case Constante.TTabla:
+
+                break;
+        }
+
+        return cadizq + cadena + cadder;
     }
 
     public FNodoExpresion ResolverExpresion() {
@@ -216,13 +367,32 @@ public class FNodoExpresion {
                 aux = new FNodoExpresion(nodo);
                 break;
 
-            case Constante.TVariable:
-                FLlamadaVariable llamada = (FLlamadaVariable) this.Variable;
+            case Constante.TVariable:{
+                FLlamadaVariable llamada = this.Variable;
                 Variable valor = llamada.Ejecutar();
                 if (valor != null) {
-                    aux = (FNodoExpresion) valor.Valor;                    
+                    if(valor.Valor != null){
+                        aux = (FNodoExpresion) valor.Valor;
+                    }else{
+                        Tools.InsertarError("Semantico", "La variable devolvio un valor nulo", Fila, Columna);
+                    }
                 }
                 break;
+            }
+            case Constante.TLlamadaMetodo:{                
+                Variable valor = this.Metodo.EjecutarLlamadaMetodo();
+                if (valor != null) {
+                    aux = (FNodoExpresion) valor.Valor;
+                }
+                break;
+            }
+            case Constante.TMetodo:{                
+                Variable valor = this.Metodo.EjecutarLlamadaMetodo();
+                if (valor != null) {
+                    aux = (FNodoExpresion) valor.Valor;
+                }
+                break;
+            }
         }
         return aux;
     }
@@ -789,6 +959,75 @@ public class FNodoExpresion {
                 }
                 break;
 
+            case Constante.TDate:
+                switch (der.Tipo) {
+                    case Constante.TDate: {
+                        String cadi = izq.Date + " 00:00:00";
+                        String cadd = der.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(cadd);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Constante.TDateTime: {
+                        String cadi = izq.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(der.DateTime);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    default:
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        break;
+                }
+                break;
+
+            case Constante.TDateTime:
+                switch (der.Tipo) {
+                    case Constante.TDate: {
+                        String cadi = izq.DateTime;
+                        String cadd = der.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(cadd);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Constante.TDateTime: {
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(izq.DateTime);
+                            Date dd = Tools.formatoFecha.parse(der.DateTime);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    default:
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        break;
+                }
+                break;
+
         }
         return aux;
     }
@@ -859,6 +1098,75 @@ public class FNodoExpresion {
 
                     default:
                         Tools.InsertarError(Constante.TError, "No se puede <, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        break;
+                }
+                break;
+
+            case Constante.TDate:
+                switch (der.Tipo) {
+                    case Constante.TDate: {
+                        String cadi = izq.Date + " 00:00:00";
+                        String cadd = der.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(cadd);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Constante.TDateTime: {
+                        String cadi = izq.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(der.DateTime);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.after(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    default:
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
+                        break;
+                }
+                break;
+
+            case Constante.TDateTime:
+                switch (der.Tipo) {
+                    case Constante.TDate: {
+                        String cadi = izq.DateTime;
+                        String cadd = der.Date + " 00:00:00";
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(cadi);
+                            Date dd = Tools.formatoFecha.parse(cadd);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.before(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    case Constante.TDateTime: {
+
+                        try {
+                            Date di = Tools.formatoFecha.parse(izq.DateTime);
+                            Date dd = Tools.formatoFecha.parse(der.DateTime);
+                            aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, di.before(dd));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(FNodoExpresion.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                    default:
+                        Tools.InsertarError(Constante.TError, "No se puede >, " + izq.Tipo + " con " + der.Tipo, Fila, Columna);
                         break;
                 }
                 break;
@@ -971,7 +1279,7 @@ public class FNodoExpresion {
                         break;
 
                     case Constante.TDateTime:
-                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, izq.Cadena.equals(der.DateTime));
+                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, (izq.Date + " 00:00:00").equals(der.DateTime));
 
                         break;
 
@@ -988,7 +1296,7 @@ public class FNodoExpresion {
                         break;
 
                     case Constante.TDate:
-                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, izq.Cadena.equals(der.Date));
+                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, izq.Cadena.equals(der.Date + " 00:00:00"));
 
                         break;
 
@@ -1108,7 +1416,7 @@ public class FNodoExpresion {
                         break;
 
                     case Constante.TDateTime:
-                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, !izq.Date.equals(der.DateTime));
+                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, !(izq.Date + " 00:00:00").equals(der.DateTime));
                         break;
 
                     default:
@@ -1124,7 +1432,7 @@ public class FNodoExpresion {
                         break;
 
                     case Constante.TDate:
-                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, !izq.DateTime.equals(der.Date));
+                        aux = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, Fila, Columna, !izq.DateTime.equals(der.Date + " 00:00:00"));
                         break;
 
                     case Constante.TDateTime:

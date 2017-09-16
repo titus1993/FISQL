@@ -197,7 +197,7 @@ public interface usqlGrammarConstants {
   /** RegularExpression Id. */
   int ARROBA = 93;
   /** RegularExpression Id. */
-  int TIME = 94;
+  int DATETIME = 94;
   /** RegularExpression Id. */
   int DATE = 95;
   /** RegularExpression Id. */
@@ -304,7 +304,7 @@ public interface usqlGrammarConstants {
     "<DECIMAL>",
     "<ID>",
     "<ARROBA>",
-    "<TIME>",
+    "<DATETIME>",
     "<DATE>",
     "\" \"",
     "\"\\n\"",

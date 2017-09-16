@@ -5,11 +5,17 @@
  */
 package Funciones.XML;
 
+import Analisis.Usql.usqlGrammar;
 import Analisis.XML.DB.*;
 import Analisis.XML.Funcion.*;
 import Analisis.XML.Objeto.*;
 import Analisis.XML.Procedimiento.*;
 import Analisis.XML.Tabla.*;
+import EjecucionUsql.EjecucionUsql;
+import EjecucionUsql.Simbolo;
+import EjecucionUsql.Variable;
+import Funciones.Usql.FNodoExpresion;
+import Static.Constante;
 import Static.Tools;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -38,74 +44,158 @@ public class DataBase {
         RutaObjetos = rutaobjeto;
         Tablas = tablas;
     }
-    
-    
-    
-    public boolean PruebaAlterTablaAgregar(String nombretabla, ArrayList<ColumnaEstructura> nuevas){
+
+    public int PruebaInsertarTablaEspecial(String nombretabla, ArrayList<ColumnaEstructura> Columnas, ArrayList<FNodoExpresion> fila) {
         Tabla tabla = ExisteTabla(nombretabla);
-        
+
+        for (ColumnaEstructura colTabla : tabla.Columnas) {
+            boolean bandera = false;
+            int i=0;
+            while (i < fila.size() && !bandera) {
+                ColumnaEstructura colInsertar = Columnas.get(i);
+                FNodoExpresion val = fila.get(i);
+                if (colTabla.NombreCampo.equals(colInsertar.NombreCampo)) {
+                    bandera = true;
+
+                    if (!(val.Tipo.equals(colTabla.TipoCampo) || val.Cadena.equals(colTabla.TipoCampo))) {
+                        //existe el campo pero no coinciden los tipo de datos
+                        return 3;
+                    }
+                }
+                i++;
+            }
+            if (!bandera) {
+                if(!colTabla.Complementos.isNulo || colTabla.Complementos.isAutoincrementable){
+                    
+                }else if(colTabla.Complementos.isPrimary){
+                    return 4;
+                }else if(colTabla.Complementos.isNulo){
+                    return 5;
+                }
+            }else{
+                if(colTabla.Complementos.isAutoincrementable){
+                    return 6;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public int PruebaInsertarTablaNormal(String nombretabla, ArrayList<FNodoExpresion> fila) {
+        Tabla tabla = ExisteTabla(nombretabla);
+
+        int i = 0, j = 0;
+
+        while (i < fila.size()) {
+            FNodoExpresion valor = fila.get(i);
+            ColumnaEstructura columna = tabla.Columnas.get(j);
+            if (!valor.Tipo.equals(columna.TipoCampo)) {
+                if (columna.TipoCampo.equals(Constante.TEntero) && columna.Complementos.isAutoincrementable) {
+                    j++;
+                } else if (valor.Tipo.equals(Constante.TObjeto) && valor.Cadena.equals(columna.TipoCampo)) {
+                    j++;
+                    i++;
+                } else {
+                    boolean bandera = false;
+
+                    if ((valor.Tipo.equals(Constante.TCadena) && valor.Cadena.equals("") && columna.Complementos.isNulo)) {
+                        j++;
+                        i++;
+                        bandera = true;
+                    } else {
+                        //no puede insertar nulo a un campo no nulo
+                        return 4;
+                    }
+
+                    if (!bandera) {
+                        //no coinciden las columnas con los valores a insertar
+                        return 3;
+                    }
+                }
+            } else {
+                if (columna.TipoCampo.equals(Constante.TEntero) && !columna.Complementos.isAutoincrementable) {
+
+                    i++;
+                    j++;
+                } else if (valor.Tipo.equals(columna.TipoCampo)) {
+                    i++;
+                    j++;
+                } else {
+                    //no se puede insertar un valor a un campo autoincrementable
+                    return 5;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public int PruebaAlterTablaAgregar(String nombretabla, ArrayList<ColumnaEstructura> nuevas) {
+        Tabla tabla = ExisteTabla(nombretabla);
+
         for (ColumnaEstructura col : nuevas) {
             //comprobamos que no exista mas de una primaria
             if (tabla.ExistePrimaria() && col.Complementos.isPrimary) {
                 //Error ya existe una llave primaria
-                return false;
+                return 4;
             }
-            
+
             //comprobamos que no se repita el nombre
             for (ColumnaEstructura col2 : tabla.Columnas) {
                 if (col.NombreCampo.equals(col2.NombreCampo)) {
                     //Error ya existe el nombre
-                    return false;
+                    return 5;
                 }
             }
-            
+
             //comprobamos que existe la tabla foranea con llave primaria
-            if(col.Complementos.isForanea){
-              Tabla tablaforanea = ExisteTabla(col.Complementos.Foranea);
-              if(tablaforanea != null){
-                  if(!tablaforanea.ExistePrimaria()){
-                      //Error la tabla no tiene una llave primaria para la relacion
-                      return false;
-                  }
-              }else{
-                  //Error no existe la tabla para hacer la relacion foranea
-                  return false;
-              }
+            if (col.Complementos.isForanea) {
+                Tabla tablaforanea = ExisteTabla(col.Complementos.Foranea);
+                if (tablaforanea != null) {
+                    if (!tablaforanea.ExistePrimaria()) {
+                        //Error la tabla no tiene una llave primaria para la relacion
+                        return 6;
+                    }
+                } else {
+                    //Error no existe la tabla para hacer la relacion foranea
+                    return 7;
+                }
             }
-            
-            if(col.Tipo != 0){
+
+            if (col.Tipo != 0) {
                 Objeto obj = ExisteObjeto(col.TipoCampo);
-                if(obj == null){
+                if (obj == null) {
                     //Error no existe el objeto
-                    return false;
+                    return 7;
                 }
             }
         }
-        return true;
+        return 0;
     }
-    
-    public boolean PruebaAlterTablaQuitar(String nombretabla, ArrayList<ColumnaEstructura> nuevas){
+
+    public int PruebaAlterTablaQuitar(String nombretabla, ArrayList<ColumnaEstructura> nuevas) {
         Tabla tabla = ExisteTabla(nombretabla);
-        
+
         for (ColumnaEstructura col : nuevas) {
             //comprobamos que no se quiera eliminar una llave primaria
-            for(ColumnaEstructura ce :tabla.Columnas){
-                if(ce.NombreCampo.equals(col.NombreCampo)){
-                    if(ce.Complementos.isPrimary){
-                        return false;
+            for (ColumnaEstructura ce : tabla.Columnas) {
+                if (ce.NombreCampo.equals(col.NombreCampo)) {
+                    if (ce.Complementos.isPrimary) {
+                        return 4;
                     }
                 }
-            }            
-            
+            }
+
         }
-        return true;
+        return 0;
     }
-    
-    public boolean PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas){
+
+    public boolean PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas) {
         Objeto objeto = ExisteObjeto(nombreobjeto);
-        
+
         for (Parametro par : nuevas) {
-                        
+
             //comprobamos que no se repita el nombre
             for (Parametro par2 : objeto.parametros) {
                 if (par.nombre.equals(par2.nombre)) {
@@ -116,48 +206,46 @@ public class DataBase {
         }
         return true;
     }
-    
-    
-    public Tabla ExisteTabla(String nombre){
-        for(Tabla tab : Tablas){
-            if(tab.Nombre.equals(nombre)){
+
+    public Tabla ExisteTabla(String nombre) {
+        for (Tabla tab : Tablas) {
+            if (tab.Nombre.equals(nombre)) {
                 return tab;
             }
         }
         return null;
-    }    
-    
-    public Procedimiento ExisteProcedimiento(String nombre){
-        for(Procedimiento proc : Procedimientos){
-            if(proc.nombre.equals(nombre)){
+    }
+
+    public Procedimiento ExisteProcedimiento(String nombre) {
+        for (Procedimiento proc : Procedimientos) {
+            if (proc.nombre.equals(nombre)) {
                 return proc;
             }
         }
         return null;
     }
-    
-    public Funcion ExisteFuncion(String nombre){
-        for(Funcion fun : Funciones){
-            if(fun.nombre.equals(nombre)){
+
+    public Funcion ExisteFuncion(String nombre) {
+        for (Funcion fun : Funciones) {
+            if (fun.nombre.equals(nombre)) {
                 return fun;
             }
         }
         return null;
     }
-    
-    public Objeto ExisteObjeto(String nombre){
-        for(Objeto obj : Objetos){
-            if(obj.nombre.equals(nombre)){
+
+    public Objeto ExisteObjeto(String nombre) {
+        for (Objeto obj : Objetos) {
+            if (obj.nombre.equals(nombre)) {
                 return obj;
             }
         }
         return null;
     }
-    
-    public String getXML(){
-        String cadena ="";
-        
-        
+
+    public String getXML() {
+        String cadena = "";
+
         cadena += "<Procedure>\n"
                 + "\t<Path>\"" + RutaProcedimiento + "\"</Path>\n"
                 + "</Procedure>\n"
@@ -166,39 +254,38 @@ public class DataBase {
                 + "</Funcion>\n"
                 + "<Object>\n"
                 + "\t<Path>\"" + RutaObjetos + "\"</Path>\n"
-                + "</Object>\n"
-                ;
-        
-        for(int i =0; i < Tablas.size(); i++){
+                + "</Object>\n";
+
+        for (int i = 0; i < Tablas.size(); i++) {
             cadena += Tablas.get(i).getXML();
         }
-        
+
         return cadena;
     }
-    
-    public void GuardarBaseDatos(){
+
+    public void GuardarBaseDatos() {
         String cadena = "";
-        for(int i = 0; i < Objetos.size(); i++){
+        for (int i = 0; i < Objetos.size(); i++) {
             Objeto temp = Objetos.get(i);
             cadena += temp.getXML();
         }
         Tools.guardarArchivo(RutaObjetos, cadena);
-        
+
         cadena = "";
-        for(int i = 0; i < Funciones.size(); i++){
+        for (int i = 0; i < Funciones.size(); i++) {
             Funcion temp = Funciones.get(i);
-            cadena  += temp.getXML();
+            cadena += temp.getXML();
         }
         Tools.guardarArchivo(RutaFuncion, cadena);
-        
+
         cadena = "";
-        for(int i = 0; i < Procedimientos.size(); i++){
+        for (int i = 0; i < Procedimientos.size(); i++) {
             Procedimiento temp = Procedimientos.get(i);
             cadena += temp.getXML();
         }
         Tools.guardarArchivo(RutaProcedimiento, cadena);
-        
-        for(int i = 0; i < Tablas.size(); i++){
+
+        for (int i = 0; i < Tablas.size(); i++) {
             Tabla temp = Tablas.get(i);
             temp.GuardarTabla();
         }

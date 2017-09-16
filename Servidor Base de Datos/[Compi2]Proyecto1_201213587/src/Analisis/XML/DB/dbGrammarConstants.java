@@ -47,47 +47,53 @@ public interface dbGrammarConstants {
   /** RegularExpression Id. */
   int T_CAMPO_DER = 18;
   /** RegularExpression Id. */
-  int T_NULO = 19;
+  int T_FA = 19;
   /** RegularExpression Id. */
-  int T_NO_NULO = 20;
+  int T_FC = 20;
   /** RegularExpression Id. */
-  int T_AUTOINCREMETABLE = 21;
+  int T_NULO = 21;
   /** RegularExpression Id. */
-  int T_LLAVE_PRIMARIA = 22;
+  int T_NO_NULO = 22;
   /** RegularExpression Id. */
-  int T_FORANEA_IZQ = 23;
+  int T_AUTOINCREMETABLE = 23;
   /** RegularExpression Id. */
-  int T_FORANEA_DER = 24;
+  int T_LLAVE_PRIMARIA = 24;
   /** RegularExpression Id. */
-  int T_TEXT_IZQ = 25;
+  int T_FORANEA_IZQ = 25;
   /** RegularExpression Id. */
-  int T_INTEGER_IZQ = 26;
+  int T_FORANEA_DER = 26;
   /** RegularExpression Id. */
-  int T_DOUBLE_IZQ = 27;
+  int T_TEXT_IZQ = 27;
   /** RegularExpression Id. */
-  int T_BOOL_IZQ = 28;
+  int T_INTEGER_IZQ = 28;
   /** RegularExpression Id. */
-  int T_DATE_IZQ = 29;
+  int T_DOUBLE_IZQ = 29;
   /** RegularExpression Id. */
-  int T_DATETIME_IZQ = 30;
+  int T_BOOL_IZQ = 30;
   /** RegularExpression Id. */
-  int T_TEXT_DER = 31;
+  int T_DATE_IZQ = 31;
   /** RegularExpression Id. */
-  int T_INTEGER_DER = 32;
+  int T_DATETIME_IZQ = 32;
   /** RegularExpression Id. */
-  int T_DOUBLE_DER = 33;
+  int T_TEXT_DER = 33;
   /** RegularExpression Id. */
-  int T_BOOL_DER = 34;
+  int T_INTEGER_DER = 34;
   /** RegularExpression Id. */
-  int T_DATE_DER = 35;
+  int T_DOUBLE_DER = 35;
   /** RegularExpression Id. */
-  int T_DATETIME_DER = 36;
+  int T_BOOL_DER = 36;
   /** RegularExpression Id. */
-  int CADENA = 37;
+  int T_DATE_DER = 37;
   /** RegularExpression Id. */
-  int ID_IZQ = 38;
+  int T_DATETIME_DER = 38;
   /** RegularExpression Id. */
-  int ID_DER = 39;
+  int CADENA = 39;
+  /** RegularExpression Id. */
+  int ID_IZQ = 40;
+  /** RegularExpression Id. */
+  int ID_DER = 41;
+  /** RegularExpression Id. */
+  int ENTERO = 42;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -113,6 +119,8 @@ public interface dbGrammarConstants {
     "<T_ROWS_DER>",
     "<T_COMPLEMENTO_DER>",
     "<T_CAMPO_DER>",
+    "\"<\"",
+    "\">\"",
     "\"nulo\"",
     "\"no nulo\"",
     "\"autoincrementable\"",
@@ -134,6 +142,7 @@ public interface dbGrammarConstants {
     "<CADENA>",
     "<ID_IZQ>",
     "<ID_DER>",
+    "<ENTERO>",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",

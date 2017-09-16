@@ -22,12 +22,12 @@ public class Constante {
     public static final String TErrorSemantico= "Error Semantico";
     //tipo de datos
     public static final String TId = "Id";    
-    public static final String TVerdadero = "true";
-    public static final String TFalso = "false";
-    public static final String TEntero = "entero";
-    public static final String TDecimal = "decimal";
-    public static final String TCadena = "cadena";    
-    public static final String TText = "cadena";
+    public static final String TVerdadero = "verdadero";
+    public static final String TFalso = "falso";
+    public static final String TEntero = "integer";
+    public static final String TDecimal = "double";
+    public static final String TCadena = "text";    
+    public static final String TText = "text";
     public static final String TDate = "date";
     public static final String TDateTime = "datetime";
     public static final String TBool = "bool";
@@ -76,4 +76,17 @@ public class Constante {
     public static final String TImprimir = "imprimir";
     public static final String TRetorno = "retorno";
     
+    public static final String TUsarBaseDatos = "usar base datos";
+    public static final String TCrearBaseDatos = "crear base datos";
+    public static final String TCrearTabla = "crear tabla";
+    public static final String TCrearUsuario = "crear usuario";
+    public static final String TCrearObjeto = "crear objeto";
+    public static final String TCrearMetodo = "crear metodo";
+    public static final String TAlterarTabla = "alterar tabla";
+    public static final String TAgregar = "agregar";
+    public static final String TQuitar = "quitar";
+    public static final String TAlterarUsuario = "alterar usuario";
+    public static final String TEliminarUsuario = "eliminar usuario";
+    public static final String TInsertarNormal = "insertar normal";
+    public static final String TInsertarEspecial = "insertar especial";
 }

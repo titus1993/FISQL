@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 public class EjecucionUsql {
 
    
-    ArrayList<Simbolo> Global;
+    public ArrayList<Simbolo> Global;
 
     public EjecucionUsql(ArrayList <Simbolo> Global) {
         this.Global = Global;       
@@ -33,7 +33,7 @@ public class EjecucionUsql {
 
     public void Ejecutar() {
         PrimerPasada();
-        FMetodo global = new FMetodo(null, null, 0, 0, Constante.TVacio, "Goblal");
+        FMetodo global = new FMetodo();
         
         global.EjecutarInstrucciones(Global);
     }

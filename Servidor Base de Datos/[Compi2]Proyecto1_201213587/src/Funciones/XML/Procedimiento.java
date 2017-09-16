@@ -33,7 +33,7 @@ public class Procedimiento {
         }
         
         cadena += "\t</Params>\n"
-                + "\t<src>§" + src + "§\n\t</src>\n"
+                + "\t<src>§\n" + src + "\n§\n\t</src>\n"
                 + "</Proc>\n";
         
         return cadena;

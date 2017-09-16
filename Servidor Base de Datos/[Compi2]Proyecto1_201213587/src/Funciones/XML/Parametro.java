@@ -25,6 +25,10 @@ public class Parametro {
         nombreObjeto = _nombreObjeto;
     }
 
+    public String getCadena(){
+        return this.nombreObjeto + " " + this.nombre;
+    }
+    
     public String getXML() {
         String cadena = "";
 

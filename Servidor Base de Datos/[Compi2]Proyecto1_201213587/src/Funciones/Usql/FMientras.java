@@ -22,6 +22,19 @@ public class FMientras {
         this.Ambito = ambito;
         this.Condicion = condicion;
     }
+    
+    public String getCadena() {
+        String cadena = "";
+        
+        cadena+= "MIENTRAS( " + Condicion.getCadena() + "){\n";
+        
+        FMetodo m = new FMetodo();
+        String cuerpo = m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
+        
+        cadena += cuerpo + "\n}";        
+        
+        return cadena;
+    }
 
     public void EjecutarMientras() {
         FNodoExpresion condicion = this.Condicion.ResolverExpresion();
@@ -38,6 +51,8 @@ public class FMientras {
                 }
                 if (Tools.Tabla.IsDetener()) {
                     Tools.Tabla.SacarVariable();
+                    FMetodo metodo = new FMetodo();
+                    metodo.SacarAmbito(Ambito.TablaSimbolo);
                 }
 
             } else {

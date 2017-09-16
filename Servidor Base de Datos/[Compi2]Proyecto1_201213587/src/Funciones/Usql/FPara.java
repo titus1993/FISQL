@@ -28,6 +28,19 @@ public class FPara {
         this.Ambito = ambito;
     }
 
+    public String getCadena() {
+        String cadena = "";
+        FDeclaracion fd = (FDeclaracion)AccionAnterior.Valor;
+        cadena+= "PARA( " + fd.getCadena() + "; " + Condicion.getCadena() + "; " + this.AccionSiguiente + "){\n";
+        
+        FMetodo m = new FMetodo();
+        String cuerpo = m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
+        
+        cadena += cuerpo + "\n}";
+        
+        return cadena;
+    }
+
     public void EjecutarPara() {
         //verificamos si la accion posterior es declaracion o asignacion
         if (AccionAnterior.Rol.equals(Constante.TDeclaracion)) {
@@ -42,27 +55,27 @@ public class FPara {
             if (condicion.Tipo.equals(Constante.TBool)) {
                 while (Tools.ContarErrores() && condicion.Bool && !Tools.Tabla.IsRertorno() && !Tools.Tabla.IsDetener()) {
                     condicion = Condicion.ResolverExpresion();
-                    
+
                     FMetodo metodo1 = new FMetodo();
 
                     if (condicion.Bool) {
                         metodo1.EjecutarInstrucciones(this.Ambito.TablaSimbolo);
 
                     }
-                    
+
                     condicion = Condicion.ResolverExpresion();
-                    
+
                     //sacamos el ambito del para
                     metodo1.SacarAmbito(this.Ambito.TablaSimbolo);
                     //realizamos la operacion posterior
                     if (condicion.Bool) {
                         FDeclaracion decla = (FDeclaracion) AccionAnterior.Valor;
                         Variable var = Tools.Tabla.BuscarVariable(decla.Nombre);
-                        FNodoExpresion exp = (FNodoExpresion)var.Valor;
-                        if(AccionSiguiente.equals(Constante.TAumento)){
+                        FNodoExpresion exp = (FNodoExpresion) var.Valor;
+                        if (AccionSiguiente.equals(Constante.TAumento)) {
                             exp.Entero++;
-                            exp.Decimal++;                            
-                        }else{
+                            exp.Decimal++;
+                        } else {
                             exp.Entero++;
                             exp.Decimal++;
                         }

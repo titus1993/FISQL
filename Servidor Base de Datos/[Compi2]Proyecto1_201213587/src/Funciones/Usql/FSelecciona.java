@@ -28,6 +28,24 @@ public class FSelecciona {
         this.Condicion = condicion;
     }
 
+    public String getCadena(){
+        String cadena = "";
+        
+        cadena += "SELECCIONA(" + Condicion.getCadena() + "){\n";
+        
+        
+        for(FCaso caso : Casos){
+            cadena += caso.getCadena() + "\n";
+        }
+
+        if(Defecto != null){
+            cadena += "DEFECTO :\n" + Defecto.getCadena().replaceAll("\n", "\n\t");
+        }
+        
+        cadena += "}";
+        return cadena;
+    }
+    
     public void EjecutarSelecciona() {
         FNodoExpresion condicion = this.Condicion.ResolverExpresion();
         

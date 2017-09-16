@@ -9,6 +9,7 @@ PARSER_BEGIN(usqlGrammar)
 package Analisis.Usql;
 
 import Funciones.Usql.*;
+import Funciones.XML.*;
 import Static.*;
 import java.util.ArrayList;
 import EjecucionUsql.*;
@@ -143,8 +144,8 @@ TOKEN:
     |<DECIMAL: (<NUMERO>)+(".")(<NUMERO>)+> {System.out.println(image);}
     |<ID: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.println(image);}
     |<ARROBA:"@" (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*>{System.out.println(image);}
-    |<TIME: ((["0"-"1"]["0"-"9"])| ("2" ["0"-"3"] )) ":" (["0"-"5"]["0"-"9"]) ":" (["0"-"5"]["0"-"9"])>{System.out.println(image + "hora");}
-    |<DATE: (("0"["1"-"9"])|(["1"-"2"]["0"-"9"])| ("3" ["0"-"1"] )) "-" (("0"["1"-"9"])| "1"["0"-"2"]) "-" ["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"]>{System.out.println( image + " fecha");}
+    |<DATETIME: "'"(("0"["1"-"9"])|(["1"-"2"]["0"-"9"])| ("3" ["0"-"1"] )) "-" (("0"["1"-"9"])| "1"["0"-"2"]) "-" ["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"] " " ((["0"-"1"]["0"-"9"])| ("2" ["0"-"3"] )) ":" (["0"-"5"]["0"-"9"]) ":" (["0"-"5"]["0"-"9"])"'">{System.out.println(image + "hora");}
+    |<DATE: "'"(("0"["1"-"9"])|(["1"-"2"]["0"-"9"])| ("3" ["0"-"1"] )) "-" (("0"["1"-"9"])| "1"["0"-"2"]) "-" ["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"]"'">{System.out.println( image + " fecha");}
 
 }
 
@@ -189,6 +190,7 @@ ArrayList<Simbolo> INSTRUCCION() :
     l=DDL() {return l;}
     | l=DML() {return l;}
     | l=DCL() {return l;}
+    | l=SSL() {return l;}//quitar ssl
     | l=DECLARACION() {return l;}    
     | LLAMADA_METODO() {return l;}
     | s=IMPRIMIR() {l.add(s); return l;}
@@ -209,25 +211,27 @@ Simbolo IMPRIMIR():
 
 
 ArrayList<Simbolo> DDL():
-{}
+{ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s; Token t,t2;}
 {
-    <T_USAR> <ID> <PCOMA>
-    |CREATE()
-    |ALTER()
-    |ELIMINAR()
+    t2=<T_USAR> t=<ID> <PCOMA> {FUsarBaseDatos ub = new FUsarBaseDatos(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                Simbolo sim = new Simbolo(Constante.TUsarBaseDatos, Constante.TUsarBaseDatos, Constante.TUsarBaseDatos, ub.Ambito, ub, ub.Fila, ub.Columna);
+                                ls.add(sim);
+                                return ls;
+    }
+    |s=CREATE() {ls.add(s); return ls;}
+    |s=ALTER() {ls.add(s); return ls;}
+    |s=ELIMINAR() {ls.add(s); return ls;}
     |BACKUP()
     |RESTAURAR()
-
-    {return null;}
 }
 
 ArrayList<Simbolo> DML():
-{}
+{ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s=null;}
 {
-    INSERTAR()
+    (s=INSERTAR()
     |ACTUALIZAR()
     |BORRAR()
-    |SELECCIONAR() <PCOMA> {return null;}
+    |SELECCIONAR()){ls.add(s); return ls;}
 }
 
 ArrayList<Simbolo> DCL():
@@ -262,83 +266,118 @@ Simbolo LLAMADA_METODO():
       }
 }
 
-void CREATE():
-{}
+Simbolo CREATE():
+{Token t; FCrearBaseDatos cb; FCrearTabla ct; FCrearUsuario cu; FMetodo cm; FCrearObjeto co;}
 {
-    <T_CREAR> (((CREATE_BASE() | CREATE_TABLA() | CREATE_OBJETO() | CREATE_USUARIO()) <PCOMA>) 
-                | CREATE_PROCEDIMIENTO()
-                | CREATE_FUNCION()                
+    t=<T_CREAR> (((cb=CREATE_BASE() {cb.Fila = t.beginLine; cb.Columna = t.beginColumn; return new Simbolo(Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, cb.Ambito, cb, cb.Fila, cb.Columna);}
+                | ct=CREATE_TABLA() {ct.Fila = t.beginLine; ct.Columna = t.beginColumn; return new Simbolo(Constante.TCrearTabla, Constante.TCrearTabla, Constante.TCrearTabla, ct.Ambito, ct, ct.Fila, ct.Columna);}
+                | co=CREATE_OBJETO()   {co.Fila = t.beginLine; co.Columna = t.beginColumn; return new Simbolo(Constante.TCrearObjeto, Constante.TCrearObjeto, Constante.TCrearObjeto, co.Ambito, co, co.Fila, co.Columna);}    
+                | cu=CREATE_USUARIO() {cu.Fila = t.beginLine; cu.Columna = t.beginColumn; return new Simbolo(Constante.TCrearUsuario, Constante.TCrearUsuario, Constante.TCrearUsuario, cu.Ambito, cu, cu.Fila, cu.Columna);}) 
+            <PCOMA>) 
+                | cm=CREATE_PROCEDIMIENTO() {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; return new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}
+                | cm=CREATE_FUNCION()   {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; return new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}                
                 )                
 }
 
-void CREATE_BASE():
-{}
+FCrearBaseDatos CREATE_BASE():
+{Token t, t2;}
 {
-    <T_BASE_DATOS> <ID>
+    t=<T_BASE_DATOS> t2=<ID> {
+                                return new FCrearBaseDatos(t2.image, new Ambito(t2.image, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);                                
+                             } 
 }
 
-void CREATE_TABLA():
-{}
+FCrearTabla CREATE_TABLA():
+{Token t,t2; ArrayList<ColumnaEstructura> lce;}
 {
-    <T_TABLA> <ID> <PAR_IZQ> L_CAMPO() <PAR_DER>
+    t=<T_TABLA> t2=<ID> <PAR_IZQ> lce=L_CAMPO() <PAR_DER>
+    {
+        return new FCrearTabla(t2.image, new Ambito(t2.image, new ArrayList<Simbolo>()), lce, t.beginLine, t.beginColumn);
+    }
 }
 
-void L_CAMPO():
-{}
+ArrayList<ColumnaEstructura> L_CAMPO():
+{ArrayList<ColumnaEstructura> lce = new ArrayList<ColumnaEstructura>(); ColumnaEstructura ce,ce2;}
 {
-    CAMPO() (<COMA> L_CAMPO())?
+    ce=CAMPO() {lce.add(ce);} (<COMA> ce2=CAMPO(){lce.add(ce2);})*{return lce;}
 }
 
-void CAMPO():
-{}
+ColumnaEstructura CAMPO():
+{String tipo; Token t; Complemento c = new Complemento(); ColumnaEstructura ce = new ColumnaEstructura();}
 {
-    TIPO_DATO() <ID> (L_COMPLEMENTO())?
+    tipo=TIPO_DATO() t=<ID> (c=L_COMPLEMENTO())? 
+        {
+            if(tipo.equals(Tools.ttext) || tipo.equals(Tools.tinteger) || tipo.equals(Tools.tdouble) || tipo.equals(Tools.tbool) || tipo.equals(Tools.tdate) || tipo.equals(Tools.tdatetime)){
+                ce.Tipo = 0;
+                ce.NombreCampo = t.image;
+                ce.TipoCampo = tipo;
+            }else{
+                ce.Tipo = 1;
+                ce.NombreCampo = t.image;
+                ce.TipoCampo = tipo;
+            }   
+            ce.Complementos = c;
+            return ce;
+        }
 }
 
 String TIPO_DATO():
 {Token t;}
 {
-    t=<T_TEXT>    {return Tools.ttext;}
-    |t=<T_INTEGER> {return Tools.tinteger;}
-    |t=<T_DOUBLE>   {return Tools.tdouble;}
-    |t=<T_BOOL> {return Tools.tbool;}
-    |t=<T_DATE> {return Tools.tdate;}
-    |t=<T_DATETIME> {return Tools.tdatetime;}
+    <T_TEXT>    {return Tools.ttext;}
+    |<T_INTEGER> {return Tools.tinteger;}
+    |<T_DOUBLE>   {return Tools.tdouble;}
+    |<T_BOOL> {return Tools.tbool;}
+    |<T_DATE> {return Tools.tdate;}
+    |<T_DATETIME> {return Tools.tdatetime;}
     |t=<ID> {return t.image;}
 }
 
-void L_COMPLEMENTO():
-{}
+Complemento L_COMPLEMENTO():
+{Complemento c; Complemento c2;}
 {
-    COMPLEMENTO() (L_COMPLEMENTO())?
+    c=COMPLEMENTO() (c2=L_COMPLEMENTO(){
+                                        if(c2.isNulo) c.isNulo = true;
+                                        if(c2.isAutoincrementable) c.isAutoincrementable = true;
+                                        if(c2.isPrimary) c.isPrimary = true;
+                                        if(c2.isForanea) c.isForanea = true;
+                                        if(c2.isForanea) c.Foranea = c2.Foranea;
+                                        })?
+    {return c;}
 }
 
-void COMPLEMENTO():
-{}
+Complemento COMPLEMENTO():
+{Complemento com = new Complemento(); Token t;}
 {
-    <T_NULO>
-    |<T_NO_NULO>
-    |<T_AUTOINCREMETABLE>
-    |<T_LLAVE_PRIMARIA>
-    |<T_LLAVE_FORANEA> <ID>
+    (<T_NULO> {com.isNulo = false;}
+    |<T_NO_NULO> {com.isNulo = true;}
+    |<T_AUTOINCREMETABLE> {com.isAutoincrementable = true;}
+    |<T_LLAVE_PRIMARIA> {com.isPrimary = true;}
+    |<T_LLAVE_FORANEA> t=<ID> {com.isForanea = true; com.Foranea = t.image;})
+    {return com;}
 }
 
-void CREATE_OBJETO():
-{}
+FCrearObjeto CREATE_OBJETO():
+{Token t; ArrayList<Parametro> lp;}
 {
-    <T_OBJETO> <ID> <PAR_IZQ> L_ATRIBUTO() <PAR_DER>
+    <T_OBJETO> t=<ID> <PAR_IZQ> lp=L_ATRIBUTO() <PAR_DER> {return new FCrearObjeto(t.image, lp, new Ambito(t.image, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);}
 }
 
-void L_ATRIBUTO():
-{}
+ArrayList<Parametro> L_ATRIBUTO():
+{ArrayList<Parametro> lp = new ArrayList<Parametro>(); ArrayList<Parametro> lp2 = new ArrayList<Parametro>();}
 {
-    ATRIBUTO() (<COMA> L_ATRIBUTO())?
+    lp=ATRIBUTO() (<COMA> lp2=L_ATRIBUTO(){
+                    for(int i=0; i < lp2.size(); i++){
+                        lp.add(lp2.get(i));
+                    }
+                }
+            )? {return lp;}
 }
 
-void ATRIBUTO():
-{}
+ArrayList<Parametro> ATRIBUTO():
+{String tipo; Token t; ArrayList<Parametro> lp = new ArrayList<Parametro>();}
 {
-    TIPO_DATO_ATRIBUTO() <ID>
+    tipo=TIPO_DATO_ATRIBUTO() t=<ID> {lp.add(new Parametro(tipo, t.image)); return lp;}
 }
 
 String TIPO_DATO_ATRIBUTO():
@@ -352,59 +391,115 @@ String TIPO_DATO_ATRIBUTO():
     |<T_DATETIME>   {return Constante.TDateTime;}
 }
 
-void CREATE_PROCEDIMIENTO():
-{}
+FMetodo CREATE_PROCEDIMIENTO():
+{Token t; ArrayList<Simbolo> ls; ArrayList<Simbolo> lp = new ArrayList<Simbolo>();}
 {
-    <T_PROCEDIMIENTO> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> <LLAVE_IZQ>  L_SENTENCIAS()  <LLAVE_DER>
+    <T_PROCEDIMIENTO> t=<ID> <PAR_IZQ> (lp=L_PARAMETRO())? <PAR_DER> <LLAVE_IZQ>  ls=L_SENTENCIAS()  <LLAVE_DER>
+    {
+        Ambito ambito = new Ambito(t.image, ls);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        for(Simbolo sim : lp){
+            sim.Ambito.Padre = ambito;
+        }
+        
+        return new FMetodo(lp, ambito, t.beginLine, t.beginColumn, Constante.TVacio, t.image);
+    }
 }
 
-void L_PARAMETRO():
-{}
+ArrayList<Simbolo> L_PARAMETRO():
+{ArrayList<Simbolo> l; ArrayList<Simbolo> l2 = new ArrayList<Simbolo>();}
 {
-    PARAMETRO() (<COMA> L_PARAMETRO())?
+    l=PARAMETRO() (<COMA> l2=L_PARAMETRO(){
+                    for(int i=0; i < l2.size(); i++){
+                        l.add(l2.get(i));
+                    }
+                }
+            )? {return l;}
 }
 
-void PARAMETRO():
-{}
+ArrayList<Simbolo> PARAMETRO():
+{String tipo; Token t;}
 {
-    TIPO_DATO() <ARROBA>
+    tipo=TIPO_DATO() t=<ARROBA> 
+    {
+        FDeclaracion fd = new FDeclaracion(tipo, t.image.substring(1, t.image.length()), new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn);
+        Simbolo s = new Simbolo(fd.Tipo, fd.Nombre, Constante.TDeclaracion, fd.Ambito, fd, fd.Fila, fd.Columna);
+        ArrayList<Simbolo> lista = new ArrayList<Simbolo>();
+        lista.add(s);
+        return lista;
+    }
 }
 
-void CREATE_FUNCION():
-{}
+FMetodo CREATE_FUNCION():
+{Token t; String tipo; ArrayList<Simbolo> ls; ArrayList<Simbolo> lp = new ArrayList<Simbolo>();}
 {
-    <T_FUNCION> <ID> <PAR_IZQ> (L_PARAMETRO())? <PAR_DER> TIPO_DATO() <LLAVE_IZQ>  L_SENTENCIAS()  <LLAVE_DER>
+    <T_FUNCION> t=<ID> <PAR_IZQ> (lp=L_PARAMETRO())? <PAR_DER> tipo=TIPO_DATO() <LLAVE_IZQ>  ls=L_SENTENCIAS()  <LLAVE_DER>
+    {
+        Ambito ambito = new Ambito(t.image, ls);
+        for(Simbolo sim : ambito.TablaSimbolo){
+            sim.Ambito.Padre = ambito;
+        }
+        for(Simbolo sim : lp){
+            sim.Ambito.Padre = ambito;
+        }
+        
+        return new FMetodo(lp, ambito, t.beginLine, t.beginColumn, tipo, t.image);
+    }
 }
 
-void CREATE_USUARIO():
-{}
+FCrearUsuario CREATE_USUARIO():
+{Token t, t2;}
 {
-    <T_USUARIO> <ID> <T_COLOCAR> <T_PASSWORD> <IGUAL> <CADENA>
+    <T_USUARIO> t=<ID> <T_COLOCAR> <T_PASSWORD> <IGUAL> t2=<CADENA>
+    {
+        FCrearUsuario usr = new FCrearUsuario(t.image, t2.image.substring(1, t2.image.length() - 1), new Ambito(Constante.TCrearUsuario, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);
+        return usr;
+    }
 }
 
 Simbolo RETORNO():
 {FNodoExpresion exp; Token t;}
 {
-    t=<T_RETORNO> exp=LOGICA_OR() {return new Simbolo(Constante.TDetener, Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn);}
+    t=<T_RETORNO> exp=LOGICA_OR() {return new Simbolo(Constante.TRetorno, Constante.TRetorno, Constante.TRetorno, new Ambito(Constante.TRetorno, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn);}
 }
 
-void ALTER():
-{}
+Simbolo ALTER():
+{Token t; FAlterarTabla at; FAlterarUsuario au;}
 {
-    <T_ALTERAR> (ALTER_TABLA() | ALTER_OBJETO() | ALTER_USUARIO()) <PCOMA>         
+    t=<T_ALTERAR> (at=ALTER_TABLA() {at.Fila = t.beginLine; at.Columna = t.beginColumn; return new Simbolo(Constante.TAlterarTabla, Constante.TAlterarTabla, Constante.TAlterarTabla, at.Ambito, at, at.Fila, at.Columna);}
+                | au=ALTER_USUARIO() {au.Fila = t.beginLine; au.Columna = t.beginColumn; return new Simbolo(Constante.TAlterarUsuario, Constante.TAlterarUsuario, Constante.TAlterarUsuario, au.Ambito, au, au.Fila, au.Columna);} 
+                | ALTER_OBJETO()
+                ) <PCOMA>         
 }
 
-void ALTER_TABLA():
-{}
+FAlterarTabla ALTER_TABLA():
+{Token t, t2; ArrayList<ColumnaEstructura> lc;}
 {
-    <T_TABLA> <ID> (<T_AGREGAR> <PAR_IZQ> L_CAMPO() <PAR_DER>
-    |<T_QUITAR> L_ID())
+    <T_TABLA> t=<ID> (t2=<T_AGREGAR> <PAR_IZQ> lc=L_CAMPO() <PAR_DER>
+    {
+        return new FAlterarTabla(Constante.TAgregar, t.image, new Ambito(t.image, new ArrayList<Simbolo>()), lc, t.beginLine, t.beginColumn);
+    }
+    |<T_QUITAR> lc=L_ID()
+    {
+        return new FAlterarTabla(Constante.TQuitar, t.image, new Ambito(t.image, new ArrayList<Simbolo>()), lc, t.beginLine, t.beginColumn);
+    }
+    )
 }
 
-void L_ID():
-{}
+ArrayList<ColumnaEstructura> L_ID():
+{Token t, t2; ArrayList<ColumnaEstructura> lce = new ArrayList<ColumnaEstructura>();}
 {
-    <ID> (<COMA> L_ID())?
+    t=<ID> {ColumnaEstructura ce = new ColumnaEstructura();
+            ce.NombreCampo = t.image;
+            ce.Fila = t.beginLine;
+            ce.Columna = t.beginColumn;
+            lce.add(ce);}   (<COMA> t2=<ID> {ColumnaEstructura ce2 = new ColumnaEstructura();
+                                            ce2.NombreCampo = t2.image;
+                                            ce2.Fila = t2.beginLine;
+                                            ce2.Columna = t2.beginColumn;
+                                            lce.add(ce2);})* {return lce;}
 }
 
 void ALTER_OBJETO():
@@ -414,25 +509,44 @@ void ALTER_OBJETO():
     |<T_QUITAR> L_ID())
 }
 
-void ALTER_USUARIO():
-{}
+FAlterarUsuario ALTER_USUARIO():
+{Token t, t2;}
 {
-    <T_USUARIO> <ID> <T_CAMBIAR> <T_PASSWORD> <IGUAL> <CADENA>
+    <T_USUARIO> t=<ID> <T_CAMBIAR> <T_PASSWORD> <IGUAL> t2=<CADENA>
+    {
+        return new FAlterarUsuario(t.image, t2.image.substring(1, t2.image.length() - 1), new Ambito(t.image, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);
+    }
 }
 
 
-void ELIMINAR():
-{}
+Simbolo ELIMINAR():
+{Token t, t2;}
 {
-    <T_ELIMINAR> (<T_TABLA> | <T_BASE_DATOS> | <T_OBJETO> | <T_USUARIO>) <ID> <PCOMA>
+    t2=<T_ELIMINAR> (<T_TABLA> t=<ID> 
+                    | <T_BASE_DATOS>  t=<ID>
+                    | <T_OBJETO> t=<ID>
+                    | <T_USUARIO> t=<ID>{
+                                            FEliminarUsuario eu = new FEliminarUsuario(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarUsuario, Constante.TEliminarUsuario, Constante.TEliminarUsuario, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        })      
+            <PCOMA>
 }
 
 
 
-void INSERTAR():
-{}
+Simbolo INSERTAR():
+{Token t,t2; ArrayList<FNodoExpresion> le; ArrayList<ColumnaEstructura> lid = new ArrayList<ColumnaEstructura>();}
 {
-    <T_INSERTAR> <T_TABLA> <ID> <PAR_IZQ> (L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ>)? L_EXPRESIONES() <PAR_DER> <PCOMA>
+    t2=<T_INSERTAR> <T_TABLA> t=<ID> <PAR_IZQ> (lid=L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ>)? le=L_EXPRESIONES() <PAR_DER> <PCOMA>
+    {
+        if(lid.size()>0){
+            FInsertarEspecial te = new FInsertarEspecial(t.image, lid, le, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+            return new Simbolo(Constante.TInsertarEspecial, Constante.TInsertarEspecial, Constante.TInsertarEspecial, te.Ambito, te, te.Fila, te.Columna);
+        }else{
+            FInsertarNormal tn = new FInsertarNormal(t.image, le, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+            return new Simbolo(Constante.TInsertarNormal, Constante.TInsertarNormal, Constante.TInsertarNormal, tn.Ambito, tn, tn.Fila, tn.Columna);
+        }        
+    }
 }
 
 void ACTUALIZAR():
@@ -492,7 +606,7 @@ ArrayList<Simbolo> DECLARACION():
                                                         for(FDeclaracion d : lv){
                                                             d.Tipo = td;
                                                             d.Valor = val;
-                                                            Simbolo s = new Simbolo(Constante.TDeclaracion, Constante.TDeclaracion, Constante.TDeclaracion, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), d, t2.beginLine, t2.beginColumn);
+                                                            Simbolo s = new Simbolo(d.Tipo, d.Nombre, Constante.TDeclaracion, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), d, t2.beginLine, t2.beginColumn);
                                                             lista.add(s);                                                            
                                                         }
                                                         return lista;
@@ -517,12 +631,12 @@ Simbolo ASIGNACION():
     t=<ARROBA> (<PUNTO> t2=<ID>)? <IGUAL> e=LOGICA_OR() <PCOMA> {
                                                                     FLlamadaVariable fv;
                                                                     if(t2 != null){
-                                                                        fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), t2.image, t.beginLine, t.beginColumn);
+                                                                        fv = new FLlamadaVariable(t2.image, t.image.substring(1, t.image.length()), t.beginLine, t.beginColumn);
                                                                     }else{
                                                                         fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), "", t.beginLine, t.beginColumn);
                                                                     }
 
-                                                                    FAsignacion as = new FAsignacion(fv, new Ambito(Constante.TAsignacion, new ArrayList<Simbolo>()), e);
+                                                                    FAsignacion as = new FAsignacion(fv, new Ambito(Constante.TAsignacion, new ArrayList<Simbolo>()), e, t.beginLine, t.beginColumn);
                                                                     return new Simbolo(Constante.TAsignacion, Constante.TAsignacion, Constante.TAsignacion, as.Ambito, as, t.beginLine, t.beginColumn);
                                                                 }
 }
@@ -561,8 +675,10 @@ Simbolo SELECCIONA():
                 sim.Ambito.Padre = ambito;
             }
         }
-        for(Simbolo sim: defecto.Ambito.TablaSimbolo){
-                sim.Ambito.Padre = ambito;
+        if(defecto != null){
+            for(Simbolo sim: defecto.Ambito.TablaSimbolo){
+                    sim.Ambito.Padre = ambito;
+            }
         }
         FSelecciona fs = new FSelecciona(exp,lc,defecto,ambito);
         Simbolo s = new Simbolo(Constante.TSeleccion, Constante.TSeleccion, Constante.TSeleccion, fs.Ambito, fs, t.beginLine, t.beginColumn);
@@ -634,7 +750,7 @@ Simbolo DECLARACION_PARA():
     t2=<T_DECLARAR> t=<ARROBA> <T_INTEGER> <IGUAL> exp=LOGICA_OR()
     {   
         FDeclaracion fd = new FDeclaracion(Constante.TEntero, t.image.substring(1,t.image.length()), new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), exp, t.beginLine, t.beginColumn); 
-        Simbolo s = new Simbolo(Constante.TDeclaracion, Constante.TDeclaracion, Constante.TDeclaracion, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), fd, t2.beginLine, t2.beginColumn);
+        Simbolo s = new Simbolo(fd.Tipo, fd.Nombre, Constante.TDeclaracion, new Ambito(Constante.TDeclaracion, new ArrayList<Simbolo>()), fd, t2.beginLine, t2.beginColumn);
         return s;
     }
 }
@@ -759,9 +875,9 @@ FNodoExpresion RELACIONAL():
                                                     nuevo = new FNodoExpresion(izq, der, Constante.TMayor, Constante.TMayor, t.beginLine, t.beginColumn, null);
                                                 }}
         | t = <MENOR> der = E()          {if(nuevo != null){
-                                                    nuevo = new FNodoExpresion(nuevo, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);
+                                                    nuevo = new FNodoExpresion(nuevo, der, Constante.TMenor, Constante.TMenos, t.beginLine, t.beginColumn, null);
                                                 }else{
-                                                    nuevo = new FNodoExpresion(izq, der, Constante.TMenos, Constante.TMenos, t.beginLine, t.beginColumn, null);
+                                                    nuevo = new FNodoExpresion(izq, der, Constante.TMenor, Constante.TMenos, t.beginLine, t.beginColumn, null);
                                                 }}
         | t = <MAYORIGUAL> der = E()     {if(nuevo != null){
                                                     nuevo = new FNodoExpresion(nuevo, der, Constante.TMayorIgual, Constante.TMayorIgual, t.beginLine, t.beginColumn, null);
@@ -851,17 +967,14 @@ FNodoExpresion I():
     t=<CADENA> { return new FNodoExpresion(null, null, Constante.TText, Constante.TText, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length() - 1));}
     | t=<ENTERO>  { return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, t.beginLine, t.beginColumn, t.image);}
     | t=<DECIMAL> { return new FNodoExpresion(null, null, Constante.TDecimal, Constante.TDecimal, t.beginLine, t.beginColumn, t.image);}
-    | t=<DATE> (t2=<TIME>{c=t.image + " " + t2.image;})? { if(!c.equals("")){ return new FNodoExpresion(null, null, Constante.TDateTime, Constante.TDateTime, t.beginLine, t.beginColumn, c);}
-                                                        else{
-                                                            return new FNodoExpresion(null, null, Constante.TDate, Constante.TDateTime, t.beginLine, t.beginColumn, t.image);
-                                                        }
-                                                        }  
+    | t=<DATE>  {return new FNodoExpresion(null, null, Constante.TDate, Constante.TDateTime, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length() - 1));}
+    | t=<DATETIME> { return new FNodoExpresion(null, null, Constante.TDateTime, Constante.TDateTime, t.beginLine, t.beginColumn, t.image.substring(1, t.image.length() - 1));}
     | t=<FALSO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
     | t=<VERDADERO> { return new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, t.image);}
     | t=<ARROBA> (<PUNTO> t2=<ID>)? {
                                         FLlamadaVariable fv;
                                         if(t2 != null){
-                                            fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), t2.image, t.beginLine, t.beginColumn);
+                                            fv = new FLlamadaVariable(t2.image, t.image.substring(1, t.image.length()), t.beginLine, t.beginColumn);
                                         }else{
                                             fv = new FLlamadaVariable(t.image.substring(1, t.image.length()), "", t.beginLine, t.beginColumn);
                                         }

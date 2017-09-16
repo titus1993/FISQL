@@ -5,6 +5,9 @@
  */
 package Funciones.XML;
 
+import Funciones.Usql.FNodoExpresion;
+import Funciones.Usql.FObjeto;
+import Static.Constante;
 import Static.Tools;
 import java.util.ArrayList;
 
@@ -16,12 +19,86 @@ public class Tabla {
 
     public ArrayList<ColumnaEstructura> Columnas;
     public String Nombre, Path;
+    public int Autoincrementable;
     public ArrayList<ArrayList<Columna>> Filas;
 
-    public Tabla(String nombre, String path, ArrayList<ColumnaEstructura> columnas) {
+    public Tabla(String nombre, String path, String val, ArrayList<ColumnaEstructura> columnas) {
         Nombre = nombre;
         Path = path;
         Columnas = columnas;
+        this.Filas = new ArrayList<ArrayList<Columna>>();
+        this.Autoincrementable = Integer.parseInt(val);
+    }
+
+    public void InsertarEspecial(ArrayList<ColumnaEstructura> columnas, ArrayList<FNodoExpresion> fila) {
+        
+        ArrayList<Columna> nuevafila = new ArrayList<Columna>();
+
+        for (ColumnaEstructura col : this.Columnas) {
+            boolean bandera = false;
+            int i =0;
+            while (i < columnas.size()) {
+                ColumnaEstructura coltemp = columnas.get(i);
+                if (col.NombreCampo.equals(coltemp.NombreCampo)) {
+                    bandera = true;
+                    if (col.TipoCampo.equals(Constante.TEntero) || col.TipoCampo.equals(Constante.TDecimal) || col.TipoCampo.equals(Constante.TBool) || col.TipoCampo.equals(Constante.TCadena)
+                            || col.TipoCampo.equals(Constante.TDate) || col.TipoCampo.equals(Constante.TDateTime)) {
+
+                        nuevafila.add(new Columna(col.NombreCampo, fila.get(i).Cadena));
+                        i++;
+                    } else {
+                        FObjeto a = fila.get(i).Objeto;
+                        nuevafila.add(new Columna(col.NombreCampo, a.GetDatos()));
+                    }
+                    break;
+                }
+                i++;
+            }
+
+            if (!bandera) {
+                if (col.Complementos.isAutoincrementable) {
+                    this.Autoincrementable++;
+                    nuevafila.add(new Columna(col.NombreCampo, String.valueOf(this.Autoincrementable)));
+                } else {
+                    if (col.TipoCampo.equals(Constante.TEntero) || col.TipoCampo.equals(Constante.TDecimal) || col.TipoCampo.equals(Constante.TBool) || col.TipoCampo.equals(Constante.TCadena)
+                            || col.TipoCampo.equals(Constante.TDate) || col.TipoCampo.equals(Constante.TDateTime)) {
+
+                        nuevafila.add(new Columna(col.NombreCampo, ""));
+                        i++;
+                    } else {
+                        Objeto o = Tools.BaseActual.ExisteObjeto(col.TipoCampo);
+                        if (o != null) {
+                            FObjeto a = o.ObtenerObjeto();
+                            nuevafila.add(new Columna(col.NombreCampo, a.GetDatos()));
+                        }
+                    }
+                }
+            }
+        }
+        this.Filas.add(nuevafila);
+    }
+
+    public void InsertarNormal(ArrayList<FNodoExpresion> fila) {
+        int i = 0;
+        ArrayList<Columna> nuevafila = new ArrayList<Columna>();
+
+        for (ColumnaEstructura col : Columnas) {
+            if (col.Complementos.isAutoincrementable) {
+                this.Autoincrementable++;
+                nuevafila.add(new Columna(col.NombreCampo, String.valueOf(this.Autoincrementable)));
+            } else {
+                if (col.TipoCampo.equals(Constante.TEntero) || col.TipoCampo.equals(Constante.TDecimal) || col.TipoCampo.equals(Constante.TBool) || col.TipoCampo.equals(Constante.TCadena)
+                        || col.TipoCampo.equals(Constante.TDate) || col.TipoCampo.equals(Constante.TDateTime)) {
+
+                    nuevafila.add(new Columna(col.NombreCampo, fila.get(i).Cadena));
+                    i++;
+                } else {
+                    FObjeto a = fila.get(i).Objeto;
+                    nuevafila.add(new Columna(col.NombreCampo, a.GetDatos()));
+                }
+            }
+        }
+        this.Filas.add(nuevafila);
     }
 
     public boolean ExistePrimaria() {
@@ -63,6 +140,7 @@ public class Tabla {
         cadena += "<Tabla>\n"
                 + "\t<Nombre>\"" + Nombre + "\"</Nombre>\n"
                 + "\t<Path>\"" + Path + "\"</Path>\n"
+                + "\t<" + String.valueOf(this.Autoincrementable) + ">\n"
                 + "\t<Rows>\n";
 
         for (int i = 0; i < Columnas.size(); i++) {

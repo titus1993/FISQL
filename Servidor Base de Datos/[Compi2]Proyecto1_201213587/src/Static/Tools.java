@@ -8,6 +8,7 @@ package Static;
 import EjecucionUsql.TablaUsql;
 import Funciones.XML.DataBase;
 import Funciones.XML.Maestro;
+import Funciones.XML.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,9 +37,8 @@ public class Tools {
     
     public static JTextArea Consola = new JTextArea();
 
-    public static void ImprimirConsola(String texto) {
-        Consola.setText(Consola.getText() + ">> " + texto + "\n");
-    }
+    public static String CadenaErrores = "";
+    
 
     public static String local = "C:\\FISQL_DB";
     public static String localUsrXml = "C:\\FISQL_DB\\users.xml";
@@ -60,13 +61,25 @@ public class Tools {
     public static final String permisoProc = "proc";
     public static final String permisoObj = "obj";
 
-    public static Maestro Base_de_datos = new Maestro();
+    
 
     public static TablaUsql Tabla = new TablaUsql();
     
     public static TablaUsql Funciones = new TablaUsql();
     
     public static DataBase BaseActual = null;
+    
+    public static Usuario Usuario = null;
+    
+    public static Maestro Base_de_datos = new Maestro();
+    
+    public static void ImprimirConsola(String texto) {
+        Consola.setText(Consola.getText() + ">> " + texto + "\n");
+    }
+    
+    public static void ImprimirLog(String Accion, String Descripcion){
+        ImprimirConsola("Fecha: " + formatoFecha.format(new Date()) + ", Usuario: " + Usuario.name + ", Accion: " + Accion + ", Descripcion: " + Descripcion);
+    }
     
     public static String LeerArchivo(String ruta) {
         String contenido = "";
@@ -167,6 +180,8 @@ public class Tools {
     public static void InsertarError(String tipo, String descripcion, int linea, int columna) {
         String[] error = {tipo, descripcion, String.valueOf(linea + 1), String.valueOf(columna + 1)};
         Error.addRow(error);
+        CadenaErrores += "Error " + tipo + " en la linea: " + String.valueOf(linea) + ", columna: " + String.valueOf(columna) + "; Descripcion: " + descripcion + "\n";
+        System.out.println("Error " + tipo + " en la linea: " + String.valueOf(linea) + ", columna: " + String.valueOf(columna) + "; Descripcion: " + descripcion + "\n");
     }
 
     public static boolean ContarErrores() {

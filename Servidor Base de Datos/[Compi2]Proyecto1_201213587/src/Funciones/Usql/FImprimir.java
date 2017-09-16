@@ -25,6 +25,10 @@ public class FImprimir {
         this.Valor = valor;
     }
 
+    
+    public String getCadena(){
+        return "IMPRIMIR(" + this.Valor.getCadena() + ")\n";
+    }
     public void Imprimir() {
         FNodoExpresion solucion = Valor.ResolverExpresion();
 
@@ -37,7 +41,7 @@ public class FImprimir {
             } else if (solucion.Tipo.equals(Constante.TDecimal)) {
                 Tools.ImprimirConsola(String.valueOf(solucion.Decimal));
             }  else if (solucion.Tipo.equals(Constante.TBool)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.Bool));
+                Tools.ImprimirConsola(String.valueOf(solucion.Cadena));
             }else if (solucion.Tipo.equals(Constante.TDate)) {
                 Tools.ImprimirConsola(String.valueOf(solucion.Date));
             }else if (solucion.Tipo.equals(Constante.TDateTime)) {

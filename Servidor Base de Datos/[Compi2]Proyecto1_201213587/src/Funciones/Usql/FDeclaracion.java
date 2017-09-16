@@ -7,6 +7,7 @@ package Funciones.Usql;
 
 import Static.Constante;
 import EjecucionUsql.*;
+import Funciones.XML.Objeto;
 import Static.Tools;
 
 /**
@@ -31,6 +32,19 @@ public class FDeclaracion {
         this.Valor = (FNodoExpresion) valor;
     }
 
+    public String getCadena() {
+        if (Valor == null) {
+            return "DECLARAR @" + this.Nombre + " " + this.Tipo;
+        } else {
+            return "DECLARAR @" + this.Nombre + " " + this.Tipo + " = " + this.Valor.getCadena();
+        }
+
+    }
+
+    public String getCadenaParametro() {
+        return this.Tipo + " @" + this.Nombre;
+    }
+
     public void EjecutarDeclaracion() {
         Variable nuevavariable;
         if (Valor != null) {
@@ -45,7 +59,12 @@ public class FDeclaracion {
                                 break;
 
                             case Constante.TBool:
-                                exp.Entero = exp.Entero;
+                                if(exp.Bool){
+                                    exp.Entero = 1;
+                                }else{
+                                    exp.Entero = 0;
+                                }
+                                
                                 exp.Tipo = Constante.TEntero;
                                 break;
 
@@ -126,8 +145,26 @@ public class FDeclaracion {
                 Tools.Tabla.InsertarVariable(nuevavariable);
             }
         } else {
-            nuevavariable = new Variable(Tipo, Nombre, Constante.TVariable, Fila, Columna, Ambito, null);
-            Tools.Tabla.InsertarVariable(nuevavariable);
+            if (!this.Tipo.equals(Constante.TEntero) && !this.Tipo.equals(Constante.TDecimal) && !this.Tipo.equals(Constante.TCadena) && !this.Tipo.equals(Constante.TBool) && !this.Tipo.equals(Constante.TDate) && !this.Tipo.equals(Constante.TDateTime)) {
+                if (Tools.BaseActual != null) {
+                    Objeto obase = Tools.BaseActual.ExisteObjeto(this.Tipo);
+                    if (obase != null) {
+                        FObjeto o = obase.ObtenerObjeto();
+
+                        FNodoExpresion exp = new FNodoExpresion(null, null, Constante.TObjeto, Nombre, Fila, Columna, o);
+
+                        nuevavariable = new Variable(Tipo, Nombre, Constante.TVariable, Fila, Columna, Ambito, exp);
+                        Tools.Tabla.InsertarVariable(nuevavariable);
+                    } else {
+                        Tools.InsertarError("Semantico", "No existe el objeto " + this.Tipo + " no se puede hacer la instancia", Fila, Columna);
+                    }
+                } else {
+                    Tools.InsertarError(Constante.TErrorSemantico, "No ha seleccionado una base de datos.", Fila, Columna);
+                }
+            } else {
+                nuevavariable = new Variable(Tipo, Nombre, Constante.TVariable, Fila, Columna, Ambito, null);
+                Tools.Tabla.InsertarVariable(nuevavariable);
+            }
         }
     }
 }

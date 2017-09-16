@@ -14,4 +14,18 @@ public class Complemento {
     public boolean isNulo, isAutoincrementable, isPrimary, isForanea;
     public String Foranea = "";
 
+    public String getCadena() {
+        String cadena = "";
+        if (isNulo) {
+            cadena += " NULO";
+        } else {
+            cadena += " NO NULO";
+        }
+        
+        if(isAutoincrementable) cadena+= " AUTOINCREMENTABLE";
+        if(isPrimary) cadena += " LLAVE_PRIMARIA";
+        if(isForanea) cadena += " LLAVE_FORANEA " + this.Foranea;
+
+        return cadena;
+    }
 }

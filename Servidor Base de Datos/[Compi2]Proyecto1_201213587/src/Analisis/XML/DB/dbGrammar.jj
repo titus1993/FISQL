@@ -42,6 +42,8 @@ TOKEN:
     |<T_ROWS_DER: ("<"(" ")*"/"(" ")*"rows"(" ")*">")> {System.out.println(image);}
     |<T_COMPLEMENTO_DER: ("<"(" ")*"/"(" ")*"complemento"(" ")*">")> {System.out.println(image);}
     |<T_CAMPO_DER: ("<"(" ")*"/"(" ")*"campo"(" ")*">")> {System.out.println(image);}
+    |<T_FA: ("<")>
+    |<T_FC: (">")>
 
     |<T_NULO:("nulo")> {System.out.println(image);}
     |<T_NO_NULO:("no nulo")> {System.out.println(image);}
@@ -74,6 +76,7 @@ TOKEN:
     <CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
     |<ID_IZQ: ("<"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
     |<ID_DER: ("<"(" ")*"/"(" ")*["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])*(" ")*">"> {System.out.println(image);}
+    |<ENTERO: (["0"-"9"])+ > {System.out.println(image);}
     
 }
 
@@ -150,17 +153,19 @@ ArrayList<Tabla> c2 = new ArrayList<Tabla>();}
 }
 
 ArrayList<Tabla> TABLA():
-{String n, p; ArrayList<ColumnaEstructura> ce;}
+{String n, p; ArrayList<ColumnaEstructura> ce; Token to;}
 {
     <T_TABLA_IZQ> 
         n=NOMBRE() 
         p=PATH()
+        <T_FA> to=<ENTERO> <T_FC>
         ce=ROWS()
     <T_TABLA_DER>
 
-        {Tabla t = new Tabla(n, p, ce);
-        ArrayList<Tabla> l = new ArrayList<Tabla>();
-        l.add(t);
+        {
+            Tabla t = new Tabla(n, p, to.image, ce);
+            ArrayList<Tabla> l = new ArrayList<Tabla>();
+            l.add(t);
             return l;
         }
 }
@@ -219,11 +224,11 @@ Complemento L_COMPLEMENTO():
 {Complemento c; Complemento c2;}
 {
     c=COMPLEMENTO() (c2=L_COMPLEMENTO(){
-                                        c.isNulo = c2.isNulo;
-                                        c.isAutoincrementable = c2.isAutoincrementable;
-                                        c.isPrimary = c2.isPrimary;
-                                        c.isForanea = c2.isForanea;
-                                        c.Foranea = c2.Foranea;
+                                        if(c2.isNulo) c.isNulo = true;
+                                        if(c2.isAutoincrementable) c.isAutoincrementable = true;
+                                        if(c2.isPrimary) c.isPrimary = true;
+                                        if(c2.isForanea) c.isForanea = true;
+                                        if(c2.isForanea) c.Foranea = c2.Foranea;
                                         })?
     {return c;}
 }
@@ -232,8 +237,8 @@ Complemento COMPLEMENTO():
 {String c; Complemento com = new Complemento();}
 {
     <T_COMPLEMENTO_IZQ>
-        (<T_NULO> {com.isNulo = true;}
-        |<T_NO_NULO> {com.isNulo = false;}
+        (<T_NULO> {com.isNulo = false;}
+        |<T_NO_NULO> {com.isNulo = true;}
         |<T_AUTOINCREMETABLE> {com.isAutoincrementable = true;}
         |<T_LLAVE_PRIMARIA> {com.isPrimary = true;}
         |c=FORANEA(){com.isForanea = true; com.Foranea = c;})

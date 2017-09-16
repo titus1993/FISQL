@@ -42,7 +42,7 @@ public class TablaUsql {
         Variable aux = null;
         while (i < Tabla.size() && !encontrado) {
             Variable funcion = Tabla.get(i);
-            if (funcion.Nombre.equals(metodo.Nombre) && funcion.Rol.equals(Constante.TMetodo)) {
+            if (funcion.Nombre.toLowerCase().equals(metodo.Nombre.toLowerCase()) && funcion.Rol.equals(Constante.TMetodo)) {
                 FMetodo m = (FMetodo) funcion.Valor;
 
                 if (m.Parametros.size() == parametros.size()) {

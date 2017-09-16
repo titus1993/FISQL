@@ -27,6 +27,26 @@ public class FSi {
         this.Condicion = condicion;
         this.Ambito = ambito;
     }
+    
+    public String getCadena() {
+        String cadena = "";
+        
+        cadena+= "SI(" + Condicion.getCadena() + "){\n";
+        
+        FMetodo m = new FMetodo();
+        String cuerpo = "\t" + m.getCadenaCuerpo(Si.TablaSimbolo).replaceAll("\n", "\n\t");
+        
+        cadena += cuerpo + "\n}";
+        
+        if(this.Sino != null){
+            cadena += "SINO{\n";
+            String c = "\t" + m.getCadenaCuerpo(Sino.TablaSimbolo).replaceAll("\n", "\n\t");
+            cadena += c + "\n}";
+        }      
+        
+        
+        return cadena;
+    }
 
     public void EjecutarSi() {
         FNodoExpresion condicion = this.Condicion.ResolverExpresion();

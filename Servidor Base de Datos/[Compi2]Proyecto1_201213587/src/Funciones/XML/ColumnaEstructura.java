@@ -13,10 +13,23 @@ public class ColumnaEstructura {
 
     public int Tipo;
     public String NombreCampo, TipoCampo;
+    public int Fila, Columna;
     public Complemento Complementos;
 
     public ColumnaEstructura() {
         Complementos = new Complemento();
+    }
+    
+    public String getCadena(){
+        String cadena = "";
+        
+        cadena += this.TipoCampo + " " + this.NombreCampo + Complementos.getCadena();
+        
+        return cadena;
+    }
+    
+    public String getCadenaInsertar(){
+        return this.NombreCampo;
     }
 
     public String getXML() {
@@ -25,7 +38,7 @@ public class ColumnaEstructura {
         cadena += "\t\t<Campo>\n"
                 + "\t\t\t<" + TipoCampo + ">\"" + NombreCampo + "\"</" + TipoCampo + ">\n";
 
-        if(Complementos.isNulo){
+        if(!Complementos.isNulo){
             cadena += "\t\t\t<Complemento>nulo</Complemento>\n";
         }else{
             cadena += "\t\t\t<Complemento>no nulo</Complemento>\n";

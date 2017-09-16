@@ -7,12 +7,15 @@ package compi2.proyecto1_201213587;
 
 
 import Funciones.XML.*;
+import Socket.Servidor;
 import Static.Tools;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -24,6 +27,8 @@ public class Compi2Proyecto1_201213587 {
     /**
      * @param args the command line arguments
      */
+    
+    static Thread server = new Thread(new Servidor(), "server");
     public static void main(String[] args) {
         //Cargar();
         //Tools.Base_de_datos.DLLCrearUsuario("masterchef", "master");
@@ -67,17 +72,26 @@ public class Compi2Proyecto1_201213587 {
         ArrayList<Parametro> lp = new ArrayList<>();
         lp.add(p);              
         
-        Tools.Base_de_datos.DLLAlterObjetoAgregar("dbnueva", "masterchef", "obj1", lp);*/
-        
-        
-        
-        
+        Tools.Base_de_datos.DLLAlterObjetoAgregar("dbnueva", "masterchef", "obj1", lp);*/        
         
         Consola a = new Consola();
         NewJFrame b = new NewJFrame();
+        Tools.Usuario = Tools.Base_de_datos.Usuarios.get(0);
         a.setVisible(true);
         b.setVisible(true);
-    }    
+        IniciarServidor();
+    }   
+    
+    
+    public static void IniciarServidor(){
+        server.start();
+
+        try {
+            Thread.currentThread().sleep(1000);
+        } catch (InterruptedException e) {
+        }
+    
+    }
     
     public static void Cargar(){
         try {
