@@ -5,6 +5,7 @@
  */
 package Static;
 
+import EjecucionUsql.TablaSeleccionar;
 import EjecucionUsql.TablaUsql;
 import Funciones.XML.DataBase;
 import Funciones.XML.Maestro;
@@ -72,6 +73,10 @@ public class Tools {
     public static Usuario Usuario = null;
     
     public static Maestro Base_de_datos = new Maestro();
+    
+    public static TablaSeleccionar TablaPivote = null;
+    
+    public static TablaSeleccionar TablaResultado = null;
     
     public static void ImprimirConsola(String texto) {
         Consola.setText(Consola.getText() + ">> " + texto + "\n");

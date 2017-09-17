@@ -89,4 +89,7 @@ public class Constante {
     public static final String TEliminarUsuario = "eliminar usuario";
     public static final String TInsertarNormal = "insertar normal";
     public static final String TInsertarEspecial = "insertar especial";
+    public static final String TSeleccionar = "seleccionar";
+    public static final String TAsc = "asc";
+    public static final String TDesc = "desc";
 }

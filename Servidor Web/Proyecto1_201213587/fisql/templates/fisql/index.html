@@ -33,6 +33,9 @@
     <!-- DataTables -->
     <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
 
+    <!-- menuContext -->
+    <link rel="stylesheet" href="{% static 'plugins/contextMenu/jquery.contextMenu.css' %}">
+
     <script src="{% static 'plugins/codeMirror/codemirror.js' %}"></script>
     <link rel="stylesheet" href="{% static 'plugins/codeMirror/codemirror.css' %}"/>
     <link rel="stylesheet" href="{% static 'plugins/codeMirror/Temas/ambiance.css' %}"/>
@@ -42,15 +45,11 @@
     <script src="{% static 'plugins/codeMirror/Autocompletar/anyword-hint.js' %}"></script>
     <script src="{% static 'plugins/codeMirror/basic3d_elements.js' %}"></script>
     <script src="{% static 'plugins/codeMirror/Autocompletar/show-hint.js' %}"></script>
+    <script src="{% static 'plugins/codeMirror/usql.js' %}"></script>
 
 
     <script src="{% static 'plugins/Herramientas/herramientas.js' %}"></script>
-    <!-- imports de contextmenu -->
-    <!--<script src="{% static 'plugins/contextMenu/jquery.contextMenu.js' %}"></script>
-    <script src="{% static 'plugins/contextMenu/jquery.ui.position.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'plugins/contextMenu/sass/_icons.scss' %}" />
-    <link rel="stylesheet" href="{% static 'plugins/contextMenu/sass/_variables.scss' %}" />
-    <link rel="stylesheet" href="{% static 'plugins/contextMenu/sass/jquery.contextMenu.scss' %}" />-->
+
 
     <link rel="stylesheet" href="{% static 'plugins/codeMirror/Autocompletar/show-hint.css' %}"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -135,13 +134,41 @@
 
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="context-menu-one"><a href=""><i class="fa fa-circle-o"></i> Dashboard v1</a>
+                            </li>
+                            <li class="context-menu-one"><a href=""><i class="fa fa-circle-o"></i> Dashboard v2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-files-o"></i>
+                            <span>Layout Options</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="../layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+                            <li><a href="../layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
+                            <li><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
+                            <li><a href="../layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed
+                                Sidebar</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </section>
             <!-- /.sidebar -->
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div id="divContenido" class="content-wrapper">
 
             <!-- Main content -->
             {% block contenido %}
@@ -149,7 +176,7 @@
 
                     <!-- Main row -->
                     <div class="row">
-                        <section class="col-lg-12 connectedSortable">
+                        <section id="seccionContenido" class="col-lg-12 connectedSortable">
 
                             <!-- usql editor -->
 
@@ -180,13 +207,13 @@
                                     <a class="btn btn-app" href="javascript:ejecutarUSQL()">
                                         <i class="fa fa-play"></i> Ejecutar
                                     </a>
-                                    <a class="btn btn-app">
+                                    <a class="context-menu-one btn btn-app" onclick="">
                                         <i class="fa fa-repeat"></i> Seleccion
                                     </a>
-                                    <a class="btn btn-app">
+                                    <a class="context-menu-one btn btn-app" onclick="agregarReporte()">
                                         <i class="fa fa-copy"></i> Copiar
                                     </a>
-                                    <a class="btn btn-app" onclick="limpiar()">
+                                    <a class="context-menu-usuario btn btn-app" onclick="limpiar()">
                                         <i class="fa fa-eraser"></i> Limpiar
                                     </a>
                                     <div id="codeeditor"></div>
@@ -266,13 +293,13 @@
                                 <div class="box-body">
                                     <div id="mensajes"></div>
                                     <script>
-                                        var mensajes = CodeMirror(document.getElementById("mensajes"), {
+                                        var editormensajes = CodeMirror(document.getElementById("mensajes"), {
                                             mode: "basic3d_elements",
                                             theme: "mdn-like",
                                             styleActiveLine: true,
                                             autoCloseBrackets: true,
                                             tabSize: 5,
-                                            lineNumbers: true,
+                                            lineNumbers: false,
                                             extraKeys: {
                                                 "F11": function (cm) {
                                                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -313,7 +340,7 @@
                                             styleActiveLine: true,
                                             autoCloseBrackets: true,
                                             tabSize: 5,
-                                            lineNumbers: true,
+                                            lineNumbers: false,
                                             extraKeys: {
                                                 "F11": function (cm) {
                                                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -1314,12 +1341,62 @@
 <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
 
+<!-- contexMenu -->
+<script src="{% static 'plugins/contextMenu/jquery.contextMenu.js' %}"></script>
+<script src="{% static 'plugins/contextMenu/jquery.ui.position.js' %}"></script>
+
+
 <script>
-                                    $(function () {
-                                        $('#resultado').DataTable()
-                                        $('#resultado2').DataTable()
-                                    })
-                                </script>
+    $(function startabla() {
+        $('#resultado').DataTable()
+        $('#resultado2').DataTable()
+    })
+
+    $(function () {
+        $.contextMenu({
+            selector: '.context-menu-one',
+            callback: function (key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m);
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+                copy: {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {
+                    name: "Quit", icon: function () {
+                        return 'context-menu-icon context-menu-icon-quit';
+                    }
+                }
+            }
+        });
+
+        $.contextMenu({
+            selector: '.context-menu-usuario',
+            callback: function (key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m);
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {
+                    name: "Quit", icon: function () {
+                        return 'context-menu-icon context-menu-icon-quit';
+                    }
+                }
+            }
+        });
+
+        $('.context-menu-one').on('click', function (e) {
+            console.log('clicked', this);
+        })
+    });
+</script>
 {% block scripts %}
 
 {% endblock %}

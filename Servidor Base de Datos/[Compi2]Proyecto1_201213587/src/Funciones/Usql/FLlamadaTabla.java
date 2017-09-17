@@ -5,6 +5,9 @@
  */
 package Funciones.Usql;
 
+import EjecucionUsql.Ambito;
+import Static.Tools;
+
 /**
  *
  * @author Titus
@@ -12,6 +15,7 @@ package Funciones.Usql;
 public class FLlamadaTabla {
     String Tabla, Atributo, Objeto;
     int Fila, Columna;
+    Ambito Ambito;
     
     public FLlamadaTabla(String Tabla, String Objeto, String Atributo, int Fila, int Columna){
         this.Tabla = Tabla;
@@ -21,4 +25,10 @@ public class FLlamadaTabla {
         this.Columna = Columna;
     }
     
+    
+    public FNodoExpresion Ejecutar(){
+        FNodoExpresion va = Tools.TablaPivote.getValor(this.Tabla, this.Objeto, this.Atributo);
+        
+        return va;
+    }
 }

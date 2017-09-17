@@ -7,7 +7,10 @@ package compi2.proyecto1_201213587;
 
 
 import Funciones.XML.*;
+import EjecucionUsql.*;
+import Funciones.Usql.FNodoExpresion;
 import Socket.Servidor;
+import Static.Constante;
 import Static.Tools;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,7 +76,7 @@ public class Compi2Proyecto1_201213587 {
         lp.add(p);              
         
         Tools.Base_de_datos.DLLAlterObjetoAgregar("dbnueva", "masterchef", "obj1", lp);*/        
-        
+                
         Consola a = new Consola();
         NewJFrame b = new NewJFrame();
         Tools.Usuario = Tools.Base_de_datos.Usuarios.get(0);

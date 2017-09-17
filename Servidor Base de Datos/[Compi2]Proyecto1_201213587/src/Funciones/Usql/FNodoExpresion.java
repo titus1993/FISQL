@@ -252,7 +252,7 @@ public class FNodoExpresion {
                 break;
 
             case Constante.TTabla:
-
+                
                 break;
         }
 
@@ -393,6 +393,13 @@ public class FNodoExpresion {
                 }
                 break;
             }
+            
+            case Constante.TTabla:
+                FNodoExpresion val = this.Tabla.Ejecutar();
+                if(val != null){
+                    aux = val;
+                }
+                break;
         }
         return aux;
     }

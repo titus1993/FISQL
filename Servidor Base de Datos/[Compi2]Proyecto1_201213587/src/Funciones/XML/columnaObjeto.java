@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class columnaObjeto {
 
-    ArrayList<Columna> Filas;
+    public ArrayList<Columna> Filas;
 
     public columnaObjeto(ArrayList<Columna> _filas) {
         Filas = _filas;

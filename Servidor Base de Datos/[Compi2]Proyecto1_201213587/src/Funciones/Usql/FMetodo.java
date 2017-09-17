@@ -269,6 +269,10 @@ public class FMetodo {
                         case Constante.TInsertarEspecial:
                             EjecutarInsertarEspecial(instruccion);
                             break;
+                            
+                        case Constante.TSeleccionar:
+                            EjecutarSeleccionar(instruccion);
+                            break;
 
                         default:
                             break;
@@ -276,6 +280,11 @@ public class FMetodo {
                 }
             }
         }
+    }
+    
+    public void EjecutarSeleccionar(Simbolo instruccion){
+        FSeleccionar se = (FSeleccionar) instruccion.Valor;
+        se.Ejecutar();
     }
 
     public void EjecutarInsertarEspecial(Simbolo instruccion) {
@@ -464,6 +473,10 @@ public class FMetodo {
                     case Constante.TInsertarEspecial:
                         cadena += GetCadenaInsertarEspecial(instruccion);
                         break;
+                        
+                    case Constante.TSeleccionar:
+                        cadena += GetCadenaSeleccionar(instruccion);
+                        break;
 
                     default:
                         break;
@@ -570,6 +583,10 @@ public class FMetodo {
     public String GetCadenaInsertarEspecial(Simbolo instruccion) {
         FInsertarEspecial in = (FInsertarEspecial) instruccion.Valor;
         return in.getCadena() + ";\n";
+    }
+    
+    public String GetCadenaSeleccionar(Simbolo instruccion){
+        return "";
     }
 
     public void SacarAmbito(ArrayList<Simbolo> ambito) {

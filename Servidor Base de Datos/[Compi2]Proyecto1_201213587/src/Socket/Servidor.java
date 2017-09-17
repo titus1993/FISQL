@@ -54,7 +54,7 @@ public class Servidor extends Thread {
                 /*Envía Mensaje*/
                 
                 DataOutputStream mensaje = new DataOutputStream(socket.getOutputStream());
-                //mensaje.writeUTF(Tools.CadenaErrores + "\n");
+                mensaje.writeUTF(Tools.CadenaErrores + "\n");
                 System.out.println("Respuesta enviada");
 
                 serverSo.close();

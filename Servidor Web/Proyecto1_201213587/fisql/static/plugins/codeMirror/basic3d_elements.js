@@ -9,17 +9,18 @@
         // Rules are matched in the order in which they appear, so there is
         // no ambiguity between this one and the one above
         {
-            regex: /(?:Principal|bool|num|str|element|array|of|create|if|then|else|switch|case|default|break|continue|return|while|do|repeat|until|for|loop|count|whilex|getBool|getNum|outStr|outNum|inStr|inNum|void|getRandom|getLenght|throws)\b/,
+            regex: /(?:crear|usar|base_datos|tabla|procedimiento|funcion|objeto|eliminar|insertar|en|autoincrementable|llave_primaria|llave_foranea|nulo|no|bool|integer|double|text|date|datetime|num|str|element|array|of|create|if|then|else|switch|case|default|break|continue|return|while|do|repeat|until|for|loop|count|whilex|getBool|getNum|outStr|outNum|inStr|inNum|void|getRandom|getLenght|throws)\b/,
             token: "keyword"
         },
-        { regex: /true|false|NULL|NullPointerException|MissingReturnStatement|ArithmeticException|StackOverFlowException|HeapOverFlowException|PoolOverFlowException/, token: "atom" },
+        { regex: /verdadero|falso|NULL|NullPointerException|MissingReturnStatement|ArithmeticException|StackOverFlowException|HeapOverFlowException|PoolOverFlowException/, token: "atom" },
         {
             regex: /0x[a-f\d]+|(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
             token: "number"
         },
-        { regex: /%%.*/, token: "comment" },
         // A next property will cause the mode to move to a different state
-        { regex: /¿¿/, token: "comment", next: "comment" },
+        { regex: /#\*/, token: "comment", next: "comment" },
+        { regex: /#.*/, token: "comment" },
+
         { regex: /[-+\/*^=<>!|\?&]+/, token: "operator" },
         // indent and dedent properties guide autoindentation
         { regex: /[\{\[\(]/, indent: true },
@@ -32,7 +33,7 @@
     ],
     // The multi-line comment state.
     comment: [
-        { regex: /.*?\?\?/, token: "comment", next: "start" },
+        { regex: /.*?\*#/, token: "comment", next: "start" },
         { regex: /.*/, token: "comment" }
     ],
     // The meta property contains global information about the mode. It
@@ -41,6 +42,6 @@
     // specific to simple modes.
     meta: {
         dontIndentStates: ["comment"],
-        lineComment: "%"
+        lineComment: "#"
     }
 });

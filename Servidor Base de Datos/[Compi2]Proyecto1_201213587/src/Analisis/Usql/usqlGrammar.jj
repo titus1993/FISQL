@@ -231,7 +231,7 @@ ArrayList<Simbolo> DML():
     (s=INSERTAR()
     |ACTUALIZAR()
     |BORRAR()
-    |SELECCIONAR()){ls.add(s); return ls;}
+    |s=SELECCIONAR()){ls.add(s); return ls;}
 }
 
 ArrayList<Simbolo> DCL():
@@ -561,12 +561,55 @@ void BORRAR():
     <T_BORRAR> <T_TABLA> <ID> (<T_DONDE> LOGICA_OR())? <PCOMA>
 }
 
-void SELECCIONAR():
-{}
+Simbolo SELECCIONAR():
+{Token t=null,t2=null,t3=null, t4=null, t5=null, t6=null; String Tipo=""; ArrayList<FLlamadaTabla> lcs = new ArrayList<FLlamadaTabla>(); ArrayList<ColumnaEstructura> lce = new ArrayList<ColumnaEstructura>(); FNodoExpresion nodo; String Ordenar = "", por=""; }
 {
-    <T_SELECCIONAR> (L_ID() | <POR>) <T_DE> L_ID() (<T_DONDE> LOGICA_OR())? (<T_ORDENAR> <ID> (<T_ASC>|<T_DESC>))?
+    
+    t=<T_SELECCIONAR> {nodo = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, Constante.TVerdadero);} (lcs=L_ID_S() | t2=<POR> {Tipo = Constante.TPor;}) <T_DE> lce=L_ID() (<T_DONDE> nodo=LOGICA_OR())? (<T_ORDENAR> t3=<ID>(<PUNTO> <ID>( <PUNTO> <ID>)?)? {Ordenar = t3.image;} (t4=<T_ASC>{por = Constante.TAsc;}|t4=<T_DESC>{por = Constante.TDesc;}))?
+    {
+        FLlamadaTabla a = null;
+        if(t6 != null){
+            a = new FLlamadaTabla(t3.image, t5.image, t6.image, t3.beginLine, t3.beginColumn);
+        }else if(t5 != null){
+            a = new FLlamadaTabla(t3.image, "", t5.image, t3.beginLine, t3.beginColumn);
+        }else if(t3 != null){
+            a = new FLlamadaTabla("", "", t3.image, t3.beginLine, t3.beginColumn);
+        }
+        FSeleccionar se = new FSeleccionar(Tipo, lcs, lce, nodo, a, por, new Ambito(t.image, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);
+        return new Simbolo(Constante.TSeleccionar, Constante.TSeleccionar, Constante.TSeleccionar, se.Ambito, se, se.Fila, se.Columna);
+    }
 }
 
+ArrayList<FLlamadaTabla> L_ID_S():
+{Token t=null, t2=null, t3=null ,t4=null , t5=null, t6=null; ArrayList<FLlamadaTabla> lce = new ArrayList<FLlamadaTabla>();}
+{
+    t=<ID>(<PUNTO> t2=<ID> (<PUNTO> t3=<ID>)?)? {
+
+                if(t3 != null){
+                    FLlamadaTabla cs = new FLlamadaTabla(t.image, t2.image, t3.image, t.beginLine, t.beginColumn);
+                    lce.add(cs);
+                }else if(t2 != null){
+                    FLlamadaTabla cs = new FLlamadaTabla(t.image, "", t2.image, t.beginLine, t.beginColumn);
+                    lce.add(cs);
+                }else{
+                    FLlamadaTabla cs = new FLlamadaTabla("", "", t.image, t.beginLine, t.beginColumn);
+                    lce.add(cs);
+                }
+    }
+            (<COMA> t2=<ID> (<PUNTO> <ID> (<PUNTO> <ID>)?)? {
+
+                if(t6 != null){
+                    FLlamadaTabla cs = new FLlamadaTabla(t4.image, t5.image, t6.image, t4.beginLine, t4.beginColumn);
+                    lce.add(cs);
+                }else if(t5 != null){
+                    FLlamadaTabla cs = new FLlamadaTabla(t4.image, "", t5.image, t4.beginLine, t4.beginColumn);
+                    lce.add(cs);
+                }else{
+                    FLlamadaTabla cs = new FLlamadaTabla("", "", t4.image, t4.beginLine, t4.beginColumn);
+                    lce.add(cs);
+                }
+    }) {return lce;}
+}
 
 ArrayList<Simbolo> L_SENTENCIAS():
 {ArrayList<Simbolo> ls = new ArrayList<Simbolo>();}
