@@ -29,6 +29,10 @@ public class Parametro {
         return this.nombreObjeto + " " + this.nombre;
     }
     
+    public String getCadenaParametro(){
+        return this.tipo + " " + this.nombre;
+    }
+    
     public String getXML() {
         String cadena = "";
 

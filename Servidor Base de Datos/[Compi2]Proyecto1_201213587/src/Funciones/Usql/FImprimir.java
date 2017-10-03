@@ -31,25 +31,36 @@ public class FImprimir {
     }
     public void Imprimir() {
         FNodoExpresion solucion = Valor.ResolverExpresion();
-
+       
         
         if (true) {
             if (solucion.Tipo.equals(Constante.TCadena)) {
-                Tools.ImprimirConsola(solucion.Cadena);
+                //Tools.ImprimirConsola(solucion.Cadena);
+                ImprimirRespuesta(solucion.Cadena);
             } else if (solucion.Tipo.equals(Constante.TEntero)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.Entero));
+                //Tools.ImprimirConsola(String.valueOf(solucion.Entero));
+                ImprimirRespuesta(String.valueOf(solucion.Entero));
             } else if (solucion.Tipo.equals(Constante.TDecimal)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.Decimal));
+                //Tools.ImprimirConsola(String.valueOf(solucion.Decimal));
+                ImprimirRespuesta(String.valueOf(solucion.Decimal));
             }  else if (solucion.Tipo.equals(Constante.TBool)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.Cadena));
+                //Tools.ImprimirConsola(String.valueOf(solucion.Cadena));                
+                ImprimirRespuesta(String.valueOf(solucion.Cadena));
             }else if (solucion.Tipo.equals(Constante.TDate)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.Date));
+                //Tools.ImprimirConsola(String.valueOf(solucion.Date));                
+                ImprimirRespuesta(String.valueOf(solucion.Date));
             }else if (solucion.Tipo.equals(Constante.TDateTime)) {
-                Tools.ImprimirConsola(String.valueOf(solucion.DateTime));
+                //Tools.ImprimirConsola(String.valueOf(solucion.DateTime));
+                ImprimirRespuesta(String.valueOf(solucion.DateTime));
             } else {
-                Tools.ImprimirConsola(String.valueOf(solucion.Nombre));
+                //Tools.ImprimirConsola(String.valueOf(solucion.Nombre));                
+                ImprimirRespuesta(String.valueOf(solucion.Nombre));
                 //Tools.InsertarError(Constante.TErrorSintactico, "Se esperaba un tipo String", solucion.Fila, solucion.Columna);
             }
         }
+    }
+    
+    public void ImprimirRespuesta(String cadena){
+        Tools.Imprimir += cadena + "\n";
     }
 }

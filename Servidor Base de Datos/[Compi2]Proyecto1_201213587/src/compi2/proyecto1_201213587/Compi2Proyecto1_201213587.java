@@ -9,7 +9,7 @@ package compi2.proyecto1_201213587;
 import Funciones.XML.*;
 import EjecucionUsql.*;
 import Funciones.Usql.FNodoExpresion;
-import Socket.Servidor;
+import Socket.Comunicacion;
 import Static.Constante;
 import Static.Tools;
 import java.io.BufferedReader;
@@ -31,7 +31,9 @@ public class Compi2Proyecto1_201213587 {
      * @param args the command line arguments
      */
     
-    static Thread server = new Thread(new Servidor(), "server");
+   
+    
+        
     public static void main(String[] args) {
         //Cargar();
         //Tools.Base_de_datos.DLLCrearUsuario("masterchef", "master");
@@ -82,11 +84,11 @@ public class Compi2Proyecto1_201213587 {
         Tools.Usuario = Tools.Base_de_datos.Usuarios.get(0);
         a.setVisible(true);
         b.setVisible(true);
-        IniciarServidor();
+//IniciarServidor();
     }   
     
     
-    public static void IniciarServidor(){
+    /*public static void IniciarServidor(){
         server.start();
 
         try {
@@ -94,7 +96,7 @@ public class Compi2Proyecto1_201213587 {
         } catch (InterruptedException e) {
         }
     
-    }
+    }*/
     
     public static void Cargar(){
         try {

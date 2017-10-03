@@ -356,52 +356,74 @@ public class Maestro {
         }
         return 0;
     }
-    
-    public int DMLInsertarTablaEspecial(String tabla, ArrayList<ColumnaEstructura> Columnas, ArrayList<FNodoExpresion> Fila){
-        
-        if(Tools.BaseActual != null){
-            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
-            if(t != null){
-                int resultado = Tools.BaseActual.PruebaInsertarTablaEspecial(tabla, Columnas, Fila); 
-                if(resultado == 0){
-                    t.InsertarEspecial(Columnas, Fila);
-                    this.Guardar();
-                }else{
-                    return resultado;
-                }
-            }else{
-                //no existe tabla
-                return 2;
-            }
-        }else{
-            //no ha seleccionado base de datos
-            return 1;
+
+    public String Backup(){
+        String cadena = "CREAR BASE_DATOS " + Tools.BaseActual.Nombre + ";\n";
+        cadena += "USAR " + Tools.BaseActual.Nombre + ";\n";
+        for(Objeto o : Tools.BaseActual.Objetos){
+            cadena+= o.getCadena() + "\n";
         }
         
-        return 0;
+        for(Tabla t : Tools.BaseActual.Tablas){
+            cadena += t.getCadena() + "\n";
+        }
+        
+        for(Funcion f : Tools.BaseActual.Funciones){
+            cadena += f.getCadena().trim() + "\n";
+        }
+        
+        for(Procedimiento p : Tools.BaseActual.Procedimientos){
+            cadena += p.getCadena().trim() + "\n";
+        }
+        
+        return cadena;
     }
     
-    public int DMLInsertarTablaNormal(String tabla, ArrayList<FNodoExpresion> Fila){
-        
-        if(Tools.BaseActual != null){
+    public int DMLInsertarTablaEspecial(String tabla, ArrayList<ColumnaEstructura> Columnas, ArrayList<FNodoExpresion> Fila) {
+
+        if (Tools.BaseActual != null) {
             Tabla t = Tools.BaseActual.ExisteTabla(tabla);
-            if(t != null){
-                int resultado = Tools.BaseActual.PruebaInsertarTablaNormal(tabla, Fila); 
-                if(resultado == 0){
-                    t.InsertarNormal(Fila);
+            if (t != null) {
+                int resultado = Tools.BaseActual.PruebaInsertarTablaEspecial(tabla, Columnas, Fila);
+                if (resultado == 0) {
+                    t.InsertarEspecial(Columnas, Fila);
                     this.Guardar();
-                }else{
+                } else {
                     return resultado;
                 }
-            }else{
+            } else {
                 //no existe tabla
                 return 2;
             }
-        }else{
+        } else {
             //no ha seleccionado base de datos
             return 1;
         }
-        
+
+        return 0;
+    }
+
+    public int DMLInsertarTablaNormal(String tabla, ArrayList<FNodoExpresion> Fila) {
+
+        if (Tools.BaseActual != null) {
+            Tabla t = Tools.BaseActual.ExisteTabla(tabla);
+            if (t != null) {
+                int resultado = Tools.BaseActual.PruebaInsertarTablaNormal(tabla, Fila);
+                if (resultado == 0) {
+                    t.InsertarNormal(Fila);
+                    this.Guardar();
+                } else {
+                    return resultado;
+                }
+            } else {
+                //no existe tabla
+                return 2;
+            }
+        } else {
+            //no ha seleccionado base de datos
+            return 1;
+        }
+
         return 0;
     }
 
@@ -412,7 +434,7 @@ public class Maestro {
                 if (usr.type != 0) {
                     this.Usuarios.remove(usr);
                     this.Guardar();
-                }else{
+                } else {
                     //no se puede eliminar al admin
                     return 3;
                 }
@@ -424,6 +446,86 @@ public class Maestro {
             //No existe usuario
             return 1;
         }
+        return 0;
+    }
+
+    public int DLLEliminarFuncionProcedimiento(String funcion) {
+        if (Tools.BaseActual != null) {
+            if (Tools.Usuario.ExisteFuncion(Tools.BaseActual.Nombre, funcion) || Tools.Usuario.ExisteProcedimiento(Tools.BaseActual.Nombre, funcion) || Tools.Usuario.type == 0) {
+                Tools.BaseActual.EliminarFuncionOProcedimiento(funcion);
+                this.Guardar();
+            } else {
+                //no exite o no tiene permisos para editar usuario
+                return 2;
+            }
+
+        } else {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public int DLLEliminarObjeto(String nombre) {
+        if (Tools.BaseActual != null) {
+            if (Tools.Usuario.ExisteObjeto(Tools.BaseActual.Nombre, nombre) || Tools.Usuario.type == 0) {
+                Tools.BaseActual.EliminarObeto(nombre);
+                this.Guardar();
+            } else {
+                //no exite o no tiene permisos para editar usuario
+                return 2;
+            }
+
+        } else {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public int DLLEliminarTabla(String nombre) {
+        if (Tools.BaseActual != null) {
+            if (Tools.Usuario.ExisteTabla(Tools.BaseActual.Nombre, nombre) || Tools.Usuario.type == 0) {
+                Tools.BaseActual.EliminarTabla(nombre);
+                this.Guardar();
+            } else {
+                //no exite o no tiene permisos para editar usuario
+                return 2;
+            }
+
+        } else {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public int DLLEliminarBaseDatos(String nombre) {
+
+        if (Tools.Usuario.type == 0) {
+            int i = 0;
+            boolean encontrado = false;
+
+            for (DataBase b : this.BaseDatos) {
+                if (b.Nombre.equals(nombre)) {
+                    encontrado = true;
+                    break;
+                }
+                i++;
+            }
+
+            if (encontrado) {
+                this.BaseDatos.remove(i);
+                this.Guardar();
+            } else {
+                return 2;
+                //no existe la base de datos
+            }
+        } else {
+            //no exite o no tiene permisos para editar usuario
+            return 1;
+        }
+
         return 0;
     }
 
@@ -525,45 +627,86 @@ public class Maestro {
         return 0;
     }
 
-    public boolean DLLAlterObjetoAgregar(String base, String usuario, String objeto, ArrayList<Parametro> columnas) {
-        DataBase db = ExisteBaseDatos(base);
-        if (db != null) {
-            Objeto o = db.ExisteObjeto(objeto);
-            if (o != null) {
-                Usuario usr = ExisteUsuario(usuario);
-                if (usr != null) {
-                    if (usr.ExisteBaseDatos(base) && usr.ExisteObjeto(base, objeto)) {
-                        if (db.PruebaAlterObjetoAgregar(o.nombre, columnas)) {
-                            for (Parametro nuevapar : columnas) {
-                                o.parametros.add(nuevapar);
+    public int DLLAlterObjetoAgregar(String objeto, ArrayList<Parametro> columnas) {
 
-                                for (Tabla tab : db.Tablas) {
-                                    for (ArrayList<Columna> ce : tab.Filas) {
-                                        for (Columna col : ce) {
-                                            if (col.Tipo == 1) {
-                                                if (col.Campo.equals(objeto)) {
-                                                    col.campoObjeto.Filas.add(new Columna(nuevapar.tipo, ""));
-                                                }
+        if (Tools.BaseActual != null) {
+            Objeto o = Tools.BaseActual.ExisteObjeto(objeto);
+            if (o != null) {
+                if (Tools.Usuario.ExisteBaseDatos(Tools.BaseActual.Nombre) && Tools.Usuario.ExisteObjeto(Tools.BaseActual.Nombre, objeto)) {
+                    int resultado = Tools.BaseActual.PruebaAlterObjetoAgregar(o.nombre, columnas);
+                    if (resultado == 0) {
+                        for (Parametro nuevapar : columnas) {
+                            o.parametros.add(nuevapar);
+
+                            for (Tabla tab : Tools.BaseActual.Tablas) {
+                                for (ArrayList<Columna> ce : tab.Filas) {
+                                    for (Columna col : ce) {
+                                        if (col.Tipo == 1) {
+                                            if (col.Campo.equals(objeto)) {
+                                                col.campoObjeto.Filas.add(new Columna(nuevapar.tipo, ""));
                                             }
                                         }
                                     }
                                 }
                             }
-                            this.Guardar();
-                        } else {
-                            //error 
                         }
+                        this.Guardar();
                     } else {
-                        //no tiene permisos sobre la tabla
+                        return resultado;
                     }
                 } else {
-                    //no existe usuario
+                    //no tiene permisos sobre la tabla
+                    return 3;
                 }
             } else {
                 //ya existe un procedimiento con ese nombre
+                return 2;
             }
+        } else {
+            return 1;
         }
-        return true;
+        return 0;
+    }
+
+    public int DLLAlterObjetoQuitar(String objeto, ArrayList<Parametro> columnas) {
+
+        if (Tools.BaseActual != null) {
+            Objeto o = Tools.BaseActual.ExisteObjeto(objeto);
+            if (o != null) {
+                if (Tools.Usuario.ExisteBaseDatos(Tools.BaseActual.Nombre) && Tools.Usuario.ExisteObjeto(Tools.BaseActual.Nombre, objeto)) {
+                    int resultado = Tools.BaseActual.PruebaAlterObjetoQuitar(o.nombre, columnas);
+                    if (resultado == 0) {
+                        for (Parametro nuevapar : columnas) {
+                            int posremove = o.QuitarObjeto(nuevapar.nombre);
+
+                            for (Tabla tab : Tools.BaseActual.Tablas) {
+                                for (ArrayList<Columna> ce : tab.Filas) {
+                                    for (Columna col : ce) {
+                                        if (col.Tipo == 1) {
+                                            if (col.Campo.equals(objeto)) {
+                                                col.campoObjeto.Filas.remove(posremove);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        this.Guardar();
+                    } else {
+                        return resultado;
+                    }
+                } else {
+                    //no tiene permisos sobre la tabla
+                    return 3;
+                }
+            } else {
+                //ya existe un procedimiento con ese nombre
+                return 2;
+            }
+        } else {
+            return 1;
+        }
+        return 0;
     }
 
     public boolean DSLOtorgarPermisosBaseDatos(String base, String usuario) {

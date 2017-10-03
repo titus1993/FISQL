@@ -78,7 +78,7 @@ public class FLlamadaMetodo {
                 }
             } else {
                 if (actual.Tipo.equals(Constante.TVacio)) {
-                    Tools.InsertarError(Constante.TErrorSemantico, "El metodo " + actual.Nombre + " es de tipo vacio ", Fila, Columna);
+                    
                 } else {
                     Tools.InsertarError(Constante.TErrorSemantico, "El metodo " + actual.Nombre + " no retorno ningun valor ", Fila, Columna);
                 }

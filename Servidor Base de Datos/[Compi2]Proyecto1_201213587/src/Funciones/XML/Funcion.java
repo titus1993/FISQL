@@ -22,6 +22,11 @@ public class Funcion {
         parametros = _parametros;
     }
     
+    public String getCadena(){       
+        
+        return this.src ;
+    }
+    
     public String getXML(){
         String cadena = "";
         

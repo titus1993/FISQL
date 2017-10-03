@@ -50,7 +50,7 @@ public class TablaUsql {
                     boolean estado = true;
                     while (j < m.Parametros.size() && estado) {
                         FNodoExpresion exp = parametros.get(j);                        
-                        if (!(exp.Tipo.equals(m.Parametros.get(j).Tipo) || (exp.Tipo.equals(Constante.TObjeto) && exp.Nombre.equals(m.Parametros.get(j).Tipo)))) {
+                        if (!(exp.Tipo.equals(m.Parametros.get(j).Tipo) || (exp.Tipo.equals(Constante.TObjeto) && exp.Cadena.equals(m.Parametros.get(j).Tipo)))) {
                             estado = false;
                         }
                         j++;

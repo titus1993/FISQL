@@ -30,13 +30,39 @@ public class Tabla {
         this.Autoincrementable = Integer.parseInt(val);
     }
 
+    public void Actualizar(ArrayList<ColumnaEstructura> columnas, ArrayList<FNodoExpresion> valores, int pos) {
+        if (pos <= this.Filas.size()) {
+            int i = 0;
+            for (ColumnaEstructura col : columnas) {
+                int j = 0;
+                for (ColumnaEstructura colpadre : this.Columnas) {
+                    if (col.NombreCampo.equals(colpadre.NombreCampo)) {
+                        if (valores.get(i).Tipo.equals(colpadre.TipoCampo) || valores.get(i).Tipo.equals(Constante.TObjeto) && valores.get(i).Cadena.equals(colpadre.TipoCampo)) {
+                            if (colpadre.TipoCampo.equals(Constante.TEntero) || colpadre.TipoCampo.equals(Constante.TDecimal) || colpadre.TipoCampo.equals(Constante.TBool) || colpadre.TipoCampo.equals(Constante.TCadena)
+                                    || colpadre.TipoCampo.equals(Constante.TDate) || colpadre.TipoCampo.equals(Constante.TDateTime)) {
+
+                                Columna c = this.Filas.get(pos).get(j);
+                                c.Valor = valores.get(i).Cadena;
+                            } else {
+                                Columna c = this.Filas.get(pos).get(j);
+                                c.campoObjeto = valores.get(i).Objeto.GetDatos();
+                            }
+                        }
+                    }
+                    j++;
+                }
+                i++;
+            }
+        }
+    }
+
     public void InsertarEspecial(ArrayList<ColumnaEstructura> columnas, ArrayList<FNodoExpresion> fila) {
-        
+
         ArrayList<Columna> nuevafila = new ArrayList<Columna>();
 
         for (ColumnaEstructura col : this.Columnas) {
             boolean bandera = false;
-            int i =0;
+            int i = 0;
             while (i < columnas.size()) {
                 ColumnaEstructura coltemp = columnas.get(i);
                 if (col.NombreCampo.equals(coltemp.NombreCampo)) {
@@ -95,10 +121,15 @@ public class Tabla {
                 } else {
                     FObjeto a = fila.get(i).Objeto;
                     nuevafila.add(new Columna(col.NombreCampo, a.GetDatos()));
+                    i++;
                 }
             }
         }
         this.Filas.add(nuevafila);
+    }
+
+    public void BorrarFila(int pos) {
+        this.Filas.remove(pos);
     }
 
     public boolean ExistePrimaria() {
@@ -132,6 +163,23 @@ public class Tabla {
             }
         }
         return -1;
+    }
+
+    public String getCadena() {
+        String cadena = "CREAR TABLA " + this.Nombre + "(";
+
+        int i = 0;
+        for (ColumnaEstructura ce : this.Columnas) {
+            if (i == 0) {
+                cadena += ce.getCadena();
+            } else {
+                cadena += ", " + ce.getCadena();
+            }
+            i++;
+        }
+
+        cadena += ");";
+        return cadena;
     }
 
     public String getXML() {

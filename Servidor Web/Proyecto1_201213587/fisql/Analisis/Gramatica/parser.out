@@ -1,0 +1,217 @@
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    USUARIO
+    PASSWORD
+
+Grammar
+
+Rule 0     S' -> plycs
+Rule 1     plycs -> lpaquete
+Rule 2     lpaquete -> paquete lpaquete
+Rule 3     lpaquete -> <empty>
+Rule 4     paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C
+Rule 5     tipo -> USQL
+Rule 6     tipo -> REPORTE
+Rule 7     tipo -> ERROR
+Rule 8     tipo -> EJECUCION
+Rule 9     tipo -> HISTORIAL
+Rule 10    tipo -> BACUP
+Rule 11    tipo -> LOGIN
+
+Terminals, with rules where they appear
+
+BACUP                : 10
+CADENA               : 4
+COR_A                : 4
+COR_C                : 4
+DPTOS                : 4 4
+EJECUCION            : 8
+ERROR                : 7
+HISTORIAL            : 9
+LOGIN                : 11
+MENSAJE              : 4
+PAQUETE              : 4
+PASSWORD             : 
+REPORTE              : 6
+USQL                 : 5
+USUARIO              : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+lpaquete             : 1 2
+paquete              : 2
+plycs                : 0
+tipo                 : 4
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . plycs
+    (1) plycs -> . lpaquete
+    (2) lpaquete -> . paquete lpaquete
+    (3) lpaquete -> .
+    (4) paquete -> . COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C
+
+    $end            reduce using rule 3 (lpaquete -> .)
+    COR_A           shift and go to state 4
+
+    plycs                          shift and go to state 1
+    lpaquete                       shift and go to state 2
+    paquete                        shift and go to state 3
+
+state 1
+
+    (0) S' -> plycs .
+
+
+
+state 2
+
+    (1) plycs -> lpaquete .
+
+    $end            reduce using rule 1 (plycs -> lpaquete .)
+
+
+state 3
+
+    (2) lpaquete -> paquete . lpaquete
+    (2) lpaquete -> . paquete lpaquete
+    (3) lpaquete -> .
+    (4) paquete -> . COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C
+
+    $end            reduce using rule 3 (lpaquete -> .)
+    COR_A           shift and go to state 4
+
+    paquete                        shift and go to state 3
+    lpaquete                       shift and go to state 5
+
+state 4
+
+    (4) paquete -> COR_A . PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C
+
+    PAQUETE         shift and go to state 6
+
+
+state 5
+
+    (2) lpaquete -> paquete lpaquete .
+
+    $end            reduce using rule 2 (lpaquete -> paquete lpaquete .)
+
+
+state 6
+
+    (4) paquete -> COR_A PAQUETE . DPTOS tipo MENSAJE DPTOS CADENA COR_C
+
+    DPTOS           shift and go to state 7
+
+
+state 7
+
+    (4) paquete -> COR_A PAQUETE DPTOS . tipo MENSAJE DPTOS CADENA COR_C
+    (5) tipo -> . USQL
+    (6) tipo -> . REPORTE
+    (7) tipo -> . ERROR
+    (8) tipo -> . EJECUCION
+    (9) tipo -> . HISTORIAL
+    (10) tipo -> . BACUP
+    (11) tipo -> . LOGIN
+
+    USQL            shift and go to state 9
+    REPORTE         shift and go to state 10
+    ERROR           shift and go to state 11
+    EJECUCION       shift and go to state 12
+    HISTORIAL       shift and go to state 13
+    BACUP           shift and go to state 14
+    LOGIN           shift and go to state 15
+
+    tipo                           shift and go to state 8
+
+state 8
+
+    (4) paquete -> COR_A PAQUETE DPTOS tipo . MENSAJE DPTOS CADENA COR_C
+
+    MENSAJE         shift and go to state 16
+
+
+state 9
+
+    (5) tipo -> USQL .
+
+    MENSAJE         reduce using rule 5 (tipo -> USQL .)
+
+
+state 10
+
+    (6) tipo -> REPORTE .
+
+    MENSAJE         reduce using rule 6 (tipo -> REPORTE .)
+
+
+state 11
+
+    (7) tipo -> ERROR .
+
+    MENSAJE         reduce using rule 7 (tipo -> ERROR .)
+
+
+state 12
+
+    (8) tipo -> EJECUCION .
+
+    MENSAJE         reduce using rule 8 (tipo -> EJECUCION .)
+
+
+state 13
+
+    (9) tipo -> HISTORIAL .
+
+    MENSAJE         reduce using rule 9 (tipo -> HISTORIAL .)
+
+
+state 14
+
+    (10) tipo -> BACUP .
+
+    MENSAJE         reduce using rule 10 (tipo -> BACUP .)
+
+
+state 15
+
+    (11) tipo -> LOGIN .
+
+    MENSAJE         reduce using rule 11 (tipo -> LOGIN .)
+
+
+state 16
+
+    (4) paquete -> COR_A PAQUETE DPTOS tipo MENSAJE . DPTOS CADENA COR_C
+
+    DPTOS           shift and go to state 17
+
+
+state 17
+
+    (4) paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS . CADENA COR_C
+
+    CADENA          shift and go to state 18
+
+
+state 18
+
+    (4) paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA . COR_C
+
+    COR_C           shift and go to state 19
+
+
+state 19
+
+    (4) paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C .
+
+    COR_A           reduce using rule 4 (paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C .)
+    $end            reduce using rule 4 (paquete -> COR_A PAQUETE DPTOS tipo MENSAJE DPTOS CADENA COR_C .)
+

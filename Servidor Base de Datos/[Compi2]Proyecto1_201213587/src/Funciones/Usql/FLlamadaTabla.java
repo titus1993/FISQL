@@ -13,9 +13,9 @@ import Static.Tools;
  * @author Titus
  */
 public class FLlamadaTabla {
-    String Tabla, Atributo, Objeto;
-    int Fila, Columna;
-    Ambito Ambito;
+    public String Tabla, Atributo, Objeto;
+    public int Fila, Columna;
+    public Ambito Ambito;
     
     public FLlamadaTabla(String Tabla, String Objeto, String Atributo, int Fila, int Columna){
         this.Tabla = Tabla;
@@ -30,5 +30,24 @@ public class FLlamadaTabla {
         FNodoExpresion va = Tools.TablaPivote.getValor(this.Tabla, this.Objeto, this.Atributo);
         
         return va;
+    }
+    
+    
+    public String getCadena(){
+        String cadena = "";
+        
+        if(!this.Tabla.equals("")){
+            cadena += this.Tabla + ".";
+        }
+        
+        if(!this.Objeto.equals("")){
+            cadena += this.Objeto + ".";
+        }
+        
+        if(!this.Atributo.equals("")){
+            cadena += this.Atributo;
+        }
+        
+        return cadena;
     }
 }

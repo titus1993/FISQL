@@ -75,7 +75,7 @@ public class FInsertarNormal {
             if (i == 0) {
                 cadena += n.getCadena();
             } else {
-                cadena = ", " + n.getCadena();
+                cadena += ", " + n.getCadena();
             }
             i++;
         }

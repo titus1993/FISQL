@@ -143,7 +143,7 @@ public class FMetodo {
                 FNodoExpresion resultadoparametro = llamada.Parametros.get(cont).ResolverExpresion();
 
                 if (Tools.ContarErrores()) {
-                    if (this.Parametros.get(cont).Tipo.equals(resultadoparametro.Tipo) || (resultadoparametro.Tipo.equals(Constante.TObjeto) && this.Parametros.get(cont).Tipo.equals(resultadoparametro.Nombre))) {
+                    if (this.Parametros.get(cont).Tipo.equals(resultadoparametro.Tipo) || (resultadoparametro.Tipo.equals(Constante.TObjeto) && this.Parametros.get(cont).Tipo.equals(resultadoparametro.Cadena))) {
                         ///////////////////////
                         FDeclaracion fd = (FDeclaracion) this.Parametros.get(cont).Valor;
                         //le asignamos el valor a la declaracion
@@ -258,8 +258,32 @@ public class FMetodo {
                             EjecutarAlterarUsuario(instruccion);
                             break;
 
+                        case Constante.TAlterarObjeto:
+                            EjecutarAlterarObjeto(instruccion);
+                            break;
+
                         case Constante.TEliminarUsuario:
                             EjecutarEliminarUsuario(instruccion);
+                            break;
+
+                        case Constante.TEliminarTabla:
+                            EjecutarEliminarTabla(instruccion);
+                            break;
+
+                        case Constante.TEliminarObjeto:
+                            EjecutarEliminarObjeto(instruccion);
+                            break;
+
+                        case Constante.TEliminarProcedimiento:
+                            EjecutarEliminarProcedimiento(instruccion);
+                            break;
+
+                        case Constante.TEliminarFuncion:
+                            EjecutarEliminarFuncion(instruccion);
+                            break;
+
+                        case Constante.TEliminarBaseDatos:
+                            EjecutarEliminarBaseDatos(instruccion);
                             break;
 
                         case Constante.TInsertarNormal:
@@ -269,9 +293,17 @@ public class FMetodo {
                         case Constante.TInsertarEspecial:
                             EjecutarInsertarEspecial(instruccion);
                             break;
-                            
+
                         case Constante.TSeleccionar:
                             EjecutarSeleccionar(instruccion);
+                            break;
+
+                        case Constante.TActualizar:
+                            EjecutarActualizar(instruccion);
+                            break;
+                            
+                        case Constante.TBorrar:
+                            EjecutarBorrar(instruccion);
                             break;
 
                         default:
@@ -281,8 +313,18 @@ public class FMetodo {
             }
         }
     }
+
+    public void EjecutarBorrar(Simbolo instruccion){
+        FBorrar b = (FBorrar)instruccion.Valor;
+        b.Ejecutar();
+    }
     
-    public void EjecutarSeleccionar(Simbolo instruccion){
+    public void EjecutarActualizar(Simbolo instruccion) {
+        FActualizar a = (FActualizar) instruccion.Valor;
+        a.Ejecutar();
+    }
+
+    public void EjecutarSeleccionar(Simbolo instruccion) {
         FSeleccionar se = (FSeleccionar) instruccion.Valor;
         se.Ejecutar();
     }
@@ -302,6 +344,31 @@ public class FMetodo {
         usr.Ejecutar();
     }
 
+    public void EjecutarEliminarTabla(Simbolo instruccion) {
+        FEliminarTabla usr = (FEliminarTabla) instruccion.Valor;
+        usr.Ejecutar();
+    }
+
+    public void EjecutarEliminarObjeto(Simbolo instruccion) {
+        FEliminarObjeto usr = (FEliminarObjeto) instruccion.Valor;
+        usr.Ejecutar();
+    }
+
+    public void EjecutarEliminarFuncion(Simbolo instruccion) {
+        FEliminarFuncion usr = (FEliminarFuncion) instruccion.Valor;
+        usr.Ejecutar();
+    }
+
+    public void EjecutarEliminarProcedimiento(Simbolo instruccion) {
+        FEliminarProcedimiento usr = (FEliminarProcedimiento) instruccion.Valor;
+        usr.Ejecutar();
+    }
+
+    public void EjecutarEliminarBaseDatos(Simbolo instruccion) {
+        FEliminarBaseDatos usr = (FEliminarBaseDatos) instruccion.Valor;
+        usr.Ejecutar();
+    }
+
     public void EjecutarAlterarUsuario(Simbolo instruccion) {
         FAlterarUsuario usr = (FAlterarUsuario) instruccion.Valor;
         usr.Ejecutar();
@@ -310,6 +377,11 @@ public class FMetodo {
     public void EjecutarAlterarTabla(Simbolo instruccion) {
         FAlterarTabla at = (FAlterarTabla) instruccion.Valor;
         at.Ejecutar();
+    }
+
+    public void EjecutarAlterarObjeto(Simbolo instruccion) {
+        FAlterarObjeto ao = (FAlterarObjeto) instruccion.Valor;
+        ao.Ejecutar();
     }
 
     public void EjecutarLlamadaMetodo(Simbolo instruccion) {
@@ -462,8 +534,31 @@ public class FMetodo {
                         cadena += GetCadenaAlterarUsuario(instruccion);
                         break;
 
+                    case Constante.TAlterarObjeto:
+                        cadena += GetCadenaAlterarObjeto(instruccion);
+                        break;
+
                     case Constante.TEliminarUsuario:
                         cadena += GetCadenaEliminarUsuario(instruccion);
+                        break;
+
+                    case Constante.TEliminarTabla:
+                        cadena += GetCadenaEliminarTabla(instruccion);
+                        break;
+                    case Constante.TEliminarObjeto:
+                        cadena += GetCadenaEliminarObjeto(instruccion);
+                        break;
+
+                    case Constante.TEliminarProcedimiento:
+                        cadena += GetCadenaEliminarProcedimiento(instruccion);
+                        break;
+
+                    case Constante.TEliminarFuncion:
+                        cadena += GetCadenaEliminarFuncion(instruccion);
+                        break;
+
+                    case Constante.TEliminarBaseDatos:
+                        cadena += GetCadenaEliminarBaseDatos(instruccion);
                         break;
 
                     case Constante.TInsertarNormal:
@@ -473,17 +568,44 @@ public class FMetodo {
                     case Constante.TInsertarEspecial:
                         cadena += GetCadenaInsertarEspecial(instruccion);
                         break;
-                        
+
                     case Constante.TSeleccionar:
                         cadena += GetCadenaSeleccionar(instruccion);
                         break;
+                        
+                    case Constante.TLlamadaMetodo:
+                        cadena += GetCadenaLlamadaMetodo(instruccion);
+                        break;
 
+                    case Constante.TActualizar:
+                        cadena += GetCadenaActualizar(instruccion);
+                        break;
+                        
+                    case Constante.TBorrar:
+                        cadena += GetCadenaBorrar(instruccion);
+                        break;
+                        
                     default:
                         break;
                 }
             }
         }
         return cadena;
+    }
+    
+    public String GetCadenaBorrar(Simbolo instruccion){
+        FBorrar b = (FBorrar)instruccion.Valor;
+        return b.getCadena() + ";\n";
+    }
+    
+    public String GetCadenaActualizar(Simbolo instruccion){
+        FActualizar fa = (FActualizar)instruccion.Valor;
+        return fa.getCadena() + ";\n";
+    }
+    
+    public String GetCadenaLlamadaMetodo(Simbolo instruccion){
+        FLlamadaMetodo lm = (FLlamadaMetodo)instruccion.Valor;
+        return lm.getCadena() + ";\n";
     }
 
     public String GetCadenaAlterarTabla(Simbolo instruccion) {
@@ -570,8 +692,38 @@ public class FMetodo {
         return usr.getCadena() + ";\n";
     }
 
+    public String GetCadenaAlterarObjeto(Simbolo instruccion) {
+        FAlterarObjeto usr = (FAlterarObjeto) instruccion.Valor;
+        return usr.getCadena();
+    }
+
     public String GetCadenaEliminarUsuario(Simbolo instruccion) {
         FEliminarUsuario usr = (FEliminarUsuario) instruccion.Valor;
+        return usr.getCadena() + ";\n";
+    }
+
+    public String GetCadenaEliminarTabla(Simbolo instruccion) {
+        FEliminarTabla usr = (FEliminarTabla) instruccion.Valor;
+        return usr.getCadena() + ";\n";
+    }
+
+    public String GetCadenaEliminarObjeto(Simbolo instruccion) {
+        FEliminarObjeto usr = (FEliminarObjeto) instruccion.Valor;
+        return usr.getCadena() + ";\n";
+    }
+
+    public String GetCadenaEliminarFuncion(Simbolo instruccion) {
+        FEliminarFuncion usr = (FEliminarFuncion) instruccion.Valor;
+        return usr.getCadena() + ";\n";
+    }
+
+    public String GetCadenaEliminarProcedimiento(Simbolo instruccion) {
+        FEliminarProcedimiento usr = (FEliminarProcedimiento) instruccion.Valor;
+        return usr.getCadena() + ";\n";
+    }
+
+    public String GetCadenaEliminarBaseDatos(Simbolo instruccion) {
+        FEliminarBaseDatos usr = (FEliminarBaseDatos) instruccion.Valor;
         return usr.getCadena() + ";\n";
     }
 
@@ -584,9 +736,10 @@ public class FMetodo {
         FInsertarEspecial in = (FInsertarEspecial) instruccion.Valor;
         return in.getCadena() + ";\n";
     }
-    
-    public String GetCadenaSeleccionar(Simbolo instruccion){
-        return "";
+
+    public String GetCadenaSeleccionar(Simbolo instruccion) {
+        FSeleccionar fs = (FSeleccionar)instruccion.Valor;
+        return fs.getCadena() + ";\n";
     }
 
     public void SacarAmbito(ArrayList<Simbolo> ambito) {

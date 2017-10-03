@@ -86,10 +86,21 @@ public class Constante {
     public static final String TAgregar = "agregar";
     public static final String TQuitar = "quitar";
     public static final String TAlterarUsuario = "alterar usuario";
+    public static final String TAlterarObjeto = "alterar objeto";
+    public static final String TEliminarBaseDatos = "eliminar base";
     public static final String TEliminarUsuario = "eliminar usuario";
+    public static final String TEliminarTabla = "eliminar tabla";
+    public static final String TEliminarObjeto = "eliminar objeto";
+    public static final String TEliminarProcedimiento = "eliminar procedimiento";
+    public static final String TEliminarFuncion = "eliminar funcion";
     public static final String TInsertarNormal = "insertar normal";
     public static final String TInsertarEspecial = "insertar especial";
     public static final String TSeleccionar = "seleccionar";
     public static final String TAsc = "asc";
     public static final String TDesc = "desc";
+    public static final String TActualizar = "actualizar";
+    public static final String TFecha = "fecha";
+    public static final String TFechaHora = "fecha hora";
+    public static final String TContar = "contar";
+    public static final String TBorrar = "borrar";
 }

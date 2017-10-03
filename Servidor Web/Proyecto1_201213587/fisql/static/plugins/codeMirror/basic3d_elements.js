@@ -9,10 +9,10 @@
         // Rules are matched in the order in which they appear, so there is
         // no ambiguity between this one and the one above
         {
-            regex: /(?:crear|usar|base_datos|tabla|procedimiento|funcion|objeto|eliminar|insertar|en|autoincrementable|llave_primaria|llave_foranea|nulo|no|bool|integer|double|text|date|datetime|num|str|element|array|of|create|if|then|else|switch|case|default|break|continue|return|while|do|repeat|until|for|loop|count|whilex|getBool|getNum|outStr|outNum|inStr|inNum|void|getRandom|getLenght|throws)\b/,
+            regex: /(?:crear|otorgar|permisos|denegar|usar|alterar|agregar|quitar|base_datos|tabla|procedimiento|funcion|objeto|usuario|actualizar|ordenar_por|asc|desc|borrar|seleccionar|donde|eliminar|insertar|en|valores|bool|integer|double|text|date|datetime|declarar|si|sino|selecciona|caso|defecto|para|mientras|detener|imprimir|fecha|fecha_hora|contar|backup|usqldump|completo|restaurar|retorno)\b/,
             token: "keyword"
         },
-        { regex: /verdadero|falso|NULL|NullPointerException|MissingReturnStatement|ArithmeticException|StackOverFlowException|HeapOverFlowException|PoolOverFlowException/, token: "atom" },
+        { regex: /verdadero|falso|nulo|no nulo|llave_primaria|llave_foranea|unico|autoincrementable/, token: "atom" },
         {
             regex: /0x[a-f\d]+|(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
             token: "number"

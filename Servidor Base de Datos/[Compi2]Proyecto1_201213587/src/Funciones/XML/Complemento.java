@@ -16,7 +16,7 @@ public class Complemento {
 
     public String getCadena() {
         String cadena = "";
-        if (isNulo) {
+        if (!isNulo) {
             cadena += " NULO";
         } else {
             cadena += " NO NULO";

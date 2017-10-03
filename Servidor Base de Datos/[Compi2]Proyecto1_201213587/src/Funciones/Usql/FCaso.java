@@ -6,29 +6,38 @@
 package Funciones.Usql;
 
 import EjecucionUsql.*;
+
 /**
  *
  * @author Titus
  */
 public class FCaso {
+
     public FNodoExpresion Valor;
     public Ambito Ambito;
-    
-    public FCaso(FNodoExpresion valor, Ambito ambito){
+
+    public FCaso(FNodoExpresion valor, Ambito ambito) {
         this.Valor = valor;
         this.Ambito = ambito;
     }
-    
-    
-    public String getCadena(){
+
+    public String getCadena() {
         String cadena = "";
-        
-        cadena += "CASO " + Valor.getCadena() + ":\n";
-        
-        FMetodo m = new FMetodo();
-        
-        cadena += m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
-        
+
+        if (Valor != null) {
+            cadena += "CASO " + Valor.getCadena() + ":\n";
+
+            FMetodo m = new FMetodo();
+
+            cadena += m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
+
+        }else{
+            
+            FMetodo m = new FMetodo();
+            
+            cadena += m.getCadenaCuerpo(Ambito.TablaSimbolo).replaceAll("\n", "\n\t");
+        }
+
         return cadena;
     }
 }

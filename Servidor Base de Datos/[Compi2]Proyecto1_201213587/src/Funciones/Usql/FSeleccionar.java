@@ -55,7 +55,7 @@ public class FSeleccionar {
                         Selects.IngresarNuevaTabla(tabla);
                         Resultado.IngresarNuevaTabla(tabla);
                     } else {
-                        //error no existe la tabla
+                        Tools.InsertarError(Constante.TErrorSemantico, "La tabla " + ntabla.NombreCampo + " no existe en la base de datos " + Tools.BaseActual.Nombre, Fila, Columna);
                     }
 
                 }
@@ -64,8 +64,7 @@ public class FSeleccionar {
                     Tools.TablaPivote = Selects;
                     Resultado.LimpiarDatos();
                     Tools.TablaResultado = Resultado;
-                    
-                    
+
                     for (int i = 0; i < Selects.getSize(); i++) {
                         FNodoExpresion estado = this.Condicion.ResolverExpresion();
                         if (estado.Tipo.equals(Constante.TBool)) {
@@ -78,10 +77,184 @@ public class FSeleccionar {
                         Tools.TablaPivote.pos++;
                     }
                     Tools.TablaPivote = null;
+                    //String cadena = Tools.TablaResultado.GetHtml();
+                    if (Tools.ContarErrores()) {
+                        Tools.ResultadosRetorno.add(Tools.TablaResultado);
+                    }   
+                }
+            }else{
+                for (ColumnaEstructura ntabla : From) {
+                    Tabla tabla = Tools.BaseActual.ExisteTabla(ntabla.NombreCampo);
+                    if (tabla != null) {
+                        Selects.IngresarNuevaTabla(tabla);
+                        Resultado.IngresarNuevaTabla(tabla);
+                    } else {
+                        Tools.InsertarError(Constante.TErrorSemantico, "La tabla " + ntabla.NombreCampo + " no existe en la base de datos " + Tools.BaseActual.Nombre, Fila, Columna);
+                    }
+
+                }
+
+                if (Tools.ContarErrores()) {
+                    Tools.TablaPivote = Selects;
+                    Resultado.LimpiarDatos();
+                    Tools.TablaResultado = Resultado;
+
+                    for (int i = 0; i < Selects.getSize(); i++) {
+                        FNodoExpresion estado = this.Condicion.ResolverExpresion();
+                        if (estado.Tipo.equals(Constante.TBool)) {
+                            if (estado.Bool) {
+                                Tools.TablaPivote.setResultado();
+                            }
+                        } else {
+                            //error de tipo bool
+                        }
+                        Tools.TablaPivote.pos++;
+                    }
+                    
+                    Tools.TablaPivote = null;
+                    //String cadena = Tools.TablaResultado.GetHtml();
+                    if (Tools.ContarErrores()) {
+                        Tools.TablaResultado.FiltrarDatos(Select);
+                        Tools.ResultadosRetorno.add(Tools.TablaResultado);
+                    }   
                 }
             }
         } else {
-            //error no existe bd
+            Tools.InsertarError(Constante.TErrorSemantico, "No ha seleccionado una base de datos.", Fila, Columna);
         }
+    }
+
+    public FNodoExpresion EjecutarContar() {
+        //llenar tablas
+        if (Tools.BaseActual != null) {
+            TablaSeleccionar Selects = new TablaSeleccionar();
+            TablaSeleccionar Resultado = new TablaSeleccionar();
+
+            if (Tipo.equals(Constante.TPor)) {
+                //buscar las tablas e ingresarlas a la estructura temporal
+                for (ColumnaEstructura ntabla : From) {
+                    Tabla tabla = Tools.BaseActual.ExisteTabla(ntabla.NombreCampo);
+                    if (tabla != null) {
+                        Selects.IngresarNuevaTabla(tabla);
+                        Resultado.IngresarNuevaTabla(tabla);
+                    } else {
+                        Tools.InsertarError(Constante.TErrorSemantico, "La tabla " + ntabla.NombreCampo + " no existe en la base de datos " + Tools.BaseActual.Nombre, Fila, Columna);
+                    }
+
+                }
+
+                if (Tools.ContarErrores()) {
+                    Tools.TablaPivote = Selects;
+                    Resultado.LimpiarDatos();
+                    Tools.TablaResultado = Resultado;
+
+                    for (int i = 0; i < Selects.getSize(); i++) {
+                        FNodoExpresion estado = this.Condicion.ResolverExpresion();
+                        if (estado.Tipo.equals(Constante.TBool)) {
+                            if (estado.Bool) {
+                                Tools.TablaPivote.setResultado();
+                            }
+                        } else {
+                            //error de tipo bool
+                        }
+                        Tools.TablaPivote.pos++;
+                    }
+                    Tools.TablaPivote = null;
+                    //String cadena = Tools.TablaResultado.GetHtml();
+                    if (Tools.ContarErrores()) {
+                        return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, this.Fila, this.Columna, Tools.TablaResultado.getSize());
+                    }   
+                }
+            }else{
+                for (ColumnaEstructura ntabla : From) {
+                    Tabla tabla = Tools.BaseActual.ExisteTabla(ntabla.NombreCampo);
+                    if (tabla != null) {
+                        Selects.IngresarNuevaTabla(tabla);
+                        Resultado.IngresarNuevaTabla(tabla);
+                    } else {
+                        Tools.InsertarError(Constante.TErrorSemantico, "La tabla " + ntabla.NombreCampo + " no existe en la base de datos " + Tools.BaseActual.Nombre, Fila, Columna);
+                    }
+
+                }
+
+                if (Tools.ContarErrores()) {
+                    Tools.TablaPivote = Selects;
+                    Resultado.LimpiarDatos();
+                    Tools.TablaResultado = Resultado;
+
+                    for (int i = 0; i < Selects.getSize(); i++) {
+                        FNodoExpresion estado = this.Condicion.ResolverExpresion();
+                        if (estado.Tipo.equals(Constante.TBool)) {
+                            if (estado.Bool) {
+                                Tools.TablaPivote.setResultado();
+                            }
+                        } else {
+                            //error de tipo bool
+                        }
+                        Tools.TablaPivote.pos++;
+                    }
+                    
+                    Tools.TablaPivote = null;
+                    //String cadena = Tools.TablaResultado.GetHtml();
+                    if (Tools.ContarErrores()) {
+                        Tools.TablaResultado.FiltrarDatos(Select);
+                        return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, this.Fila, this.Columna, Tools.TablaResultado.getSize());
+                    }   
+                }
+            }
+        } else {
+            Tools.InsertarError(Constante.TErrorSemantico, "No ha seleccionado una base de datos.", Fila, Columna);
+        }
+        return new FNodoExpresion(null, null, Constante.TEntero, Constante.TEntero, this.Fila, this.Columna, 0);
+    }
+    
+    public String getCadena() {
+        String cadena = "";
+
+        if (this.Tipo.equals(Constante.TPor)) {
+            cadena += "SELECCIONAR * DE ";
+
+            int i = 0;
+            for (ColumnaEstructura n : this.From) {
+                if (i == 0) {
+                    cadena += n.getCadenaInsertar();
+                } else {
+                    cadena += ", " + n.getCadenaInsertar();
+                }
+                i++;
+            }
+        } else {
+            cadena += "SELECCIONAR ";
+
+            int j = 0;
+            
+            for(FLlamadaTabla t : this.Select){
+                if (j == 0) {
+                    cadena += t.getCadena();
+                } else {
+                    cadena += ", " + t.getCadena();
+                }
+                j++;
+            }
+            
+            cadena += " DE ";
+            int i = 0;
+            for (ColumnaEstructura n : this.From) {
+                if (i == 0) {
+                    cadena += n.getCadenaInsertar();
+                } else {
+                    cadena += ", " + n.getCadenaInsertar();
+                }
+                i++;
+            }
+        }
+
+        cadena += " DONDE " + this.Condicion.getCadena();
+
+        if (this.Ordenar != null) {
+
+        }
+
+        return cadena;
     }
 }

@@ -44,6 +44,41 @@ public class DataBase {
         RutaObjetos = rutaobjeto;
         Tablas = tablas;
     }
+    
+    
+    public void EliminarFuncionOProcedimiento(String nombre){
+        for(Funcion f : Funciones){
+            if(f.nombre.equals(nombre)){
+                Funciones.remove(f);
+                break;
+            }
+        }
+        
+        for(Procedimiento p : Procedimientos){
+            if(p.nombre.equals(nombre)){
+                Procedimientos.remove(p);
+                break;
+            }
+        }
+    }
+    
+    public void EliminarObeto(String nombre){
+        for(Objeto o : Objetos){
+            if(o.nombre.equals(nombre)){
+                Objetos.remove(o);
+                break;
+            }
+        }
+    }
+    
+    public void EliminarTabla(String nombre){
+        for(Tabla t : Tablas){
+            if(t.Nombre.equals(nombre)){
+                Tablas.remove(t);
+                break;
+            }
+        }
+    }
 
     public int PruebaInsertarTablaEspecial(String nombretabla, ArrayList<ColumnaEstructura> Columnas, ArrayList<FNodoExpresion> fila) {
         Tabla tabla = ExisteTabla(nombretabla);
@@ -54,7 +89,7 @@ public class DataBase {
             while (i < fila.size() && !bandera) {
                 ColumnaEstructura colInsertar = Columnas.get(i);
                 FNodoExpresion val = fila.get(i);
-                if (colTabla.NombreCampo.equals(colInsertar.NombreCampo)) {
+                if (colTabla.NombreCampo.toLowerCase().equals(colInsertar.NombreCampo.toLowerCase())) {
                     bandera = true;
 
                     if (!(val.Tipo.equals(colTabla.TipoCampo) || val.Cadena.equals(colTabla.TipoCampo))) {
@@ -99,7 +134,7 @@ public class DataBase {
                 } else {
                     boolean bandera = false;
 
-                    if ((valor.Tipo.equals(Constante.TCadena) && valor.Cadena.equals("") && columna.Complementos.isNulo)) {
+                    if ((valor.Tipo.equals(Constante.TCadena) && valor.Cadena.equals("") && !columna.Complementos.isNulo)) {
                         j++;
                         i++;
                         bandera = true;
@@ -143,7 +178,7 @@ public class DataBase {
 
             //comprobamos que no se repita el nombre
             for (ColumnaEstructura col2 : tabla.Columnas) {
-                if (col.NombreCampo.equals(col2.NombreCampo)) {
+                if (col.NombreCampo.toLowerCase().equals(col2.NombreCampo.toLowerCase())) {
                     //Error ya existe el nombre
                     return 5;
                 }
@@ -180,7 +215,7 @@ public class DataBase {
         for (ColumnaEstructura col : nuevas) {
             //comprobamos que no se quiera eliminar una llave primaria
             for (ColumnaEstructura ce : tabla.Columnas) {
-                if (ce.NombreCampo.equals(col.NombreCampo)) {
+                if (ce.NombreCampo.toLowerCase().equals(col.NombreCampo.toLowerCase())) {
                     if (ce.Complementos.isPrimary) {
                         return 4;
                     }
@@ -191,7 +226,7 @@ public class DataBase {
         return 0;
     }
 
-    public boolean PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas) {
+    public int PruebaAlterObjetoAgregar(String nombreobjeto, ArrayList<Parametro> nuevas) {
         Objeto objeto = ExisteObjeto(nombreobjeto);
 
         for (Parametro par : nuevas) {
@@ -200,16 +235,32 @@ public class DataBase {
             for (Parametro par2 : objeto.parametros) {
                 if (par.nombre.equals(par2.nombre)) {
                     //Error ya existe el nombre
-                    return false;
+                    return 4;
                 }
             }
         }
-        return true;
+        return 0;
+    }
+    
+    public int PruebaAlterObjetoQuitar(String nombreobjeto, ArrayList<Parametro> nuevas) {
+        Objeto objeto = ExisteObjeto(nombreobjeto);
+
+        for (Parametro par : nuevas) {
+
+            //comprobamos que no se repita el nombre
+            for (Parametro par2 : objeto.parametros) {
+                if (par.nombre.equals(par2.nombre)) {
+                    //ya existe el nombre
+                    return 0;
+                }
+            }
+        }
+        return 4;
     }
 
     public Tabla ExisteTabla(String nombre) {
         for (Tabla tab : Tablas) {
-            if (tab.Nombre.equals(nombre)) {
+            if (tab.Nombre.toLowerCase().equals(nombre.toLowerCase())) {
                 return tab;
             }
         }
@@ -218,7 +269,7 @@ public class DataBase {
 
     public Procedimiento ExisteProcedimiento(String nombre) {
         for (Procedimiento proc : Procedimientos) {
-            if (proc.nombre.equals(nombre)) {
+            if (proc.nombre.toLowerCase().equals(nombre.toLowerCase())) {
                 return proc;
             }
         }
@@ -227,7 +278,7 @@ public class DataBase {
 
     public Funcion ExisteFuncion(String nombre) {
         for (Funcion fun : Funciones) {
-            if (fun.nombre.equals(nombre)) {
+            if (fun.nombre.toLowerCase().equals(nombre.toLowerCase())) {
                 return fun;
             }
         }
@@ -236,7 +287,7 @@ public class DataBase {
 
     public Objeto ExisteObjeto(String nombre) {
         for (Objeto obj : Objetos) {
-            if (obj.nombre.equals(nombre)) {
+            if (obj.nombre.toLowerCase().equals(nombre.toLowerCase())) {
                 return obj;
             }
         }

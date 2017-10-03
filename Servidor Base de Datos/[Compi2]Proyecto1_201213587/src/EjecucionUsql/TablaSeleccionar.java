@@ -183,6 +183,19 @@ public class TablaSeleccionar {
 
     }
 
+    public void FiltrarDatos(ArrayList<FLlamadaTabla> datos){
+        ArrayList<ColumnaSeleccionar> temp = new ArrayList<ColumnaSeleccionar>();
+        for(FLlamadaTabla t : datos){
+            for(ColumnaSeleccionar c : this.Tabla){
+                if(t.Objeto.equals(c.Objeto) && (t.Tabla.equals(c.Tabla) || t.Tabla.equals("")) && t.Atributo.equals(c.Atributo)){
+                    temp.add(c);
+                }
+            }
+        }
+        
+        this.Tabla = temp;        
+    }
+    
     public FNodoExpresion getValor(String Tabla, String Objeto, String Atributo) {
         if (!Tabla.equals("") && Objeto.equals("") && Atributo.equals("")) {
 
@@ -190,15 +203,15 @@ public class TablaSeleccionar {
             for (ColumnaSeleccionar col : this.Tabla) {
                 if (col.Tabla.equals(Tabla) && col.Atributo.equals(Atributo)) {
                     return col.Columnas.get(pos);
-                } else if (col.Objeto.equals(Objeto)) {
+                } else if (col.Objeto.equals(Objeto) && !col.Objeto.equals("")) {
                     return col.Columnas.get(pos);
                 }
             }
         } else if (!Atributo.equals("")) {
             for (ColumnaSeleccionar col : this.Tabla) {
                 if (col.Atributo.equals(Atributo)) {
-                    return col.Columnas.get(pos);
-                } else if (col.Objeto.equals(Objeto)) {
+                        return col.Columnas.get(pos);
+                } else if (col.Objeto.equals(Objeto) && !col.Objeto.equals("")) {
                     return col.Columnas.get(pos);
                 }
             }
@@ -255,5 +268,42 @@ public class TablaSeleccionar {
             FNodoExpresion result = this.Tabla.get(i).Columnas.get(pos);
             Tools.TablaResultado.Tabla.get(i).Columnas.add(result);
         }
+    }
+    
+    
+    public String GetHtml(){
+        String cadena = "";
+        cadena += "<thead>\n";
+        String encabezado = "\t<tr>\n";
+        for(ColumnaSeleccionar col : this.Tabla){
+            encabezado += "\t\t<th>" + col.Tabla + "." + col.Atributo + "</th>\n";
+        }        
+        encabezado += "\t</tr>\n";
+        
+        cadena += encabezado;
+        
+        cadena += "</thead>\n";
+        
+        cadena += "<tbody>\n";
+        
+        
+        
+        for(int i = 0; i < this.Tabla.get(0).Columnas.size(); i++){
+            cadena += "\t<tr>\n";
+            for(ColumnaSeleccionar col : this.Tabla){
+                cadena += "\t\t<th>"+col.Columnas.get(i).getCadena() + "</th>\n";
+            }
+            cadena += "\t</tr>\n";
+        }
+        
+        cadena += "</tbody>\n";
+        
+        cadena += "<tfoot>\n";
+        
+        cadena += encabezado;
+        
+        cadena+= "</tfoot>\n";
+        
+        return cadena;
     }
 }

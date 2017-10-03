@@ -89,121 +89,123 @@ public interface usqlGrammarConstants {
   /** RegularExpression Id. */
   int T_NULO = 39;
   /** RegularExpression Id. */
-  int T_NO_NULO = 40;
+  int T_UNICO = 40;
   /** RegularExpression Id. */
-  int T_AUTOINCREMETABLE = 41;
+  int T_NO_NULO = 41;
   /** RegularExpression Id. */
-  int T_LLAVE_PRIMARIA = 42;
+  int T_AUTOINCREMETABLE = 42;
   /** RegularExpression Id. */
-  int T_LLAVE_FORANEA = 43;
+  int T_LLAVE_PRIMARIA = 43;
   /** RegularExpression Id. */
-  int T_OBJETO = 44;
+  int T_LLAVE_FORANEA = 44;
   /** RegularExpression Id. */
-  int T_PROCEDIMIENTO = 45;
+  int T_OBJETO = 45;
   /** RegularExpression Id. */
-  int T_FUNCION = 46;
+  int T_PROCEDIMIENTO = 46;
   /** RegularExpression Id. */
-  int T_RETORNO = 47;
+  int T_FUNCION = 47;
   /** RegularExpression Id. */
-  int T_USUARIO = 48;
+  int T_RETORNO = 48;
   /** RegularExpression Id. */
-  int T_COLOCAR = 49;
+  int T_USUARIO = 49;
   /** RegularExpression Id. */
-  int T_PASSWORD = 50;
+  int T_COLOCAR = 50;
   /** RegularExpression Id. */
-  int T_USAR = 51;
+  int T_PASSWORD = 51;
   /** RegularExpression Id. */
-  int T_ALTERAR = 52;
+  int T_USAR = 52;
   /** RegularExpression Id. */
-  int T_AGREGAR = 53;
+  int T_ALTERAR = 53;
   /** RegularExpression Id. */
-  int T_QUITAR = 54;
+  int T_AGREGAR = 54;
   /** RegularExpression Id. */
-  int T_CAMBIAR = 55;
+  int T_QUITAR = 55;
   /** RegularExpression Id. */
-  int T_ELIMINAR = 56;
+  int T_CAMBIAR = 56;
   /** RegularExpression Id. */
-  int T_INSERTAR = 57;
+  int T_ELIMINAR = 57;
   /** RegularExpression Id. */
-  int T_VALORES = 58;
+  int T_INSERTAR = 58;
   /** RegularExpression Id. */
-  int T_ACTUALIZAR = 59;
+  int T_VALORES = 59;
   /** RegularExpression Id. */
-  int T_DONDE = 60;
+  int T_ACTUALIZAR = 60;
   /** RegularExpression Id. */
-  int T_BORRAR = 61;
+  int T_DONDE = 61;
   /** RegularExpression Id. */
-  int T_SELECCIONAR = 62;
+  int T_BORRAR = 62;
   /** RegularExpression Id. */
-  int T_DE = 63;
+  int T_SELECCIONAR = 63;
   /** RegularExpression Id. */
-  int T_ORDENAR = 64;
+  int T_DE = 64;
   /** RegularExpression Id. */
-  int T_ASC = 65;
+  int T_ORDENAR = 65;
   /** RegularExpression Id. */
-  int T_DESC = 66;
+  int T_ASC = 66;
   /** RegularExpression Id. */
-  int T_OTORGAR = 67;
+  int T_DESC = 67;
   /** RegularExpression Id. */
-  int T_DENEGAR = 68;
+  int T_OTORGAR = 68;
   /** RegularExpression Id. */
-  int T_DECLARAR = 69;
+  int T_DENEGAR = 69;
   /** RegularExpression Id. */
-  int T_SI = 70;
+  int T_DECLARAR = 70;
   /** RegularExpression Id. */
-  int T_SINO = 71;
+  int T_SI = 71;
   /** RegularExpression Id. */
-  int T_SELECCIONA = 72;
+  int T_SINO = 72;
   /** RegularExpression Id. */
-  int T_CASO = 73;
+  int T_SELECCIONA = 73;
   /** RegularExpression Id. */
-  int T_DEFECTO = 74;
+  int T_CASO = 74;
   /** RegularExpression Id. */
-  int T_PARA = 75;
+  int T_DEFECTO = 75;
   /** RegularExpression Id. */
-  int T_MIENTRAS = 76;
+  int T_PARA = 76;
   /** RegularExpression Id. */
-  int T_DETENER = 77;
+  int T_MIENTRAS = 77;
   /** RegularExpression Id. */
-  int T_IMPRIMIR = 78;
+  int T_DETENER = 78;
   /** RegularExpression Id. */
-  int T_FECHA = 79;
+  int T_IMPRIMIR = 79;
   /** RegularExpression Id. */
-  int T_FECHA_HORA = 80;
+  int T_FECHA = 80;
   /** RegularExpression Id. */
-  int T_CONTAR = 81;
+  int T_FECHA_HORA = 81;
   /** RegularExpression Id. */
-  int T_BACKUP_USQL = 82;
+  int T_CONTAR = 82;
   /** RegularExpression Id. */
-  int T_BACKUP_COMPLETO = 83;
+  int T_BACKUP_USQL = 83;
   /** RegularExpression Id. */
-  int T_RESTAURAR_USQL = 84;
+  int T_BACKUP_COMPLETO = 84;
   /** RegularExpression Id. */
-  int T_RESTAURAR_COMPLETO = 85;
+  int T_RESTAURAR_USQL = 85;
   /** RegularExpression Id. */
-  int CADENA = 86;
+  int T_RESTAURAR_COMPLETO = 86;
   /** RegularExpression Id. */
-  int ENTERO = 87;
+  int CADENA = 87;
   /** RegularExpression Id. */
-  int FALSO = 88;
+  int ENTERO = 88;
   /** RegularExpression Id. */
-  int VERDADERO = 89;
+  int FALSO = 89;
   /** RegularExpression Id. */
-  int NUMERO = 90;
+  int VERDADERO = 90;
   /** RegularExpression Id. */
-  int DECIMAL = 91;
+  int NUMERO = 91;
   /** RegularExpression Id. */
-  int ID = 92;
+  int DECIMAL = 92;
   /** RegularExpression Id. */
-  int ARROBA = 93;
+  int ID = 93;
   /** RegularExpression Id. */
-  int DATETIME = 94;
+  int ARROBA = 94;
   /** RegularExpression Id. */
-  int DATE = 95;
+  int DATETIME = 95;
   /** RegularExpression Id. */
-  int COMENTARIO_LINEA = 100;
+  int DATE = 96;
   /** RegularExpression Id. */
   int COMENTARIO_MULTI = 101;
+  /** RegularExpression Id. */
+  int COMENTARIO_LINEA = 102;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -250,6 +252,7 @@ public interface usqlGrammarConstants {
     "\"base_datos\"",
     "\"tabla\"",
     "\"nulo\"",
+    "\"unico\"",
     "\"no nulo\"",
     "\"autoincrementable\"",
     "\"llave_primaria\"",
@@ -310,8 +313,8 @@ public interface usqlGrammarConstants {
     "\"\\n\"",
     "\"\\r\"",
     "\"\\t\"",
-    "<COMENTARIO_LINEA>",
     "<COMENTARIO_MULTI>",
+    "<COMENTARIO_LINEA>",
   };
 
 }

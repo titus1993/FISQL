@@ -19,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -35,11 +36,13 @@ public class Tools {
 
     public static JTable TablaErrores;
     public static DefaultTableModel Error;
-    
+
     public static JTextArea Consola = new JTextArea();
 
     public static String CadenaErrores = "";
-    
+
+    public static String Imprimir = "";
+    public static String ReporteHtml = "";
 
     public static String local = "C:\\FISQL_DB";
     public static String localUsrXml = "C:\\FISQL_DB\\users.xml";
@@ -48,6 +51,9 @@ public class Tools {
 
     public static SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
+    public static String Bacup = "";
+    public static String PlanEjecucion = "";
+    
     public static String ttext = "text";
     public static String tinteger = "integer";
     public static String tdouble = "double";
@@ -62,30 +68,30 @@ public class Tools {
     public static final String permisoProc = "proc";
     public static final String permisoObj = "obj";
 
-    
-
     public static TablaUsql Tabla = new TablaUsql();
-    
+
     public static TablaUsql Funciones = new TablaUsql();
-    
+
     public static DataBase BaseActual = null;
+
+    public static ArrayList<TablaSeleccionar> ResultadosRetorno = null;
     
     public static Usuario Usuario = null;
-    
+
     public static Maestro Base_de_datos = new Maestro();
-    
+
     public static TablaSeleccionar TablaPivote = null;
-    
+
     public static TablaSeleccionar TablaResultado = null;
-    
+
     public static void ImprimirConsola(String texto) {
         Consola.setText(Consola.getText() + ">> " + texto + "\n");
     }
-    
-    public static void ImprimirLog(String Accion, String Descripcion){
-        ImprimirConsola("Fecha: " + formatoFecha.format(new Date()) + ", Usuario: " + Usuario.name + ", Accion: " + Accion + ", Descripcion: " + Descripcion);
+
+    public static void ImprimirLog(String Accion, String Descripcion) {
+        ImprimirConsola("Fecha: " + formatoFecha.format(new Date()) + ", Usuario: " + Usuario.name + ", Accion: " + Accion + ", Descripcion: " + Descripcion);        
     }
-    
+
     public static String LeerArchivo(String ruta) {
         String contenido = "";
         try {
@@ -175,7 +181,7 @@ public class Tools {
         path = f.getParent();
         return path;
     }
-    
+
     public static void IniciarErrores() {
         String[] columnas = {"Tipo de error", "Descripcion", "Linea", "Columna"};
         Error = new DefaultTableModel(columnas, 0);
@@ -194,8 +200,21 @@ public class Tools {
     }
 
     public static void LimpiarTabla() {
-        while (Error.getRowCount() > 0) {
-            Error.removeRow(0);
+
+        if (Tools.TablaErrores == null) {
+            Tools.IniciarErrores();
+        } else {
+            while (Error.getRowCount() > 0) {
+                Error.removeRow(0);
+            }
         }
+
+        Tools.Bacup = "";
+        Tools.Imprimir = "";
+        Tools.TablaPivote = null;
+        Tools.TablaResultado = null;
+        Tools.ResultadosRetorno = new ArrayList<>();
+        
+        Tools.ReporteHtml = "";
     }
 }

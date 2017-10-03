@@ -54,18 +54,19 @@ public class FCrearTabla {
     public String getCadena() {
         String cadena = "";
 
-        cadena += "CREAR TABLA " + this.Nombre + "(\n";
+        cadena += "CREAR TABLA " + this.Nombre + "(";
 
         int i = 0;
         for (ColumnaEstructura col : Campos) {
             if (i == 0) {
-                cadena += "\t" + col.getCadena();
+                cadena += "\n\t" + col.getCadena();
             } else {
                 cadena += ",\n\t" + col.getCadena();
             }
+            i++;
         }
 
-        cadena += "\n);\n";
+        cadena += "\n)";
 
         return cadena;
     }

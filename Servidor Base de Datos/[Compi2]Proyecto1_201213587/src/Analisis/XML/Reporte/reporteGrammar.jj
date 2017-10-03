@@ -1,0 +1,112 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Reporte\\";
+
+}
+
+PARSER_BEGIN(reporteGrammar)
+package Analisis.XML.Reporte;
+
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
+public class reporteGrammar {
+  public static void main(String args[]) throws ParseException {
+    reporteGrammar parser = new reporteGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(reporteGrammar)
+
+TOKEN:
+{
+  
+    <T_HTML_IZQ: ("<"(" ")*"html"(" ")*">")> {System.out.println(image);}
+    |<T_HEAD_IZQ: ("<"(" ")*"head"(" ")*">")> {System.out.println(image);}
+    |<T_BODY_IZQ: ("<"(" ")*"body"(~[">"])*">")> {System.out.println(image);}
+    |<T_HEADER_IZQ:("<"(" ")*"header"(" ")*">")> {System.out.println(image);}
+    |<T_DIV_IZQ: ("<"(" ")*"div"(~[">"])*">")> {System.out.println(image);}
+    |<T_USQL_IZQ: ("<"(" ")*"usql"(" ")* (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z","0"-"9","_"])* (" ")*">")> {System.out.println(image);}
+    |<T_H_IZQ: ("<"(" ")*"h1"(" ")*">")> {System.out.println(image);}
+    |<T_HTML_DER: ("<"(" ")*"/"(" ")*"html"(" ")*">")> {System.out.println(image);}
+    |<T_HEAD_DER: ("<"(" ")*"/"(" ")*"head"(" ")*">")> {System.out.println(image);}
+    |<T_BODY_DER: ("<"(" ")*"/"(" ")*"body"(" ")*">")> {System.out.println(image);}
+    |<T_DIV_DER:("<"(" ")*"/"(" ")*"div"(" ")*">")> {System.out.println(image);}
+    |<T_USQL_DER:("<"(" ")*"/"(" ")*"usql"(" ")*">")> {System.out.println(image);}
+    |<T_H_DER:("<"(" ")*"/"(" ")*"h1"(" ")*">")> {System.out.println(image);}
+    
+}
+
+TOKEN:
+{  
+    <SRC:"\u00b6" (~["\u00b6"])*"\u00b6"> {System.out.println(image);}
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+Etiqueta S():
+{Etiqueta e;}
+{   
+    e=HTML()
+    {return e;}
+}
+
+
+Etiqueta HTML():
+{ArrayList<Etiqueta> le = new ArrayList<Etiqueta>(); Etiqueta e;}
+{
+    <T_HTML_IZQ> (e=HEAD() {le.add(e);})? e=BODY() <T_HTML_DER> {le.add(e);}
+    {return new Etiqueta("html", "", "", le);}
+}
+
+Etiqueta HEAD():
+{}
+{
+    <T_HEAD_IZQ>  <T_HEAD_DER>
+    {return new Etiqueta("head", "", "");}
+}
+
+Etiqueta BODY():
+{ArrayList<Etiqueta> le = new ArrayList<Etiqueta>(); }
+{
+    <T_BODY_IZQ> le=L_ETQ() <T_BODY_DER>
+    {return new Etiqueta("body", "", "", le);}    
+}
+
+ArrayList<Etiqueta> L_ETQ():
+{ArrayList<Etiqueta> le = new ArrayList<Etiqueta>(); Etiqueta e;}
+{
+    (e=H() {le.add(e);}| e=DIV(){le.add(e);} | e=USQL(){le.add(e);})+ {return le;}
+}
+
+Etiqueta DIV():
+{ArrayList<Etiqueta> hijos = new ArrayList<Etiqueta>();}
+{
+    <T_DIV_IZQ> (hijos = L_ETQ())? <T_DIV_DER>
+    {return new Etiqueta("div", "", "", hijos);}
+}
+
+Etiqueta USQL():
+{Token t,t2;}
+{
+    t2=<T_USQL_IZQ> t=<SRC> <T_USQL_DER>
+    {return new Etiqueta("usql", t2.image.substring(1, t2.image.length() - 1).replace("usql","").trim(), t.image.substring(1, t.image.length() - 1));}
+}
+
+Etiqueta H():
+{Token t;}
+{
+    <T_H_IZQ> t=<SRC> <T_H_DER>
+    {return new Etiqueta("h1", "", t.image.substring(1, t.image.length() - 1));}
+}
+
+
+

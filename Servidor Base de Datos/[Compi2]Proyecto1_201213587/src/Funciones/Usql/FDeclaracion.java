@@ -59,12 +59,12 @@ public class FDeclaracion {
                                 break;
 
                             case Constante.TBool:
-                                if(exp.Bool){
+                                if (exp.Bool) {
                                     exp.Entero = 1;
-                                }else{
+                                } else {
                                     exp.Entero = 0;
                                 }
-                                
+
                                 exp.Tipo = Constante.TEntero;
                                 break;
 
@@ -133,10 +133,49 @@ public class FDeclaracion {
                         }
                         break;
 
+                    case Constante.TDate:
+                        switch (exp.Tipo) {
+                            case Constante.TDate:
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+
+                        }
+                        break;
+
+                    case Constante.TDateTime:
+                        switch (exp.Tipo) {
+                            case Constante.TDateTime:
+                                break;
+
+                            case Constante.TDate:
+                                exp.Tipo = Constante.TDateTime;
+                                exp.DateTime = exp.Date + " 00:00:00";
+                                break;
+
+                            default:
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                                break;
+
+                        }
+                        break;
+                    case Constante.TObjeto:
+                        if (this.Tipo.equals(exp.Cadena)) {
+                            break;
+                        }
+
                     default:
-
-                        Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
-
+                        if (!exp.Tipo.equals(Constante.TObjeto)) {
+                            Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Tipo + " a " + Tipo, Fila, Columna);
+                        } else {
+                            if (exp.Cadena.equals(this.Tipo)) {
+                                break;
+                            } else {
+                                Tools.InsertarError(Constante.TErrorSintactico, "No se puede asignar un tipo " + exp.Cadena + " a " + Tipo, Fila, Columna);
+                            }
+                        }
                         break;
 
                 }

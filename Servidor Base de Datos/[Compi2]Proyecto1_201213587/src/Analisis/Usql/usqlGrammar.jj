@@ -86,6 +86,7 @@ TOKEN:
     |<T_BASE_DATOS:("base_datos")> {System.out.println(image);}
     |<T_TABLA:("tabla")> {System.out.println(image);}
     |<T_NULO:("nulo")> {System.out.println(image);}
+    |<T_UNICO:("unico")> {System.out.println(image);}
     |<T_NO_NULO:("no nulo")> {System.out.println(image);}
     |<T_AUTOINCREMETABLE:("autoincrementable")> {System.out.println(image);}
     |<T_LLAVE_PRIMARIA:("llave_primaria")> {System.out.println(image);}
@@ -159,8 +160,8 @@ SKIP:
 
 SPECIAL_TOKEN:
 {
-    <COMENTARIO_LINEA: "#" (~["\n"])*>{System.out.println(image);}
-    |<COMENTARIO_MULTI: "#*" (~["*"])* "*#">{System.out.println(image);}
+    <COMENTARIO_MULTI: "#*" (~["*"])* "*#">{System.out.println("multi" + image);}
+    |<COMENTARIO_LINEA: "#" (~["\n"])*>{System.out.println("linea" + image);}    
 }
 
 EjecucionUsql S():
@@ -190,10 +191,7 @@ ArrayList<Simbolo> INSTRUCCION() :
     l=DDL() {return l;}
     | l=DML() {return l;}
     | l=DCL() {return l;}
-    | l=SSL() {return l;}//quitar ssl
-    | l=DECLARACION() {return l;}    
-    | LLAMADA_METODO() {return l;}
-    | s=IMPRIMIR() {l.add(s); return l;}
+    | l=SSL() {return l;}
 }
 
 
@@ -213,25 +211,24 @@ Simbolo IMPRIMIR():
 ArrayList<Simbolo> DDL():
 {ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s; Token t,t2;}
 {
-    t2=<T_USAR> t=<ID> <PCOMA> {FUsarBaseDatos ub = new FUsarBaseDatos(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+    (t2=<T_USAR> t=<ID> <PCOMA> {FUsarBaseDatos ub = new FUsarBaseDatos(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
                                 Simbolo sim = new Simbolo(Constante.TUsarBaseDatos, Constante.TUsarBaseDatos, Constante.TUsarBaseDatos, ub.Ambito, ub, ub.Fila, ub.Columna);
-                                ls.add(sim);
-                                return ls;
+                                ls.add(sim);                                
     }
-    |s=CREATE() {ls.add(s); return ls;}
-    |s=ALTER() {ls.add(s); return ls;}
-    |s=ELIMINAR() {ls.add(s); return ls;}
+    |s=CREATE() {ls.add(s); }
+    |s=ALTER() {ls.add(s); }
+    |s=ELIMINAR() {ls.add(s);}
     |BACKUP()
-    |RESTAURAR()
+    |RESTAURAR()) {return ls;}
 }
 
 ArrayList<Simbolo> DML():
 {ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s=null;}
 {
     (s=INSERTAR()
-    |ACTUALIZAR()
-    |BORRAR()
-    |s=SELECCIONAR()){ls.add(s); return ls;}
+    |s =ACTUALIZAR()
+    |s=BORRAR()
+    |s=SELECCIONAR() <PCOMA>){ls.add(s); return ls;}
 }
 
 ArrayList<Simbolo> DCL():
@@ -244,16 +241,17 @@ ArrayList<Simbolo> DCL():
 ArrayList<Simbolo> SSL():
 {ArrayList<Simbolo> ls = new ArrayList<Simbolo>(); Simbolo s; Token t;}
 {
-    ls=DECLARACION(){return ls;}
-    |s=ASIGNACION() {ls.add(s); return ls;}
-    |s=SI()   {ls.add(s); return ls;}
-    |s=SELECCIONA()   {ls.add(s); return ls;}
-    |s=PARA() {ls.add(s); return ls;}
-    |s=MIENTRAS() {ls.add(s); return ls;}
-    |t=<T_DETENER> <PCOMA>    {ls.add(new Simbolo(Constante.TDetener,Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn)); return ls;}
-    |s=IMPRIMIR() {ls.add(s); return ls;}
-    |s=RETORNO() <PCOMA>  {ls.add(s); return ls;}
-    |s=LLAMADA_METODO() {ls.add(s); return ls;}
+    (ls=DECLARACION()
+    |s=ASIGNACION() {ls.add(s); }
+    |s=SI()   {ls.add(s); }
+    |s=SELECCIONA()   {ls.add(s); }
+    |s=PARA() {ls.add(s); }
+    |s=MIENTRAS() {ls.add(s); }
+    |t=<T_DETENER> <PCOMA>    {ls.add(new Simbolo(Constante.TDetener,Constante.TDetener, Constante.TDetener, new Ambito(Constante.TDetener, new ArrayList<Simbolo>()), null, t.beginLine, t.beginColumn)); }
+    |s=IMPRIMIR() {ls.add(s); }
+    |s=RETORNO() <PCOMA>  {ls.add(s);}
+    |s=LLAMADA_METODO() {ls.add(s); })
+    {return ls;}
 }
 
 Simbolo LLAMADA_METODO():
@@ -267,16 +265,19 @@ Simbolo LLAMADA_METODO():
 }
 
 Simbolo CREATE():
-{Token t; FCrearBaseDatos cb; FCrearTabla ct; FCrearUsuario cu; FMetodo cm; FCrearObjeto co;}
+{Token t; FCrearBaseDatos cb; FCrearTabla ct; FCrearUsuario cu; FMetodo cm; FCrearObjeto co; Simbolo s = null;}
 {
-    t=<T_CREAR> (((cb=CREATE_BASE() {cb.Fila = t.beginLine; cb.Columna = t.beginColumn; return new Simbolo(Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, cb.Ambito, cb, cb.Fila, cb.Columna);}
-                | ct=CREATE_TABLA() {ct.Fila = t.beginLine; ct.Columna = t.beginColumn; return new Simbolo(Constante.TCrearTabla, Constante.TCrearTabla, Constante.TCrearTabla, ct.Ambito, ct, ct.Fila, ct.Columna);}
-                | co=CREATE_OBJETO()   {co.Fila = t.beginLine; co.Columna = t.beginColumn; return new Simbolo(Constante.TCrearObjeto, Constante.TCrearObjeto, Constante.TCrearObjeto, co.Ambito, co, co.Fila, co.Columna);}    
-                | cu=CREATE_USUARIO() {cu.Fila = t.beginLine; cu.Columna = t.beginColumn; return new Simbolo(Constante.TCrearUsuario, Constante.TCrearUsuario, Constante.TCrearUsuario, cu.Ambito, cu, cu.Fila, cu.Columna);}) 
+    t=<T_CREAR> (((cb=CREATE_BASE() {cb.Fila = t.beginLine; cb.Columna = t.beginColumn; s = new Simbolo(Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, Constante.TCrearBaseDatos, cb.Ambito, cb, cb.Fila, cb.Columna);}
+                | ct=CREATE_TABLA() {ct.Fila = t.beginLine; ct.Columna = t.beginColumn; s = new Simbolo(Constante.TCrearTabla, Constante.TCrearTabla, Constante.TCrearTabla, ct.Ambito, ct, ct.Fila, ct.Columna);}
+                | co=CREATE_OBJETO()   {co.Fila = t.beginLine; co.Columna = t.beginColumn; s = new Simbolo(Constante.TCrearObjeto, Constante.TCrearObjeto, Constante.TCrearObjeto, co.Ambito, co, co.Fila, co.Columna);}    
+                | cu=CREATE_USUARIO() {cu.Fila = t.beginLine; cu.Columna = t.beginColumn; s = new Simbolo(Constante.TCrearUsuario, Constante.TCrearUsuario, Constante.TCrearUsuario, cu.Ambito, cu, cu.Fila, cu.Columna);}) 
             <PCOMA>) 
-                | cm=CREATE_PROCEDIMIENTO() {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; return new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}
-                | cm=CREATE_FUNCION()   {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; return new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}                
-                )                
+                | cm=CREATE_PROCEDIMIENTO() {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; s = new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}
+                | cm=CREATE_FUNCION()   {cm.Fila = t.beginLine; cm.Columna = t.beginColumn; s = new Simbolo(cm.Tipo, cm.Nombre, Constante.TMetodo, cm.Ambito, cm, cm.Fila, cm.Columna);}                
+                ) 
+                {
+                    return s;
+                }
 }
 
 FCrearBaseDatos CREATE_BASE():
@@ -353,7 +354,8 @@ Complemento COMPLEMENTO():
     |<T_NO_NULO> {com.isNulo = true;}
     |<T_AUTOINCREMETABLE> {com.isAutoincrementable = true;}
     |<T_LLAVE_PRIMARIA> {com.isPrimary = true;}
-    |<T_LLAVE_FORANEA> t=<ID> {com.isForanea = true; com.Foranea = t.image;})
+    |<T_LLAVE_FORANEA> t=<ID> {com.isForanea = true; com.Foranea = t.image;}
+    |<T_UNICO> {})    
     {return com;}
 }
 
@@ -400,6 +402,7 @@ FMetodo CREATE_PROCEDIMIENTO():
         for(Simbolo sim : ambito.TablaSimbolo){
             sim.Ambito.Padre = ambito;
         }
+
         for(Simbolo sim : lp){
             sim.Ambito.Padre = ambito;
         }
@@ -466,12 +469,21 @@ Simbolo RETORNO():
 }
 
 Simbolo ALTER():
-{Token t; FAlterarTabla at; FAlterarUsuario au;}
+{Token t; FAlterarTabla at = null; FAlterarUsuario au = null; FAlterarObjeto ao = null;}
 {
-    t=<T_ALTERAR> (at=ALTER_TABLA() {at.Fila = t.beginLine; at.Columna = t.beginColumn; return new Simbolo(Constante.TAlterarTabla, Constante.TAlterarTabla, Constante.TAlterarTabla, at.Ambito, at, at.Fila, at.Columna);}
-                | au=ALTER_USUARIO() {au.Fila = t.beginLine; au.Columna = t.beginColumn; return new Simbolo(Constante.TAlterarUsuario, Constante.TAlterarUsuario, Constante.TAlterarUsuario, au.Ambito, au, au.Fila, au.Columna);} 
-                | ALTER_OBJETO()
-                ) <PCOMA>         
+    t=<T_ALTERAR> (at=ALTER_TABLA() {at.Fila = t.beginLine; at.Columna = t.beginColumn; }
+                | au=ALTER_USUARIO() {au.Fila = t.beginLine; au.Columna = t.beginColumn; } 
+                | ao=ALTER_OBJETO() {ao.Fila = t.beginLine; ao.Columna = t.beginColumn; } 
+                ) <PCOMA>    
+                {
+                    if(at != null){
+                        return new Simbolo(Constante.TAlterarTabla, Constante.TAlterarTabla, Constante.TAlterarTabla, at.Ambito, at, at.Fila, at.Columna);
+                    }else if(au != null){
+                        return new Simbolo(Constante.TAlterarUsuario, Constante.TAlterarUsuario, Constante.TAlterarUsuario, au.Ambito, au, au.Fila, au.Columna);
+                    }else{
+                        return new Simbolo(Constante.TAlterarObjeto, Constante.TAlterarObjeto, Constante.TAlterarObjeto, ao.Ambito, ao, ao.Fila, ao.Columna);
+                    }
+                }
 }
 
 FAlterarTabla ALTER_TABLA():
@@ -502,11 +514,21 @@ ArrayList<ColumnaEstructura> L_ID():
                                             lce.add(ce2);})* {return lce;}
 }
 
-void ALTER_OBJETO():
-{}
+FAlterarObjeto ALTER_OBJETO():
+{Token t; ArrayList<Parametro> lp = new ArrayList<Parametro>(); ArrayList<ColumnaEstructura> lc;}
 {
-    <T_OBJETO> <ID> (<T_AGREGAR> <PAR_IZQ> L_ATRIBUTO() <PAR_DER>
-    |<T_QUITAR> L_ID())
+    <T_OBJETO> t=<ID> (<T_AGREGAR> <PAR_IZQ> lp=L_ATRIBUTO() <PAR_DER>
+        {   
+            return new FAlterarObjeto(Constante.TAgregar, t.image, new Ambito(t.image, new ArrayList<Simbolo>()), lp, t.beginLine, t.beginColumn);
+        }
+    |<T_QUITAR> lc=L_ID()
+        {
+            for(ColumnaEstructura c : lc){
+                lp.add(new Parametro("", c.NombreCampo));
+            }
+            return new FAlterarObjeto(Constante.TQuitar, t.image, new Ambito(t.image, new ArrayList<Simbolo>()), lp, t.beginLine, t.beginColumn);
+        }
+    )
 }
 
 FAlterarUsuario ALTER_USUARIO():
@@ -522,14 +544,36 @@ FAlterarUsuario ALTER_USUARIO():
 Simbolo ELIMINAR():
 {Token t, t2;}
 {
-    t2=<T_ELIMINAR> (<T_TABLA> t=<ID> 
-                    | <T_BASE_DATOS>  t=<ID>
-                    | <T_OBJETO> t=<ID>
-                    | <T_USUARIO> t=<ID>{
+    t2=<T_ELIMINAR> (<T_TABLA> t=<ID> <PCOMA>
+                                        {
+                                            FEliminarTabla eu = new FEliminarTabla(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarTabla, Constante.TEliminarTabla, Constante.TEliminarTabla, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        }
+                    | <T_BASE_DATOS>  t=<ID> <PCOMA>
+                                        {
+                                            FEliminarBaseDatos eu = new FEliminarBaseDatos(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarBaseDatos, Constante.TEliminarBaseDatos, Constante.TEliminarBaseDatos, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        }
+                    | <T_PROCEDIMIENTO>  t=<ID> <PCOMA>
+                                        {
+                                            FEliminarProcedimiento eu = new FEliminarProcedimiento(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarProcedimiento, Constante.TEliminarProcedimiento, Constante.TEliminarProcedimiento, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        }
+                    | <T_FUNCION>  t=<ID> <PCOMA>
+                                        {
+                                            FEliminarFuncion eu = new FEliminarFuncion(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarFuncion, Constante.TEliminarFuncion, Constante.TEliminarFuncion, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        }
+                    | <T_OBJETO> t=<ID> <PCOMA>
+                                        {
+                                            FEliminarObjeto eu = new FEliminarObjeto(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+                                            return new Simbolo(Constante.TEliminarObjeto, Constante.TEliminarObjeto, Constante.TEliminarObjeto, eu.Ambito, eu, eu.Fila, eu.Columna);
+                                        }
+                    | <T_USUARIO> t=<ID> <PCOMA>{
                                             FEliminarUsuario eu = new FEliminarUsuario(t.image, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
                                             return new Simbolo(Constante.TEliminarUsuario, Constante.TEliminarUsuario, Constante.TEliminarUsuario, eu.Ambito, eu, eu.Fila, eu.Columna);
                                         })      
-            <PCOMA>
+            
 }
 
 
@@ -549,23 +593,30 @@ Simbolo INSERTAR():
     }
 }
 
-void ACTUALIZAR():
-{}
+Simbolo ACTUALIZAR():
+{Token t,t2; ArrayList<ColumnaEstructura> l = new ArrayList<ColumnaEstructura>(); ArrayList<FNodoExpresion> le = new ArrayList<FNodoExpresion>(); FNodoExpresion cond = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, 0, 0, Constante.TVerdadero);}
 {
-    <T_ACTUALIZAR> <T_TABLA> <ID> <PAR_IZQ> L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ> L_EXPRESIONES() <PAR_DER> (<T_DONDE> LOGICA_OR())? <PCOMA>
+    t2=<T_ACTUALIZAR> <T_TABLA> t=<ID> <PAR_IZQ> l=L_ID() <PAR_DER> <T_VALORES> <PAR_IZQ> le=L_EXPRESIONES() <PAR_DER> (<T_DONDE> cond=LOGICA_OR())? <PCOMA>
+    {FActualizar te = new FActualizar(t.image, l, le, cond, new Ambito(t.image, new ArrayList<Simbolo>()), t2.beginLine, t2.beginColumn);
+    return new Simbolo(Constante.TActualizar, Constante.TActualizar, Constante.TActualizar, te.Ambito, te, te.Fila, te.Columna);
+    }   
 }
 
-void BORRAR():
-{}
+Simbolo BORRAR():
+{Token t, t2; FNodoExpresion nodo;}
 {
-    <T_BORRAR> <T_TABLA> <ID> (<T_DONDE> LOGICA_OR())? <PCOMA>
+    t=<T_BORRAR> {nodo = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, Constante.TVerdadero);}<T_TABLA> t2=<ID> (<T_DONDE> nodo=LOGICA_OR())? <PCOMA> 
+    {
+        FBorrar sb = new FBorrar(t2.image, nodo, new Ambito(t.image, new ArrayList<Simbolo>()), t.beginLine, t.beginColumn);
+        return new Simbolo(Constante.TBorrar, Constante.TBorrar, Constante.TBorrar, sb.Ambito, sb, sb.Fila, sb.Columna);
+    }
 }
 
 Simbolo SELECCIONAR():
 {Token t=null,t2=null,t3=null, t4=null, t5=null, t6=null; String Tipo=""; ArrayList<FLlamadaTabla> lcs = new ArrayList<FLlamadaTabla>(); ArrayList<ColumnaEstructura> lce = new ArrayList<ColumnaEstructura>(); FNodoExpresion nodo; String Ordenar = "", por=""; }
 {
     
-    t=<T_SELECCIONAR> {nodo = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, Constante.TVerdadero);} (lcs=L_ID_S() | t2=<POR> {Tipo = Constante.TPor;}) <T_DE> lce=L_ID() (<T_DONDE> nodo=LOGICA_OR())? (<T_ORDENAR> t3=<ID>(<PUNTO> <ID>( <PUNTO> <ID>)?)? {Ordenar = t3.image;} (t4=<T_ASC>{por = Constante.TAsc;}|t4=<T_DESC>{por = Constante.TDesc;}))?
+    t=<T_SELECCIONAR> {nodo = new FNodoExpresion(null, null, Constante.TBool, Constante.TBool, t.beginLine, t.beginColumn, Constante.TVerdadero);} (lcs=L_ID_S() | t2=<POR> {Tipo = Constante.TPor;}) <T_DE> lce=L_ID() (<T_DONDE> nodo=LOGICA_OR())? (<T_ORDENAR> t3=<ID>(<PUNTO> <ID>( <PUNTO> <ID>)?)? {Ordenar = t3.image;} (t4=<T_ASC>{por = Constante.TAsc;}|t4=<T_DESC>{por = Constante.TDesc;}))? 
     {
         FLlamadaTabla a = null;
         if(t6 != null){
@@ -596,7 +647,7 @@ ArrayList<FLlamadaTabla> L_ID_S():
                     lce.add(cs);
                 }
     }
-            (<COMA> t2=<ID> (<PUNTO> <ID> (<PUNTO> <ID>)?)? {
+            (<COMA> t4=<ID> (<PUNTO> t5=<ID> (<PUNTO> t6=<ID>)?)? {
 
                 if(t6 != null){
                     FLlamadaTabla cs = new FLlamadaTabla(t4.image, t5.image, t6.image, t4.beginLine, t4.beginColumn);
@@ -604,11 +655,11 @@ ArrayList<FLlamadaTabla> L_ID_S():
                 }else if(t5 != null){
                     FLlamadaTabla cs = new FLlamadaTabla(t4.image, "", t5.image, t4.beginLine, t4.beginColumn);
                     lce.add(cs);
-                }else{
+                }else if(t4 != null){
                     FLlamadaTabla cs = new FLlamadaTabla("", "", t4.image, t4.beginLine, t4.beginColumn);
                     lce.add(cs);
                 }
-    }) {return lce;}
+    })* {return lce;}
 }
 
 ArrayList<Simbolo> L_SENTENCIAS():
@@ -635,7 +686,8 @@ ArrayList<Simbolo> SENTENCIA():
 {
     (l=SSL() {return l;}
     |l=DML() {return l;}
-    |l=DCL()){return l;}
+    |l=DCL() {return l;}
+    |l=DDL() {return l;})
 }
 
 
@@ -825,12 +877,14 @@ void RESTAURAR():
     (<T_RESTAURAR_USQL> | <T_RESTAURAR_COMPLETO>) <CADENA> <PCOMA>
 }
 
-void FUNCINES_NATIVAS_VALOR():
-{}
+FNodoExpresion FUNCINES_NATIVAS_VALOR():
+{Token t; Simbolo s;}
 {
-    <T_FECHA> <PAR_IZQ> <PAR_DER>
-    |<T_FECHA_HORA> <PAR_IZQ> <PAR_DER>
-    |<T_CONTAR> <PAR_IZQ> <FLECHA_IZQ> SELECCIONAR() <FLECHA_DER> <PAR_DER>
+    t=<T_FECHA> <PAR_IZQ> <PAR_DER> {return new FNodoExpresion(null, null, Constante.TFecha, Constante.TFecha, t.beginLine, t.beginColumn, "");}
+    |t=<T_FECHA_HORA> <PAR_IZQ> <PAR_DER> {return new FNodoExpresion(null, null, Constante.TFechaHora, Constante.TFechaHora, t.beginLine, t.beginColumn, "");}
+    |t=<T_CONTAR> <PAR_IZQ> <FLECHA_IZQ> s=SELECCIONAR() <FLECHA_DER> <PAR_DER> 
+        {   FContar c = new FContar((FSeleccionar)s.Valor, t.beginLine, t.beginColumn);
+            return new FNodoExpresion(null, null, Constante.TContar, Constante.TContar, t.beginLine, t.beginColumn, c);}
 }
 
 FNodoExpresion LLAMADA_OBJETO():
@@ -870,7 +924,13 @@ ArrayList<FNodoExpresion> L_EXPRESIONES():
 FNodoExpresion LOGICA_OR():
 {FNodoExpresion izq, der; Token t; FNodoExpresion nuevo = null;}
 {
-    izq = LOGICA_AND() (t = <OR> der = LOGICA_AND() {nuevo = new FNodoExpresion(izq, der, Constante.TOr, Constante.TOr, t.beginLine, t.beginColumn, null);})* {if(nuevo == null){
+    izq = LOGICA_AND() (t = <OR> der = LOGICA_AND() {
+                                                if(nuevo != null){
+                                                    nuevo = new FNodoExpresion(nuevo, der, Constante.TOr, Constante.TOr, t.beginLine, t.beginColumn, null);
+                                                }else{
+                                                    nuevo = new FNodoExpresion(izq, der, Constante.TOr, Constante.TOr, t.beginLine, t.beginColumn, null);
+                                                }
+                                            })* {if(nuevo == null){
                                         return izq;
                                     }else{
                                         return nuevo;
@@ -880,7 +940,13 @@ FNodoExpresion LOGICA_OR():
 FNodoExpresion LOGICA_AND():
 {FNodoExpresion izq, der; Token t; FNodoExpresion nuevo = null;}
 {
-    izq = LOGICA_NOT() (t=<AND> der = LOGICA_NOT(){nuevo = new FNodoExpresion(izq, der, Constante.TAnd, Constante.TAnd, t.beginLine, t.beginColumn, null);})* {if(nuevo == null){
+    izq = LOGICA_NOT() (t=<AND> der = LOGICA_NOT(){
+                                                if(nuevo != null){
+                                                    nuevo = new FNodoExpresion(nuevo, der, Constante.TAnd, Constante.TAnd, t.beginLine, t.beginColumn, null);
+                                                }else{
+                                                    nuevo = new FNodoExpresion(izq, der, Constante.TAnd, Constante.TAnd, t.beginLine, t.beginColumn, null);
+                                                }
+                                            })* {if(nuevo == null){
                                         return izq;
                                     }else{
                                         return nuevo;
@@ -1025,5 +1091,5 @@ FNodoExpresion I():
                                     }
     | n=LLAMADA_OBJETO() {return n;}
     | <PAR_IZQ> n=LOGICA_OR() <PAR_DER> {return n;}
-    | FUNCINES_NATIVAS_VALOR()
+    | n=FUNCINES_NATIVAS_VALOR() {return n;}
 }

@@ -56,13 +56,14 @@ public class FCrearObjeto {
         int i = 0;
         for (Parametro p : Parametros) {
             if (i == 0) {
-                cadena += p.getCadena();
+                cadena += "\n\t" + p.getCadenaParametro();
             } else {
-                cadena += ", " + p.getCadena();
+                cadena += ",\n\t" + p.getCadenaParametro();
             }
+            i++;
         }
         
-        cadena += ");";
+        cadena += "\n);";
 
         return cadena;
     }

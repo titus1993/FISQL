@@ -1,0 +1,102 @@
+options {
+IGNORE_CASE = true;
+STATIC = false;
+OUTPUT_DIRECTORY="D:\\Titus\\Documents\\Proyectos\\Compiladores 2\\Proyecto 1\\FISQL\\Servidor Base de Datos\\[Compi2]Proyecto1_201213587\\src\\Analisis\\XML\\Paquetes\\";
+
+}
+
+PARSER_BEGIN(paquetesGrammar)
+package Analisis.XML.Paquetes;
+
+import Funciones.XML.*;
+import Static.*;
+import java.util.ArrayList;
+
+public class paquetesGrammar {
+  public static void main(String args[]) throws ParseException {
+    paquetesGrammar parser = new paquetesGrammar(System.in);
+    parser.S();
+  }
+}
+PARSER_END(paquetesGrammar)
+
+TOKEN:
+{
+    <T_PAQUETE: "paquete">
+    |<T_BACUP: "bacup">
+    |<T_TIPO: "tipo">
+    |<T_MSG: "msg">
+    |<T_INSTRUCCION: "instruccion">
+    |<T_REPORTE: "reporte">
+    |<T_USQL: "usql">
+    |<T_USUARIO: "usuario">
+    |<T_PASSWORD: "password">
+    |<T_LOGIN: "login">
+    |<T_FIN: "fin">
+}
+
+
+
+TOKEN:
+{  
+    <SRC:"\u00a7" (~["\u00a7"])*"\u00a7"> {System.out.println(image);}
+    |<CADENA:"\"" (~["\""])*"\""> {System.out.println(image);}
+    | <COR_A: "[">
+    | <COR_C: "]">
+    | <DPTOS: ":">
+}
+
+SKIP: 
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+}
+
+
+Paquete S():
+{Paquete p;}
+{
+    <COR_A> p=PAQUETE() <COR_C> {return p;}
+}
+
+Paquete PAQUETE():
+{Paquete p;}
+{
+    (<T_PAQUETE> <DPTOS> ( p=FIN() | p=INSTRUCCION() | p=REPORTE() | p=BACUP()) | p=SESION() )
+    {return p;}
+}
+
+Paquete BACUP():
+{Token t;}
+{
+    t=<T_BACUP> {return new Paquete("bacup");} 
+}
+
+Paquete SESION():
+{Token t,t2;}
+{
+    <T_USUARIO> <DPTOS> t=<CADENA>
+    <T_PASSWORD> <DPTOS> t2=<CADENA> {return new Paquete("sesion", t.image.substring(1, t.image.length() - 1), t2.image.substring(1, t2.image.length() - 1));} 
+}
+
+Paquete FIN():
+{}
+{
+    <T_FIN> {return new Paquete("fin");}
+}
+
+Paquete INSTRUCCION():
+{Token t;}
+{
+    <T_INSTRUCCION>
+    <T_INSTRUCCION> <DPTOS> t=<SRC> {return new Paquete("usql", t.image.substring(1, t.image.length() - 1));} 
+}
+
+Paquete REPORTE():
+{Token t;}
+{
+    <T_REPORTE>
+    <T_INSTRUCCION> <DPTOS> t=<SRC> {return new Paquete("reporte", t.image.substring(1, t.image.length() - 1));}
+}

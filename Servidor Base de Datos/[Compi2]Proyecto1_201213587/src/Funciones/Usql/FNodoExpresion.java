@@ -27,12 +27,14 @@ public class FNodoExpresion {
     public double Decimal;
     public String Cadena;
     public boolean Bool;
+    public FContar Contar;
     public String Date, DateTime;
     public FLlamadaVariable Variable;
     public FObjeto Objeto;
     public FLlamadaMetodo Metodo;
     public FLlamadaTabla Tabla;
     public FNodoExpresion Col;
+    
 
     public FNodoExpresion(FNodoExpresion nodo) {
         this.Izquierda = nodo.Izquierda;
@@ -108,6 +110,22 @@ public class FNodoExpresion {
                 this.Objeto = (FObjeto)valor;
                 this.Cadena = this.Objeto.Nombre;
                 this.Precedencia = 1;
+                break;
+                
+            case Constante.TFecha:
+                this.Precedencia = 1;
+                this.Cadena = "FECHA()";
+                break;
+                
+            case Constante.TFechaHora:
+                this.Precedencia = 1;
+                this.Cadena = "FECHA_HORA()";
+                break;
+                
+            case Constante.TContar:
+                this.Precedencia = 1;
+                this.Contar = (FContar) valor;
+                this.Cadena = this.Contar.getCadena();
                 break;
                 
             case Constante.TMetodo:
@@ -252,8 +270,21 @@ public class FNodoExpresion {
                 break;
 
             case Constante.TTabla:
-                
+                cadena = this.Tabla.getCadena();
                 break;
+                
+            case Constante.TFecha:
+                cadena = this.Cadena;
+                break;
+                
+            case Constante.TFechaHora:
+                cadena = this.Cadena;
+                break;
+                
+            case Constante.TContar:
+                cadena = this.Cadena;
+                break;
+                
         }
 
         return cadizq + cadena + cadder;
@@ -400,6 +431,25 @@ public class FNodoExpresion {
                     aux = val;
                 }
                 break;
+                
+            case Constante.TObjeto:
+                aux = this;
+                break;
+                
+            case Constante.TFecha:
+                FFecha a = new FFecha(this.Fila, this.Columna);
+                aux = a.Ejecutar();
+                break;
+                
+            case Constante.TFechaHora:
+                FFechaHora b = new FFechaHora(this.Fila, this.Columna);
+                aux = b.Ejecutar();
+                break;         
+                
+            case Constante.TContar:
+                aux = Contar.Ejecutar();
+                break;
+                
         }
         return aux;
     }

@@ -7,6 +7,7 @@ package compi2.proyecto1_201213587;
 
 import Analisis.XML.Tabla.*;
 import Funciones.XML.*;
+import Socket.Comunicacion;
 import Static.Tools;
 import java.awt.Color;
 import java.awt.Font;
@@ -28,6 +29,8 @@ public class Consola extends javax.swing.JFrame {
         initComponents();
         iniciarComponentes();
         Tools.ImprimirConsola("Iniciando Base de datos");
+        Comunicacion puente = Comunicacion.getInstance();
+        puente.start();
     }
     
     private void iniciarComponentes(){

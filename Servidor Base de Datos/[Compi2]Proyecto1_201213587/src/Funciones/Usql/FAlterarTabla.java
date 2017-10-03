@@ -87,7 +87,7 @@ public class FAlterarTabla {
                     break;
 
                 default:
-                    Tools.ImprimirLog("Alterar Tabla", "Se agregaron nuevo campos a la tabla " + this.Nombre + " en la base de datos " + Tools.BaseActual.Nombre);
+                    Tools.ImprimirLog("Alterar Tabla", "Se eliminaron campos a la tabla " + this.Nombre + " en la base de datos " + Tools.BaseActual.Nombre);
                     break;
             }
         }
@@ -97,12 +97,12 @@ public class FAlterarTabla {
         String cadena = "";
 
         if (this.Tipo.equals(Constante.TAgregar)) {
-            cadena += "ALTERAR TABLA " + this.Nombre + " AGREGAR ";
+            cadena += "ALTERAR TABLA " + this.Nombre + " AGREGAR (";
 
             int i = 0;
             for (ColumnaEstructura col : Campos) {
                 if (i == 0) {
-                    cadena += col.NombreCampo;
+                    cadena += col.TipoCampo + " " +col.NombreCampo;
                     if (col.Complementos.isAutoincrementable) {
                         cadena += " AUTOINCREMENTABLE";
                     }
@@ -111,7 +111,7 @@ public class FAlterarTabla {
                         cadena += " LLAVE_FORANEA " + col.Complementos.Foranea;
                     }
 
-                    if (!col.Complementos.isNulo) {
+                    if (col.Complementos.isNulo) {
                         cadena += " NO NULO";
                     }
 
@@ -119,7 +119,7 @@ public class FAlterarTabla {
                         cadena += " LLAVE_PRIMARIA";
                     }
                 } else {
-                    cadena += ", " + col.NombreCampo;
+                    cadena += ", " + col.TipoCampo + " " + col.NombreCampo;
 
                     if (col.Complementos.isAutoincrementable) {
                         cadena += " AUTOINCREMENTABLE";
@@ -129,7 +129,7 @@ public class FAlterarTabla {
                         cadena += " LLAVE_FORANEA " + col.Complementos.Foranea;
                     }
 
-                    if (!col.Complementos.isNulo) {
+                    if (col.Complementos.isNulo) {
                         cadena += " NO NULO";
                     }
 
@@ -139,6 +139,7 @@ public class FAlterarTabla {
                 }
                 i++;
             }
+            cadena += ")";
         } else {
             cadena += "ALTERAR TABLA " + this.Nombre + " QUITAR ";
 
