@@ -76,8 +76,8 @@ public class FPara {
                             exp.Entero++;
                             exp.Decimal++;
                         } else {
-                            exp.Entero++;
-                            exp.Decimal++;
+                            exp.Entero--;
+                            exp.Decimal--;
                         }
                     }
 

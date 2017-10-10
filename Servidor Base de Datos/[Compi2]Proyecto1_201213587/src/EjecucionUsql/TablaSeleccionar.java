@@ -201,7 +201,7 @@ public class TablaSeleccionar {
 
         } else if (!Tabla.equals("") && !Atributo.equals("")) {
             for (ColumnaSeleccionar col : this.Tabla) {
-                if (col.Tabla.equals(Tabla) && col.Atributo.equals(Atributo)) {
+                if (col.Tabla.equals(Tabla) && col.Atributo.toLowerCase().equals(Atributo.toLowerCase())) {
                     return col.Columnas.get(pos);
                 } else if (col.Objeto.equals(Objeto) && !col.Objeto.equals("")) {
                     return col.Columnas.get(pos);

@@ -86,10 +86,12 @@ public class FNodoExpresion {
                     this.Bool = true;
                     this.Entero = 1;
                     this.Decimal = 1;
+                    this.Cadena = "verdadero";
                 } else {
                     this.Bool = false;
                     this.Entero = 0;
                     this.Decimal = 0;
+                    this.Cadena = "falso";
                 }
                 this.Precedencia = 1;
                 break;
